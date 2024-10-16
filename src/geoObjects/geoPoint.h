@@ -6,11 +6,11 @@
 class GeoPoint : public GeoObject {
 public:
     GeoPoint(wxWindow *parent, wxString &name, wxPoint2DDouble &pos);
+    ~GeoPoint(){}
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const override;
+    virtual void SetPos(wxPoint2DDouble &pos) override;
 
 private:
-    wxPoint2DDouble pos;
-
     int pointRadius;
 };

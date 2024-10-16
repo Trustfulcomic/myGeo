@@ -9,10 +9,6 @@ DrawingCanvas::DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos
     this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 
     this->Bind(wxEVT_PAINT, &DrawingCanvas::OnPaint, this);
-    this->Bind(wxEVT_LEFT_DOWN, &DrawingCanvas::OnMouseDown, this);
-    this->Bind(wxEVT_MOTION, &DrawingCanvas::OnMouseMove, this);
-    this->Bind(wxEVT_LEFT_UP, &DrawingCanvas::OnMouseUp, this);
-    this->Bind(wxEVT_LEAVE_WINDOW, &DrawingCanvas::OnMouseLeave, this);
 }
 
 void DrawingCanvas::OnPaint(wxPaintEvent &event) {
@@ -27,25 +23,5 @@ void DrawingCanvas::OnPaint(wxPaintEvent &event) {
         }
         delete gc;
     }
-    
     Refresh();
-}
-
-void DrawingCanvas::OnMouseDown(wxMouseEvent &event) {
-    wxPoint2DDouble mouse_pt = event.GetPosition();
-    wxString name_string;
-    auto gp = new GeoPoint(this, name_string, mouse_pt);
-    geoObjects.push_back(gp);
-}
-
-void DrawingCanvas::OnMouseMove(wxMouseEvent &event)
-{
-}
-
-void DrawingCanvas::OnMouseUp(wxMouseEvent &event)
-{
-}
-
-void DrawingCanvas::OnMouseLeave(wxMouseEvent &event)
-{
 }
