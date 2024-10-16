@@ -5,12 +5,17 @@
 
 class GeoPoint : public GeoObject {
 public:
-    GeoPoint(wxWindow *parent, wxString &name, wxPoint2DDouble &pos);
+    GeoPoint(wxWindow *parent, wxString &name, std::list<GeoObject*> parentObjs, wxPoint2DDouble &pos);
     ~GeoPoint(){}
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const override;
-    virtual void SetPos(wxPoint2DDouble &pos) override;
+
+    virtual double GetDistance(wxPoint2DDouble &pt) override;
+    virtual wxPoint2DDouble GetPos() override;
+    virtual bool SetPos(wxPoint2DDouble &pos) override;
 
 private:
     int pointRadius;
+    wxPoint2DDouble pos;
+
 };

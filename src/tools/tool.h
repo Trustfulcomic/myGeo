@@ -17,11 +17,13 @@ public:
     }
 
     virtual void BindToCanvas(DrawingCanvas *canvas) = 0;
+    virtual void ResetState(wxMouseEvent&) = 0;
 
     bool selected = false;
 
 protected:
     virtual void DrawContent(wxGraphicsContext *gc, const wxRect &rect) const = 0;
+    void CheckHighlight(wxPoint2DDouble &pt);
 
     DrawingCanvas *drawingCanvas;
 

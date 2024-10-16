@@ -4,7 +4,7 @@
 
 class GeoObject {
 public:
-    GeoObject(wxWindow *parent, wxString &name, wxPoint2DDouble &pos);
+    GeoObject(wxWindow *parent, wxString &name, std::list<GeoObject*> parentObjs);
     ~GeoObject(){};
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const = 0;
@@ -12,20 +12,28 @@ public:
     wxPen outlineColor;
     wxBrush fillColor;
 
-    wxPoint2DDouble GetPos(){return pos;};
-    virtual void SetPos(wxPoint2DDouble &pos) = 0;
+    virtual double GetDistance(wxPoint2DDouble &pt) = 0;
+    virtual wxPoint2DDouble GetPos() = 0;
+    virtual bool SetPos(wxPoint2DDouble &pt) = 0;
 
     virtual bool IsDraggable() {return draggable;}
+    virtual bool IsPoint() {return isPoint;}
+
+    bool highlited = false;
+    bool selected = false;
+
+    wxPoint2DDouble defaultPoint = {0.0, 0.0};
 
 protected:
     wxWindow *parent;
-    wxPoint2DDouble pos;
 
     bool draggable = false;
+    bool isPoint = false;
+
+    std::list<GeoObject*> parentObjs;
+    std::list<GeoObject*> childObjs;
 
 private:
     wxString name;
-    GeoObject* parentObj;
-    std::list<GeoObject*> childObjs;
 
 };

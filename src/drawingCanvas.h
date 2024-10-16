@@ -8,6 +8,8 @@ class DrawingCanvas : public wxWindow {
 public:
     DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size);
     virtual ~DrawingCanvas(){}
+
+    void DeselectAll();
     
     std::list<GeoObject*> geoObjects = {};
 

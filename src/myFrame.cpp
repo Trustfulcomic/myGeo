@@ -54,6 +54,13 @@ void MyFrame::SetupToolPanes(wxWindow *parent, wxSizer *sizer) {
     });
     tools.push_back(handTool);
     sizer->Add(handTool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));
+
+    auto segBy2PTool = new SegBy2PTool(parent, canvas, wxID_ANY);
+    segBy2PTool->Bind(wxEVT_LEFT_DOWN, [this, segBy2PTool](wxMouseEvent &event){
+        SelectToolPane(segBy2PTool);
+    });
+    tools.push_back(segBy2PTool);
+    sizer->Add(segBy2PTool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));
 }
 
 void MyFrame::SelectToolPane(Tool *tool) {
@@ -63,4 +70,5 @@ void MyFrame::SelectToolPane(Tool *tool) {
     }
 
     tool->BindToCanvas(canvas);
+    canvas->DeselectAll();
 }

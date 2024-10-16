@@ -2,8 +2,8 @@
 
 #include "geoObject.h"
 
-GeoObject::GeoObject(wxWindow *parent, wxString &name, wxPoint2DDouble &pos) {
+GeoObject::GeoObject(wxWindow *parent, wxString &name, std::list<GeoObject*> parentObjs) {
     this->parent = parent;
     this->name = name;
-    this->pos = pos;
+    this->parentObjs = parentObjs;
 }

@@ -25,3 +25,10 @@ void DrawingCanvas::OnPaint(wxPaintEvent &event) {
     }
     Refresh();
 }
+
+void DrawingCanvas::DeselectAll(){
+    for (auto geoObj : geoObjects){
+        geoObj->highlited = false;
+        geoObj->highlited = false;
+    }
+}

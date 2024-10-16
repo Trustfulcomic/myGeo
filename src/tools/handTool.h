@@ -8,11 +8,11 @@ class HandTool : public Tool {
 public:
     HandTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
 
-    virtual void BindToCanvas(DrawingCanvas *canvas) override;
+    void BindToCanvas(DrawingCanvas *canvas) override;
+    void ResetState(wxMouseEvent&) override;
     
-    bool creating_point = false;
 private:
-    virtual void DrawContent(wxGraphicsContext *gc, const wxRect &rect) const override;
+    void DrawContent(wxGraphicsContext *gc, const wxRect &rect) const override;
 
     void OnMouseDown(wxMouseEvent& event) override;
     void OnMouseMove(wxMouseEvent& event) override;
