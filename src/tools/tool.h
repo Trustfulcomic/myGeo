@@ -34,4 +34,5 @@ private:
     virtual void OnMouseMove(wxMouseEvent& event) = 0;
     virtual void OnMouseUp(wxMouseEvent& event) = 0;
     virtual void OnMouseLeave(wxMouseEvent& event) = 0;
+    virtual void OnMouseEnter(wxMouseEvent& event) = 0;
 };

@@ -9,10 +9,13 @@ GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPo
 
     this->pointA = pointA;
     this->pointB = pointB;
+
+    this->outlineColor = wxColor(0, 0, 0);
+    this->outlineWidth = 2;
 }
 
 void GeoSegment::DrawOnContext(wxGraphicsContext *gc) const {
-    gc->SetPen(*wxBLACK_PEN);
+    gc->SetPen(wxPen(this->outlineColor, this->outlineWidth));
 
     gc->StrokeLine(pointA->GetPos().m_x, pointA->GetPos().m_y, pointB->GetPos().m_x, pointB->GetPos().m_y);
 }

@@ -12,6 +12,7 @@ void HandTool::BindToCanvas(DrawingCanvas *canvas) {
     canvas->Bind(wxEVT_LEFT_UP, &HandTool::OnMouseUp, this);
     canvas->Bind(wxEVT_LEAVE_WINDOW, &HandTool::OnMouseLeave, this);
     canvas->Bind(wxEVT_RIGHT_DOWN, &HandTool::ResetState, this);
+    canvas->Bind(wxEVT_ENTER_WINDOW, &HandTool::OnMouseEnter, this);
 }
 
 void HandTool::ResetState(wxMouseEvent&) {
@@ -35,7 +36,7 @@ void HandTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
 }
 
 void HandTool::OnMouseDown(wxMouseEvent &event) {
-    wxPoint2DDouble mouse_pt = event.GetPosition();
+    wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
 
     GeoObject *closestDraggable = nullptr;
     for (auto GeoObj : drawingCanvas->geoObjects){
@@ -45,7 +46,7 @@ void HandTool::OnMouseDown(wxMouseEvent &event) {
         }
     }
 
-    if (closestDraggable != nullptr && closestDraggable->GetDistance(mouse_pt) < drawingCanvas->FromDIP(4)){
+    if (closestDraggable != nullptr && closestDraggable->GetDistance(mouse_pt) < drawingCanvas->FromDIP(8)){
         std::cout << "IsDragging" << std::endl;
         isDragging = true;
         draggingObj = closestDraggable;
@@ -53,7 +54,7 @@ void HandTool::OnMouseDown(wxMouseEvent &event) {
 }
 
 void HandTool::OnMouseMove(wxMouseEvent &event) {
-    wxPoint2DDouble mouse_pt = event.GetPosition();
+    wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
     CheckHighlight(mouse_pt);
 
     if (isDragging){
@@ -63,9 +64,13 @@ void HandTool::OnMouseMove(wxMouseEvent &event) {
 
 void HandTool::OnMouseUp(wxMouseEvent &event) {
     isDragging = false;
+    draggingObj = nullptr;
 }
 
 void HandTool::OnMouseLeave(wxMouseEvent &event) {
     isDragging = false;
 }
 
+void HandTool::OnMouseEnter(wxMouseEvent &event){
+    if (draggingObj != nullptr) isDragging = true;
+}

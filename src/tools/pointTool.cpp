@@ -11,6 +11,7 @@ void PointTool::BindToCanvas(DrawingCanvas *canvas) {
     canvas->Bind(wxEVT_LEFT_UP, &PointTool::OnMouseUp, this);
     canvas->Bind(wxEVT_LEAVE_WINDOW, &PointTool::OnMouseLeave, this);
     canvas->Bind(wxEVT_RIGHT_DOWN, &PointTool::ResetState, this);
+    canvas->Bind(wxEVT_ENTER_WINDOW, &PointTool::OnMouseEnter, this);
 }
 
 void PointTool::ResetState(wxMouseEvent&) {
@@ -34,14 +35,14 @@ void PointTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
 
 void PointTool::OnMouseDown(wxMouseEvent &event) {
     creating_point = true;
-    wxPoint2DDouble mouse_pt = event.GetPosition();
+    wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
 
     wxString nullName = "";
     this->drawingCanvas->geoObjects.push_back(new GeoPoint(this->drawingCanvas, nullName, std::list<GeoObject*>(), mouse_pt));
 }
 
 void PointTool::OnMouseMove(wxMouseEvent &event){
-    wxPoint2DDouble mouse_pt = event.GetPosition();
+    wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
     CheckHighlight(mouse_pt);
 
     if (creating_point) {
@@ -62,4 +63,7 @@ void PointTool::OnMouseLeave(wxMouseEvent &event) {
             delete deletedObj;
         }
     }
+}
+
+void PointTool::OnMouseEnter(wxMouseEvent &event){
 }

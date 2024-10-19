@@ -35,7 +35,7 @@ void Tool::OnPaint(wxPaintEvent &event) {
 
 void Tool::CheckHighlight(wxPoint2DDouble &pt) {
     for (auto GeoObj : drawingCanvas->geoObjects) {
-        if (GeoObj->GetDistance(pt) < drawingCanvas->FromDIP(4)){
+        if (GeoObj->GetDistance(pt) < drawingCanvas->FromDIP(8)){
             GeoObj->highlited = true;
         } else {
             GeoObj->highlited = false;

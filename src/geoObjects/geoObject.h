@@ -9,8 +9,9 @@ public:
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const = 0;
 
-    wxPen outlineColor;
-    wxBrush fillColor;
+    wxColor outlineColor;
+    wxColor fillColor;
+    int outlineWidth = 1;
 
     virtual double GetDistance(wxPoint2DDouble &pt) = 0;
     virtual wxPoint2DDouble GetPos() = 0;

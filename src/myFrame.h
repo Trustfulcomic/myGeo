@@ -1,5 +1,6 @@
 #pragma once
 #include <wx/wx.h>
+#include <wx/splitter.h>
 #include <vector>
 
 #include "drawingCanvas.h"
@@ -16,6 +17,10 @@ private:
     void SelectToolPane(Tool *tool);
 
     std::vector<Tool*> tools;
+    Tool *currentTool;
 
     DrawingCanvas *canvas;
+
+    void SashMove(wxSplitterEvent &event);
+    int sashPosition;
 };

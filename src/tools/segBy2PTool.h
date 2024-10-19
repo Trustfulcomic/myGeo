@@ -20,6 +20,7 @@ private:
     void OnMouseMove(wxMouseEvent& event) override;
     void OnMouseUp(wxMouseEvent& event) override;
     void OnMouseLeave(wxMouseEvent& event) override;
+    void OnMouseEnter(wxMouseEvent& event) override;
 
     bool creating_line = false;
     GeoObject *firstPoint;

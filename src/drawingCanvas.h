@@ -13,6 +13,10 @@ public:
     
     std::list<GeoObject*> geoObjects = {};
 
+    wxAffineMatrix2D transform;
+    wxPoint2DDouble TransformPoint(wxPoint2DDouble pt);
+
 private:
     void OnPaint(wxPaintEvent& event);
+    void OnChar(wxKeyEvent& event);
 }; 

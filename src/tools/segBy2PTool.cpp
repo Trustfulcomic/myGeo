@@ -13,6 +13,7 @@ void SegBy2PTool::BindToCanvas(DrawingCanvas *canvas) {
     canvas->Bind(wxEVT_LEFT_UP, &SegBy2PTool::OnMouseUp, this);
     canvas->Bind(wxEVT_LEAVE_WINDOW, &SegBy2PTool::OnMouseLeave, this);
     canvas->Bind(wxEVT_RIGHT_DOWN, &SegBy2PTool::ResetState, this);
+    canvas->Bind(wxEVT_ENTER_WINDOW, &SegBy2PTool::OnMouseEnter, this);
 }
 
 void SegBy2PTool::ResetState(wxMouseEvent&) {
@@ -38,7 +39,7 @@ void SegBy2PTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
 }
 
 void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
-    wxPoint2DDouble mouse_pt = event.GetPosition();
+    wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
 
     GeoObject *closestPoint = nullptr;
     for (auto geoObj : drawingCanvas->geoObjects){
@@ -49,7 +50,7 @@ void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
         }
     }
 
-    if (closestPoint != nullptr && closestPoint->GetDistance(mouse_pt) < drawingCanvas->FromDIP(4)){
+    if (closestPoint != nullptr && closestPoint->GetDistance(mouse_pt) < drawingCanvas->FromDIP(8)){
         if (creating_line && firstPoint != closestPoint) {
             wxString nullName = "";
             firstPoint->selected = false;
@@ -66,7 +67,7 @@ void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
 }
 
 void SegBy2PTool::OnMouseMove(wxMouseEvent &event) {
-    wxPoint2DDouble mouse_pt = event.GetPosition();
+    wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
     CheckHighlight(mouse_pt);
 }
 
@@ -76,3 +77,5 @@ void SegBy2PTool::OnMouseUp(wxMouseEvent &event){
 void SegBy2PTool::OnMouseLeave(wxMouseEvent &event){
 }
 
+void SegBy2PTool::OnMouseEnter(wxMouseEvent &event){
+}
