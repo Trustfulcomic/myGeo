@@ -9,5 +9,6 @@ target_sources(myGeo PRIVATE    main.cpp
 
 add_subdirectory(geoObjects)
 add_subdirectory(tools)
+add_subdirectory(utils)
 
 target_link_libraries(myGeo PRIVATE ${wxWidgets_LIBRARIES})

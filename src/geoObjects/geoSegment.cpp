@@ -1,5 +1,8 @@
 #include <list>
+
 #include "geoSegment.h"
+
+#include "../utils/utils.h"
 
 GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB)
     : GeoObject(parent, name, std::list<GeoObject*>()){
@@ -23,8 +26,29 @@ void GeoSegment::DrawOnContext(wxGraphicsContext *gc) const {
 }
 
 double GeoSegment::GetDistance(wxPoint2DDouble &pt) {
-    //TODO
-    return 0.0;
+    wxPoint2DDouble P1 = pointA->GetPos();
+    wxPoint2DDouble P2 = pointB->GetPos();
+
+    if (P1 == P2) {
+        return P1.GetDistance(pt);
+    }
+
+    wxPoint2DDouble projectedPt = util::ProjectAtoLineBC(pt, P1, P2);
+    if (P1 == projectedPt) {
+        return P1.GetDistance(pt);
+    }
+
+    if (P1.m_x == P2.m_x){
+        if (!(0 < (P2.m_y - P1.m_y) / (projectedPt.m_y-P1.m_y) < 1)){
+            return parent->FromDIP(100);
+        }
+    } else {
+        if (!(0 < (P2.m_x - P1.m_x) / (projectedPt.m_x-P1.m_x) < 1)){
+            return parent->FromDIP(100);
+        }
+    }
+
+    return projectedPt.GetDistance(pt);
 }
 
 wxPoint2DDouble GeoSegment::GetPos()
