@@ -33,9 +33,40 @@ void Tool::OnPaint(wxPaintEvent &event) {
     delete gc;
 }
 
-void Tool::CheckHighlight(wxPoint2DDouble &pt) {
+GeoObject *Tool::GetNearestGeoObj(wxPoint2DDouble &pt) {
+    GeoObject *nearestPoint = nullptr;
+    GeoObject *nearestObj = nullptr;
+    double nearestPointDist = 0;
+    double nearestObjDist = 0;
+
     for (auto GeoObj : drawingCanvas->geoObjects) {
-        if (GeoObj->GetDistance(pt) < drawingCanvas->FromDIP(8)){
+        double distToObj = GeoObj->GetDistance(pt);
+        if (GeoObj->IsPoint()){
+            if (nearestPoint == nullptr || nearestPointDist > distToObj) {
+                nearestPoint = GeoObj;
+                nearestPointDist = distToObj;
+            }
+        }
+        if (nearestObj == nullptr || nearestObjDist > distToObj) {
+                nearestObj = GeoObj;
+                nearestObjDist = distToObj;
+            }
+    }
+
+    if (nearestPoint != nullptr && nearestPoint->GetDistance(pt) < drawingCanvas->FromDIP(8)) {
+        return nearestPoint;
+    }
+    if (nearestObj != nullptr && nearestObj->GetDistance(pt) < drawingCanvas->FromDIP(8)) {
+        return nearestObj;
+    }
+    return nullptr;
+}
+
+void Tool::CheckHighlight(wxPoint2DDouble &pt)
+{
+    GeoObject *nearestObj = GetNearestGeoObj(pt);
+    for (auto GeoObj : drawingCanvas->geoObjects) {
+        if (GeoObj == nearestObj) {
             GeoObj->highlited = true;
         } else {
             GeoObj->highlited = false;

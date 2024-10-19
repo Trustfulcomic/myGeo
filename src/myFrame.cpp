@@ -20,6 +20,7 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
 
     this->SetSize(FromDIP(800), FromDIP(550));
     this->SetMinSize({FromDIP(400), FromDIP(200)});
+    Maximize();
 
     currentTool = nullptr;
     SelectToolPane(tools[0]);

@@ -43,19 +43,14 @@ void HandTool::OnMouseDown(wxMouseEvent &event) {
 
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
 
-    GeoObject *closestDraggable = nullptr;
-    for (auto GeoObj : drawingCanvas->geoObjects){
-        if (GeoObj->IsDraggable() && 
-            (closestDraggable == nullptr || GeoObj->GetDistance(mouse_pt) < closestDraggable->GetDistance(mouse_pt))){
-            closestDraggable = GeoObj;
+    GeoObject *nearestObj = GetNearestGeoObj(mouse_pt);
+    std::cout << nearestObj << std::endl;
+    if (nearestObj != nullptr) {    
+        if (nearestObj->IsDraggable()){
+            isDragging = true;
+            draggingObj = nearestObj;
         }
-    }
-
-    if (closestDraggable != nullptr && closestDraggable->GetDistance(mouse_pt) < drawingCanvas->FromDIP(8)){
-        std::cout << "IsDragging" << std::endl;
-        isDragging = true;
-        draggingObj = closestDraggable;
-        selectedObj = draggingObj;
+        selectedObj = nearestObj;
         selectedObj->selected = true;
     }
 }

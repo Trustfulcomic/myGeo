@@ -20,8 +20,12 @@ GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPo
 }
 
 void GeoSegment::DrawOnContext(wxGraphicsContext *gc) const {
-    gc->SetPen(wxPen(this->outlineColor, this->outlineWidth));
+    if (highlited || selected) {
+        gc->SetPen(wxPen(wxColour(200, 150, 150, 150), this->outlineWidth + 3));
+        gc->StrokeLine(pointA->GetPos().m_x, pointA->GetPos().m_y, pointB->GetPos().m_x, pointB->GetPos().m_y);
+    }
 
+    gc->SetPen(wxPen(this->outlineColor, this->outlineWidth));
     gc->StrokeLine(pointA->GetPos().m_x, pointA->GetPos().m_y, pointB->GetPos().m_x, pointB->GetPos().m_y);
 }
 
@@ -39,11 +43,11 @@ double GeoSegment::GetDistance(wxPoint2DDouble &pt) {
     }
 
     if (P1.m_x == P2.m_x){
-        if (!(0 < (P2.m_y - P1.m_y) / (projectedPt.m_y-P1.m_y) < 1)){
+        if (0 >= (projectedPt.m_y-P1.m_y) / (P2.m_y - P1.m_y) || (projectedPt.m_y-P1.m_y) / (P2.m_y - P1.m_y) >= 1){
             return parent->FromDIP(100);
         }
     } else {
-        if (!(0 < (P2.m_x - P1.m_x) / (projectedPt.m_x-P1.m_x) < 1)){
+        if (0 >= (projectedPt.m_x-P1.m_x) / (P2.m_x - P1.m_x) || (projectedPt.m_x-P1.m_x) / (P2.m_x - P1.m_x) >= 1){
             return parent->FromDIP(100);
         }
     }

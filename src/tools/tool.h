@@ -18,6 +18,7 @@ public:
 
     virtual void BindToCanvas(DrawingCanvas *canvas) = 0;
     virtual void ResetState() = 0;
+    GeoObject* GetNearestGeoObj(wxPoint2DDouble &pt);
 
     bool selected = false;
 
