@@ -12,6 +12,7 @@ public:
 
 private:
     wxPanel* BuildToolsPanel(wxWindow *parent);
+    void BuildMenuBar();
     
     void SetupToolPanes(wxWindow *parent, wxSizer *sizer);
     void SelectToolPane(Tool *tool);

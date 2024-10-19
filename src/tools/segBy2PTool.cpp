@@ -12,11 +12,11 @@ void SegBy2PTool::BindToCanvas(DrawingCanvas *canvas) {
     canvas->Bind(wxEVT_MOTION, &SegBy2PTool::OnMouseMove, this);
     canvas->Bind(wxEVT_LEFT_UP, &SegBy2PTool::OnMouseUp, this);
     canvas->Bind(wxEVT_LEAVE_WINDOW, &SegBy2PTool::OnMouseLeave, this);
-    canvas->Bind(wxEVT_RIGHT_DOWN, &SegBy2PTool::ResetState, this);
+    canvas->Bind(wxEVT_RIGHT_DOWN, [this](wxMouseEvent&){this->ResetState();});
     canvas->Bind(wxEVT_ENTER_WINDOW, &SegBy2PTool::OnMouseEnter, this);
 }
 
-void SegBy2PTool::ResetState(wxMouseEvent&) {
+void SegBy2PTool::ResetState() {
     creating_line = false;
     if (firstPoint != nullptr)
         firstPoint->selected = false;

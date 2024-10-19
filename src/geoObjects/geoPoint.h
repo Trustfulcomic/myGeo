@@ -6,7 +6,6 @@
 class GeoPoint : public GeoObject {
 public:
     GeoPoint(wxWindow *parent, wxString &name, std::list<GeoObject*> parentObjs, wxPoint2DDouble &pos);
-    ~GeoPoint(){}
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const override;
 

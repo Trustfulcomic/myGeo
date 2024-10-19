@@ -21,7 +21,10 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     this->SetSize(FromDIP(800), FromDIP(550));
     this->SetMinSize({FromDIP(400), FromDIP(200)});
 
+    currentTool = nullptr;
     SelectToolPane(tools[0]);
+
+    BuildMenuBar();
 }
 
 wxPanel *MyFrame::BuildToolsPanel(wxWindow *parent) {
@@ -31,7 +34,7 @@ wxPanel *MyFrame::BuildToolsPanel(wxWindow *parent) {
 
     auto mainSizer = new wxBoxSizer(wxVERTICAL);
 
-    auto text = new wxStaticText(toolsPanel, wxID_ANY, "Nastroje");
+    auto text = new wxStaticText(toolsPanel, wxID_ANY, wxString::FromUTF8("Nástroje"));
     mainSizer->Add(text, 0, wxALL, FromDIP(5));
 
     auto toolsSizer = new wxWrapSizer(wxHORIZONTAL);
@@ -40,6 +43,13 @@ wxPanel *MyFrame::BuildToolsPanel(wxWindow *parent) {
 
     toolsPanel->SetSizer(mainSizer);
     return toolsPanel;
+}
+
+void MyFrame::BuildMenuBar() {
+    wxMenuBar *menuBar = new wxMenuBar();
+    wxMenu *fileMenu = new wxMenu();
+    menuBar->Append(fileMenu, "File");
+    SetMenuBar(menuBar);
 }
 
 void MyFrame::SetupToolPanes(wxWindow *parent, wxSizer *sizer) {
@@ -71,6 +81,7 @@ void MyFrame::SelectToolPane(Tool *tool) {
         toolPane->Refresh();
     }
 
+    if (currentTool) currentTool->ResetState();
     currentTool = tool;
 
     tool->BindToCanvas(canvas);

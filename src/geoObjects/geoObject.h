@@ -5,7 +5,7 @@
 class GeoObject {
 public:
     GeoObject(wxWindow *parent, wxString &name, std::list<GeoObject*> parentObjs);
-    ~GeoObject(){};
+    ~GeoObject();
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const = 0;
 
@@ -20,6 +20,9 @@ public:
     virtual bool IsDraggable() {return draggable;}
     virtual bool IsPoint() {return isPoint;}
 
+    void AddChild(GeoObject* obj) {childObjs.push_back(obj);}
+    void RemoveChild(GeoObject* obj) {childObjs.remove(obj);}
+
     bool highlited = false;
     bool selected = false;
 
@@ -31,10 +34,11 @@ protected:
     bool draggable = false;
     bool isPoint = false;
 
-    std::list<GeoObject*> parentObjs;
-    std::list<GeoObject*> childObjs;
+    std::list<GeoObject*> parentObjs{};
+    std::list<GeoObject*> childObjs{};
 
 private:
     wxString name;
+    bool forDeletion = false;
 
 };

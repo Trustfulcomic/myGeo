@@ -9,7 +9,7 @@ public:
     HandTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
 
     void BindToCanvas(DrawingCanvas *canvas) override;
-    void ResetState(wxMouseEvent&) override;
+    void ResetState() override;
     
 private:
     void DrawContent(wxGraphicsContext *gc, const wxRect &rect) const override;
@@ -21,5 +21,6 @@ private:
     void OnMouseEnter(wxMouseEvent& event) override;
 
     bool isDragging = false;
-    GeoObject* draggingObj;
+    GeoObject* draggingObj = nullptr;
+    GeoObject* selectedObj = nullptr;
 };  

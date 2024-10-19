@@ -17,7 +17,7 @@ public:
     }
 
     virtual void BindToCanvas(DrawingCanvas *canvas) = 0;
-    virtual void ResetState(wxMouseEvent&) = 0;
+    virtual void ResetState() = 0;
 
     bool selected = false;
 

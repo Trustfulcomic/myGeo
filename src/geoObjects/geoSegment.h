@@ -8,7 +8,6 @@
 class GeoSegment : public GeoObject {
 public:
     GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB);
-    ~GeoSegment(){}
 
     void DrawOnContext(wxGraphicsContext *gc) const override;
 

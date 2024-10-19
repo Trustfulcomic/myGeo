@@ -6,6 +6,8 @@ GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPo
     
     this->parentObjs.push_back(pointA);
     this->parentObjs.push_back(pointB);
+    pointA->AddChild(this);
+    pointB->AddChild(this);
 
     this->pointA = pointA;
     this->pointB = pointB;

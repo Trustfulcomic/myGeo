@@ -1,8 +1,9 @@
 #include <wx/graphics.h>
 #include <wx/dcbuffer.h>
 
+#include <iostream>
+
 #include "drawingCanvas.h"
-#include "geoObjects/geoPoint.h"
 
 DrawingCanvas::DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size)
     : wxWindow(parent, id, pos, size) {
@@ -48,11 +49,23 @@ void DrawingCanvas::OnChar(wxKeyEvent &event) {
     if (event.GetKeyCode() == WXK_UP){
         transform.Translate(0.0, -FromDIP(10));
     }
+    if (event.GetKeyCode() == WXK_DELETE){
+        std::list<GeoObject*> toDelete;
+
+        for (auto geoObj : geoObjects) {
+            if (geoObj->selected)
+                toDelete.push_back(geoObj);
+        }
+
+        for (auto toDelObj : toDelete){
+            delete toDelObj;
+        }
+    }
 }
 
 void DrawingCanvas::DeselectAll(){
     for (auto geoObj : geoObjects){
         geoObj->highlited = false;
-        geoObj->highlited = false;
+        geoObj->selected = false;
     }
 }
