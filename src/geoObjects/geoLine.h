@@ -5,9 +5,9 @@
 #include "geoObject.h"
 #include "geoPoint.h"
 
-class GeoSegment : public GeoObject {
+class GeoLine : public GeoObject {
 public:
-    GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB);
+    GeoLine(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB);
 
     void DrawOnContext(wxGraphicsContext *gc) const override;
 

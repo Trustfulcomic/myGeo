@@ -2,8 +2,6 @@
 
 #include "geoSegment.h"
 
-#include "../utils/utils.h"
-
 GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB)
     : GeoObject(parent, name, std::list<GeoObject*>()){
     

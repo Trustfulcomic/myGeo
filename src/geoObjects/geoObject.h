@@ -2,6 +2,8 @@
 #include <wx/wx.h>
 #include <list>
 
+#include "../utils/utils.h"
+
 class GeoObject {
 public:
     GeoObject(wxWindow *parent, wxString &name, std::list<GeoObject*> parentObjs);

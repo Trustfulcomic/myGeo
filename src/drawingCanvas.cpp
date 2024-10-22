@@ -13,7 +13,10 @@ DrawingCanvas::DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos
     this->Bind(wxEVT_CHAR, &DrawingCanvas::OnChar, this);
 }
 
-wxPoint2DDouble DrawingCanvas::TransformPoint(wxPoint2DDouble pt) {
+wxPoint2DDouble DrawingCanvas::TransformPoint(wxPoint2DDouble pt, bool inv /*=true*/) {
+    if (!inv)
+        return transform.TransformPoint(pt);
+
     auto transform_cpy = transform;
     transform_cpy.Invert();
     return transform_cpy.TransformPoint(pt);

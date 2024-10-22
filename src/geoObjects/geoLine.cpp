@@ -1,0 +1,82 @@
+#include "geoLine.h"
+
+#include "../drawingCanvas.h"
+
+GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB)
+    : GeoObject(parent, name, std::list<GeoObject*>()) {
+
+    this->parentObjs.push_back(pointA);
+    this->parentObjs.push_back(pointB);
+    pointA->AddChild(this);
+    pointB->AddChild(this);
+
+    this->pointA = pointA;
+    this->pointB = pointB;
+
+    this->outlineColor = wxColor(0, 0, 0);
+    this->outlineWidth = 2;
+}
+
+void GeoLine::DrawOnContext(wxGraphicsContext *gc) const {
+    wxSize canvasSize = parent->GetSize();
+    wxPoint2DDouble lineVect = pointB->GetPos() - pointA->GetPos();
+
+    wxPoint2DDouble topLeft = {0.0, 0.0};
+    wxPoint2DDouble bottomRight = {parent->GetSize().GetWidth(), parent->GetSize().GetHeight()};
+    topLeft = ((DrawingCanvas*)parent)->TransformPoint(topLeft);
+    bottomRight = ((DrawingCanvas*)parent)->TransformPoint(bottomRight);
+
+    wxPoint2DDouble edgePointA, edgePointB;
+
+    // The line is defined as pointA + t*lineVect, where  t \in R
+
+    if (lineVect.m_x == 0 || abs(lineVect.m_y / lineVect.m_x) > 1) {
+        //Vertical
+
+        double tTop = (topLeft.m_y-pointA->GetPos().m_y)/lineVect.m_y;
+        double tBotttom = (bottomRight.m_y-pointA->GetPos().m_y)/lineVect.m_y;
+
+        edgePointA = pointA->GetPos() + tTop*lineVect;
+        edgePointB = pointA->GetPos() + tBotttom*lineVect;
+
+    } else {
+        // Horizontal
+
+        double tLeft = (topLeft.m_x-pointA->GetPos().m_x)/lineVect.m_x;
+        double tRight = (bottomRight.m_x-pointA->GetPos().m_x)/lineVect.m_x;
+
+        edgePointA = pointA->GetPos() + tLeft*lineVect;
+        edgePointB = pointA->GetPos() + tRight*lineVect;
+        
+    }
+    
+
+    if (highlited || selected) {
+        gc->SetPen(wxPen(wxColour(200, 150, 150, 150), this->outlineWidth + 3));
+        gc->StrokeLine(edgePointA.m_x, edgePointA.m_y, edgePointB.m_x, edgePointB.m_y);
+    }
+
+    gc->SetPen(wxPen(this->outlineColor, this->outlineWidth));
+    gc->StrokeLine(edgePointA.m_x, edgePointA.m_y, edgePointB.m_x, edgePointB.m_y);
+}
+
+double GeoLine::GetDistance(wxPoint2DDouble &pt) {
+    wxPoint2DDouble P1 = pointA->GetPos();
+    wxPoint2DDouble P2 = pointB->GetPos();
+
+    if (P1 == P2) {
+        return P1.GetDistance(pt);
+    }
+
+    wxPoint2DDouble projectedPt = util::ProjectAtoLineBC(pt, P1, P2);
+    return pt.GetDistance(projectedPt);
+}
+
+wxPoint2DDouble GeoLine::GetPos()
+{
+    return defaultPoint;
+}
+
+bool GeoLine::SetPos(wxPoint2DDouble &pt) {
+    return false;
+}

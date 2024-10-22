@@ -74,6 +74,13 @@ void MyFrame::SetupToolPanes(wxWindow *parent, wxSizer *sizer) {
     });
     tools.push_back(segBy2PTool);
     sizer->Add(segBy2PTool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));
+
+    auto lineBy2PTool = new LineBy2PTool(parent, canvas, wxID_ANY);
+    lineBy2PTool->Bind(wxEVT_LEFT_DOWN, [this, lineBy2PTool](wxMouseEvent &event){
+        SelectToolPane(lineBy2PTool);
+    });
+    tools.push_back(lineBy2PTool);
+    sizer->Add(lineBy2PTool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));
 }
 
 void MyFrame::SelectToolPane(Tool *tool) {

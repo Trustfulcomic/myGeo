@@ -14,7 +14,7 @@ public:
     std::list<GeoObject*> geoObjects = {};
 
     wxAffineMatrix2D transform;
-    wxPoint2DDouble TransformPoint(wxPoint2DDouble pt);
+    wxPoint2DDouble TransformPoint(wxPoint2DDouble pt, bool inv = true);
 
 private:
     void OnPaint(wxPaintEvent& event);
