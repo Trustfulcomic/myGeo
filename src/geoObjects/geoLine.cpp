@@ -18,6 +18,9 @@ GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *p
 }
 
 void GeoLine::DrawOnContext(wxGraphicsContext *gc) const {
+    if (pointA->GetPos() == pointB->GetPos())
+        return;
+
     wxSize canvasSize = parent->GetSize();
     wxPoint2DDouble lineVect = pointB->GetPos() - pointA->GetPos();
 
@@ -47,7 +50,7 @@ void GeoLine::DrawOnContext(wxGraphicsContext *gc) const {
 
         edgePointA = pointA->GetPos() + tLeft*lineVect;
         edgePointB = pointA->GetPos() + tRight*lineVect;
-        
+
     }
     
 

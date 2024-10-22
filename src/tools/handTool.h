@@ -23,4 +23,7 @@ private:
     bool isDragging = false;
     GeoObject* draggingObj = nullptr;
     GeoObject* selectedObj = nullptr;
+
+    bool isDraggingCanvas = false;
+    wxPoint2DDouble canvasDragPoint = {0.0, 0.0};
 };  
