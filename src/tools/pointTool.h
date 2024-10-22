@@ -20,4 +20,5 @@ private:
     void OnMouseEnter(wxMouseEvent& event) override;
 
     bool creating_point = false;
+    GeoPoint *creatingPoint = nullptr;
 };  

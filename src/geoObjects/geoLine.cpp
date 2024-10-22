@@ -4,6 +4,7 @@
 
 GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB)
     : GeoObject(parent, name, std::list<GeoObject*>()) {
+    this->objectType = LINE;
 
     this->parentObjs.push_back(pointA);
     this->parentObjs.push_back(pointB);
@@ -15,6 +16,8 @@ GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *p
 
     this->outlineColor = wxColor(0, 0, 0);
     this->outlineWidth = 2;
+
+    this->definition = LINE_BY_TWO_POINTS;
 }
 
 void GeoLine::DrawOnContext(wxGraphicsContext *gc) const {
@@ -25,7 +28,7 @@ void GeoLine::DrawOnContext(wxGraphicsContext *gc) const {
     wxPoint2DDouble lineVect = pointB->GetPos() - pointA->GetPos();
 
     wxPoint2DDouble topLeft = {0.0, 0.0};
-    wxPoint2DDouble bottomRight = {parent->GetSize().GetWidth(), parent->GetSize().GetHeight()};
+    wxPoint2DDouble bottomRight = {static_cast<double>(parent->GetSize().GetWidth()), static_cast<double>(parent->GetSize().GetHeight())};
     topLeft = ((DrawingCanvas*)parent)->TransformPoint(topLeft);
     bottomRight = ((DrawingCanvas*)parent)->TransformPoint(bottomRight);
 
@@ -73,6 +76,16 @@ double GeoLine::GetDistance(wxPoint2DDouble &pt) {
 
     wxPoint2DDouble projectedPt = util::ProjectAtoLineBC(pt, P1, P2);
     return pt.GetDistance(projectedPt);
+}
+
+wxPoint2DDouble GeoLine::ProjectPoint(wxPoint2DDouble &pt) {
+    switch (definition){
+        case LINE_BY_TWO_POINTS:
+            wxPoint2DDouble pointAPos = pointA->GetPos();
+            wxPoint2DDouble pointBPos = pointB->GetPos();
+
+            return util::ProjectAtoLineBC(pt, pointAPos, pointBPos);
+    }
 }
 
 wxPoint2DDouble GeoLine::GetPos()

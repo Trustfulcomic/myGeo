@@ -16,6 +16,7 @@ void PointTool::BindToCanvas(DrawingCanvas *canvas) {
 
 void PointTool::ResetState() {
     creating_point = false;
+    creatingPoint = nullptr;
 }
 
 void PointTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
@@ -36,9 +37,18 @@ void PointTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
 void PointTool::OnMouseDown(wxMouseEvent &event) {
     creating_point = true;
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
-
     wxString nullName = "";
-    this->drawingCanvas->geoObjects.push_back(new GeoPoint(this->drawingCanvas, nullName, std::list<GeoObject*>(), mouse_pt));
+
+    GeoObject *nearestObj = GetNearestGeoObj(mouse_pt);
+    if (nearestObj == nullptr){
+        this->drawingCanvas->geoObjects.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt));
+        creatingPoint = (GeoPoint*)drawingCanvas->geoObjects.back();
+    } else if (nearestObj->IsPoint()){
+        creatingPoint = (GeoPoint*)nearestObj;
+    } else {
+        this->drawingCanvas->geoObjects.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt, nearestObj));
+        creatingPoint = (GeoPoint*)drawingCanvas->geoObjects.back();
+    }
 }
 
 void PointTool::OnMouseMove(wxMouseEvent &event){
@@ -46,24 +56,21 @@ void PointTool::OnMouseMove(wxMouseEvent &event){
     CheckHighlight(mouse_pt);
 
     if (creating_point) {
-        this->drawingCanvas->geoObjects.back()->SetPos(mouse_pt);
+        creatingPoint->SetPos(mouse_pt);
     }
 }
 
 void PointTool::OnMouseUp(wxMouseEvent &event) {
     creating_point = false;
+    creatingPoint = nullptr;
 }
 
 void PointTool::OnMouseLeave(wxMouseEvent &event) {
-    if (creating_point){
-        creating_point = false;
-        if (this->drawingCanvas->geoObjects.size() > 0){
-            GeoObject* deletedObj = this->drawingCanvas->geoObjects.back();
-            this->drawingCanvas->geoObjects.pop_back();
-            delete deletedObj;
-        }
-    }
+    creating_point = false;
 }
 
 void PointTool::OnMouseEnter(wxMouseEvent &event){
+    if (creatingPoint != nullptr) {
+        creating_point = true;
+    }
 }

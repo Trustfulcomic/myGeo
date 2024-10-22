@@ -4,6 +4,12 @@
 
 #include "../utils/utils.h"
 
+enum GeoObjectType {
+    POINT,
+    LINE,
+    SEGMENT
+};
+
 class GeoObject {
 public:
     GeoObject(wxWindow *parent, wxString &name, std::list<GeoObject*> parentObjs);
@@ -20,7 +26,8 @@ public:
     virtual bool SetPos(wxPoint2DDouble &pt) = 0;
 
     virtual bool IsDraggable() {return draggable;}
-    virtual bool IsPoint() {return isPoint;}
+    virtual bool IsPoint() {return objectType == POINT;}
+    GeoObjectType GetType() {return objectType;}
 
     void AddChild(GeoObject* obj) {childObjs.push_back(obj);}
     void RemoveChild(GeoObject* obj) {childObjs.remove(obj);}
@@ -34,10 +41,11 @@ protected:
     wxWindow *parent;
 
     bool draggable = false;
-    bool isPoint = false;
 
     std::list<GeoObject*> parentObjs{};
     std::list<GeoObject*> childObjs{};
+
+    GeoObjectType objectType;
 
 private:
     wxString name;

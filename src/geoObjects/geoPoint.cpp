@@ -2,18 +2,43 @@
 #include <wx/graphics.h>
 
 #include "geoPoint.h"
+#include "geoLine.h"
 
-GeoPoint::GeoPoint(wxWindow *parent, wxString &name, std::list<GeoObject*> parentObjs, wxPoint2DDouble &pos)
-    : GeoObject(parent, name, parentObjs) {
+std::unordered_map<GeoObjectType, PointDefinition> GeoPoint::typeToPointDefinition = {
+    {LINE, POINT_ON_LINE},
+    {SEGMENT, POINT_ON_SEGMENT}
+};
+
+GeoPoint::GeoPoint(wxWindow *parent, wxString &name, wxPoint2DDouble &pos, GeoObject *parentObj)
+    : GeoObject(parent, name, std::list<GeoObject*>()) {
+    this->objectType = POINT;
 
     this->pointRadius = parent->FromDIP(4);
     this->outlineColor = *wxBLACK;
-    this->fillColor = wxColor(120, 120, 120);
-
-    this->pos = pos;
 
     this->draggable = true;
-    this->isPoint = true;
+
+    if (parentObj == nullptr){
+        this->definition = FREE_POINT;
+    } else {
+        parentObj->AddChild(this);
+        this->parentObjs.push_back(parentObj);
+        this->definition = typeToPointDefinition[parentObj->GetType()];
+    }
+
+    switch (definition){
+        case FREE_POINT:
+            this->fillColor = wxColor(120, 120, 120);
+            break;
+            
+        
+        case POINT_ON_LINE:
+            this->parentObjs.push_back(parentObj);
+            this->fillColor = wxColor(0, 0, 255);
+            break;
+    }
+
+    SetPos(pos);
 }
 
 void GeoPoint::DrawOnContext(wxGraphicsContext *gc) const {
@@ -42,6 +67,15 @@ wxPoint2DDouble GeoPoint::GetPos() {
 }
 
 bool GeoPoint::SetPos(wxPoint2DDouble &pos) {
-    this->pos = pos;
-    return true;
+    switch (definition){
+        case FREE_POINT:
+            this->pos = pos;
+            return true;
+        
+        case POINT_ON_LINE:
+            this->pos = ((GeoLine*)parentObjs.front())->ProjectPoint(pos);
+            return true;
+    }
+
+    return false;
 }

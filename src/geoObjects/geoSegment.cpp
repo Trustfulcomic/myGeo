@@ -4,6 +4,7 @@
 
 GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB)
     : GeoObject(parent, name, std::list<GeoObject*>()){
+    this->objectType = SEGMENT;
     
     this->parentObjs.push_back(pointA);
     this->parentObjs.push_back(pointB);

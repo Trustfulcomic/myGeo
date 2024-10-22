@@ -10,7 +10,7 @@ GeoObject::GeoObject(wxWindow *parent, wxString &name, std::list<GeoObject*> par
     this->parentObjs = parentObjs;
 
     for (auto parentObj : parentObjs){
-        parentObj->childObjs.push_back(this);
+        parentObj->AddChild(this);
     }
 }
 
