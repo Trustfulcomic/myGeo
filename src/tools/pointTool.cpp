@@ -57,6 +57,7 @@ void PointTool::OnMouseMove(wxMouseEvent &event){
 
     if (creating_point) {
         creatingPoint->SetPos(mouse_pt);
+        creatingPoint->ReloadAllChildren();
     }
 }
 

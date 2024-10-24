@@ -65,6 +65,7 @@ void HandTool::OnMouseMove(wxMouseEvent &event) {
 
     if (isDragging){
         draggingObj->SetPos(mouse_pt);
+        draggingObj->ReloadAllChildren();
     }
 
     if (isDraggingCanvas){

@@ -28,6 +28,9 @@ void GeoSegment::DrawOnContext(wxGraphicsContext *gc) const {
     gc->StrokeLine(pointA->GetPos().m_x, pointA->GetPos().m_y, pointB->GetPos().m_x, pointB->GetPos().m_y);
 }
 
+void GeoSegment::ReloadSelf() {
+}
+
 double GeoSegment::GetDistance(wxPoint2DDouble &pt) {
     wxPoint2DDouble P1 = pointA->GetPos();
     wxPoint2DDouble P2 = pointB->GetPos();

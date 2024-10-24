@@ -15,8 +15,13 @@ public:
 
     void DrawOnContext(wxGraphicsContext *gc) const override;
 
+    virtual void ReloadSelf() override;
+
     double GetDistance(wxPoint2DDouble &pt);
     wxPoint2DDouble ProjectPoint(wxPoint2DDouble &pt);
+
+    wxPoint2DDouble GetVect(){ return lineVect; }
+    wxPoint2DDouble GetPoint(){ return mainPoint; }
 
     wxPoint2DDouble GetPos();
     bool SetPos(wxPoint2DDouble &pt);
@@ -24,6 +29,9 @@ public:
 private:
     GeoPoint *pointA;
     GeoPoint *pointB;
+
+    wxPoint2DDouble lineVect;
+    wxPoint2DDouble mainPoint;
 
     LineDefinition definition;
 };

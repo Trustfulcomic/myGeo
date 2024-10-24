@@ -40,19 +40,22 @@ void SegBy2PTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
 
 void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
+    wxString nullName = "";
 
+    GeoObject *nearestObj = GetNearestGeoObj(mouse_pt);
     GeoObject *closestPoint = nullptr;
-    for (auto geoObj : drawingCanvas->geoObjects){
-        if (!geoObj->IsPoint()) continue;
-
-        if (closestPoint == nullptr || geoObj->GetDistance(mouse_pt) < closestPoint->GetDistance(mouse_pt)){
-            closestPoint = geoObj;
-        }
+    if (nearestObj == nullptr){
+        drawingCanvas->geoObjects.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt));
+        closestPoint = drawingCanvas->geoObjects.back();
+    } else if (!nearestObj->IsPoint()){
+        drawingCanvas->geoObjects.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt, nearestObj));
+        closestPoint = drawingCanvas->geoObjects.back();
+    } else {
+        closestPoint = nearestObj;
     }
 
     if (closestPoint != nullptr && closestPoint->GetDistance(mouse_pt) < drawingCanvas->FromDIP(8)){
         if (creating_line && firstPoint != closestPoint) {
-            wxString nullName = "";
             firstPoint->selected = false;
             drawingCanvas->geoObjects.push_back(new GeoSegment(drawingCanvas, nullName, (GeoPoint*)firstPoint, (GeoPoint*)closestPoint));
             

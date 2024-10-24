@@ -11,6 +11,9 @@ GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *p
     pointA->AddChild(this);
     pointB->AddChild(this);
 
+    mainPoint = pointA->GetPos();
+    lineVect = pointB->GetPos() - pointA->GetPos();
+
     this->pointA = pointA;
     this->pointB = pointB;
 
@@ -64,6 +67,15 @@ void GeoLine::DrawOnContext(wxGraphicsContext *gc) const {
 
     gc->SetPen(wxPen(this->outlineColor, this->outlineWidth));
     gc->StrokeLine(edgePointA.m_x, edgePointA.m_y, edgePointB.m_x, edgePointB.m_y);
+}
+
+void GeoLine::ReloadSelf() {
+    switch (definition) {
+        case LINE_BY_TWO_POINTS:
+            mainPoint = pointA->GetPos();
+            lineVect = pointB->GetPos() - pointA->GetPos();
+            break;
+    }
 }
 
 double GeoLine::GetDistance(wxPoint2DDouble &pt) {

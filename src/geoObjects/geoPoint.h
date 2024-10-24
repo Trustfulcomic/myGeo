@@ -21,6 +21,8 @@ public:
     virtual wxPoint2DDouble GetPos() override;
     virtual bool SetPos(wxPoint2DDouble &pos) override;
 
+    virtual void ReloadSelf() override;
+
     static std::unordered_map<GeoObjectType, PointDefinition> typeToPointDefinition;
 
 private:
@@ -28,4 +30,5 @@ private:
     wxPoint2DDouble pos;
 
     PointDefinition definition;
+    double lineVectMult;
 };

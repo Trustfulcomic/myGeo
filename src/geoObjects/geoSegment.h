@@ -11,6 +11,8 @@ public:
 
     void DrawOnContext(wxGraphicsContext *gc) const override;
 
+    virtual void ReloadSelf() override;
+
     double GetDistance(wxPoint2DDouble &pt);
     wxPoint2DDouble GetPos();
     bool SetPos(wxPoint2DDouble &pt);

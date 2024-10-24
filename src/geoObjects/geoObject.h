@@ -32,6 +32,9 @@ public:
     void AddChild(GeoObject* obj) {childObjs.push_back(obj);}
     void RemoveChild(GeoObject* obj) {childObjs.remove(obj);}
 
+    void ReloadAllChildren();
+    virtual void ReloadSelf() = 0;
+
     bool highlited = false;
     bool selected = false;
 
@@ -44,6 +47,8 @@ protected:
 
     std::list<GeoObject*> parentObjs{};
     std::list<GeoObject*> childObjs{};
+
+    int parentsToUpdate = 0;
 
     GeoObjectType objectType;
 

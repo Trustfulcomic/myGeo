@@ -26,6 +26,8 @@ GeoPoint::GeoPoint(wxWindow *parent, wxString &name, wxPoint2DDouble &pos, GeoOb
         this->definition = typeToPointDefinition[parentObj->GetType()];
     }
 
+    SetPos(pos);
+
     switch (definition){
         case FREE_POINT:
             this->fillColor = wxColor(120, 120, 120);
@@ -37,8 +39,6 @@ GeoPoint::GeoPoint(wxWindow *parent, wxString &name, wxPoint2DDouble &pos, GeoOb
             this->fillColor = wxColor(0, 0, 255);
             break;
     }
-
-    SetPos(pos);
 }
 
 void GeoPoint::DrawOnContext(wxGraphicsContext *gc) const {
@@ -74,8 +74,21 @@ bool GeoPoint::SetPos(wxPoint2DDouble &pos) {
         
         case POINT_ON_LINE:
             this->pos = ((GeoLine*)parentObjs.front())->ProjectPoint(pos);
+            this->lineVectMult = util::VectDivide(this->pos - (static_cast<GeoLine*>(parentObjs.front()))->GetPoint(), (static_cast<GeoLine*>(parentObjs.front()))->GetVect());
             return true;
     }
 
     return false;
+}
+
+void GeoPoint::ReloadSelf() {
+    switch (definition){
+        case FREE_POINT:
+            break;
+        
+        case POINT_ON_LINE:
+            this->pos = (static_cast<GeoLine*>(parentObjs.front()))->GetPoint() + lineVectMult * (static_cast<GeoLine*>(parentObjs.front()))->GetVect();
+            break;
+            
+    }
 }
