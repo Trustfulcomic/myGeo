@@ -13,6 +13,11 @@ public:
 
     virtual void ReloadSelf() override;
 
+    wxPoint2DDouble ProjectPoint(wxPoint2DDouble &pt);
+
+    wxPoint2DDouble GetVect(){ return lineVect; }
+    wxPoint2DDouble GetPoint(){ return mainPoint; }
+
     double GetDistance(wxPoint2DDouble &pt);
     wxPoint2DDouble GetPos();
     bool SetPos(wxPoint2DDouble &pt);
@@ -20,4 +25,7 @@ public:
 private:
     GeoPoint *pointA;
     GeoPoint *pointB;
+
+    wxPoint2DDouble lineVect;
+    wxPoint2DDouble mainPoint;
 };

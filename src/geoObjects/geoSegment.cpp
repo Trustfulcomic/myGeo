@@ -11,6 +11,9 @@ GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPo
     pointA->AddChild(this);
     pointB->AddChild(this);
 
+    mainPoint = pointA->GetPos();
+    lineVect = pointB->GetPos() - pointA->GetPos();
+
     this->pointA = pointA;
     this->pointB = pointB;
 
@@ -29,6 +32,12 @@ void GeoSegment::DrawOnContext(wxGraphicsContext *gc) const {
 }
 
 void GeoSegment::ReloadSelf() {
+    mainPoint = pointA->GetPos();
+    lineVect = pointB->GetPos() - pointA->GetPos();
+}
+
+wxPoint2DDouble GeoSegment::ProjectPoint(wxPoint2DDouble &pt) {
+    return util::ProjectAtoLineBC(pt, pointA->GetPos(), pointB->GetPos());
 }
 
 double GeoSegment::GetDistance(wxPoint2DDouble &pt) {

@@ -1,6 +1,6 @@
 #include "utils.h"
 
-wxPoint2DDouble util::ProjectAtoLineBC(wxPoint2DDouble &A, wxPoint2DDouble &B, wxPoint2DDouble &C){
+wxPoint2DDouble util::ProjectAtoLineBC(const wxPoint2DDouble &A, const wxPoint2DDouble &B, const wxPoint2DDouble &C){
     wxPoint2DDouble lineVect = C-B;
     wxPoint2DDouble toAVect = A-B;
 

@@ -3,6 +3,7 @@
 
 #include "geoPoint.h"
 #include "geoLine.h"
+#include "geoSegment.h"
 
 std::unordered_map<GeoObjectType, PointDefinition> GeoPoint::typeToPointDefinition = {
     {LINE, POINT_ON_LINE},
@@ -32,10 +33,12 @@ GeoPoint::GeoPoint(wxWindow *parent, wxString &name, wxPoint2DDouble &pos, GeoOb
         case FREE_POINT:
             this->fillColor = wxColor(120, 120, 120);
             break;
-            
         
         case POINT_ON_LINE:
-            this->parentObjs.push_back(parentObj);
+            this->fillColor = wxColor(0, 0, 255);
+            break;
+
+        case POINT_ON_SEGMENT:
             this->fillColor = wxColor(0, 0, 255);
             break;
     }
@@ -76,6 +79,21 @@ bool GeoPoint::SetPos(wxPoint2DDouble &pos) {
             this->pos = ((GeoLine*)parentObjs.front())->ProjectPoint(pos);
             this->lineVectMult = util::VectDivide(this->pos - (static_cast<GeoLine*>(parentObjs.front()))->GetPoint(), (static_cast<GeoLine*>(parentObjs.front()))->GetVect());
             return true;
+
+        case POINT_ON_SEGMENT:
+            this->pos = ((GeoSegment*)parentObjs.front())->ProjectPoint(pos);
+            this->lineVectMult = util::VectDivide(this->pos - (static_cast<GeoSegment*>(parentObjs.front()))->GetPoint(), (static_cast<GeoSegment*>(parentObjs.front()))->GetVect());
+
+            if (lineVectMult < 0){
+                this->lineVectMult = 0;
+                this->pos = (static_cast<GeoLine*>(parentObjs.front()))->GetPoint() + lineVectMult * (static_cast<GeoLine*>(parentObjs.front()))->GetVect();
+            }
+            if (lineVectMult > 1){
+                this->lineVectMult = 1;
+                this->pos = (static_cast<GeoLine*>(parentObjs.front()))->GetPoint() + lineVectMult * (static_cast<GeoLine*>(parentObjs.front()))->GetVect();
+            }
+
+            return true;
     }
 
     return false;
@@ -89,6 +107,9 @@ void GeoPoint::ReloadSelf() {
         case POINT_ON_LINE:
             this->pos = (static_cast<GeoLine*>(parentObjs.front()))->GetPoint() + lineVectMult * (static_cast<GeoLine*>(parentObjs.front()))->GetVect();
             break;
-            
+
+        case POINT_ON_SEGMENT:
+            this->pos = (static_cast<GeoLine*>(parentObjs.front()))->GetPoint() + lineVectMult * (static_cast<GeoLine*>(parentObjs.front()))->GetVect();
+            break;
     }
 }
