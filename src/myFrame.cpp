@@ -11,6 +11,9 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     splitter->SetMinimumPaneSize(FromDIP(160));
 
     canvas = new DrawingCanvas(splitter, wxID_ANY, wxDefaultPosition, this->FromDIP(wxSize(640,480)));
+    this->Bind(wxEVT_CHAR_HOOK, [this](wxKeyEvent &event){
+        this->canvas->OnChar(event);
+    });
     auto toolsPanel = BuildToolsPanel(splitter);
 
     splitter->SplitVertically(toolsPanel, canvas);

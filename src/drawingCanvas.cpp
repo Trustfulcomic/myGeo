@@ -53,6 +53,7 @@ void DrawingCanvas::OnChar(wxKeyEvent &event) {
         transform.Translate(0.0, -FromDIP(10));
     }
     if (event.GetKeyCode() == WXK_DELETE){
+        std::cout << "Delete" << std::endl;
         std::list<GeoObject*> toDelete;
 
         for (auto geoObj : geoObjects) {

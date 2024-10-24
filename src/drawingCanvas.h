@@ -16,7 +16,7 @@ public:
     wxAffineMatrix2D transform;
     wxPoint2DDouble TransformPoint(wxPoint2DDouble pt, bool inv = true);
 
+    void OnChar(wxKeyEvent& event);
 private:
     void OnPaint(wxPaintEvent& event);
-    void OnChar(wxKeyEvent& event);
 }; 
