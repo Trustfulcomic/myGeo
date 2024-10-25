@@ -1,8 +1,12 @@
 #pragma once
-#include <unordered_map>
 #include <wx/wx.h>
+#include <wx/graphics.h>
+
+#include <unordered_map>
+#include <list>
 
 #include "geoObject.h"
+#include "geoCurve.h"
 
 enum PointDefinition {
     FREE_POINT,
@@ -13,22 +17,26 @@ enum PointDefinition {
 
 class GeoPoint : public GeoObject {
 public:
-    GeoPoint(wxWindow *parent, wxString &name, wxPoint2DDouble &pos, GeoObject *parentObj = nullptr);
+    GeoPoint(wxWindow *parent, wxString &name, wxPoint2DDouble &pos, GeoCurve *parentObj = nullptr);
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const override;
 
-    virtual double GetDistance(wxPoint2DDouble &pt) override;
-    virtual wxPoint2DDouble GetPos() override;
-    virtual bool SetPos(wxPoint2DDouble &pos) override;
+    bool IsDraggable(){return draggable;}
+
+    double GetDistance(const wxPoint2DDouble &pt);
+    wxPoint2DDouble GetPos();
+    bool SetPos(wxPoint2DDouble &pos);
 
     virtual void ReloadSelf() override;
 
-    static std::unordered_map<GeoObjectType, PointDefinition> typeToPointDefinition;
+    static std::unordered_map<GeoCurveType, PointDefinition> typeToPointDefinition;
 
 private:
     int pointRadius;
     wxPoint2DDouble pos;
 
+    bool draggable = false;
+
     PointDefinition definition;
-    double lineVectMult;
+    double parameter;
 };

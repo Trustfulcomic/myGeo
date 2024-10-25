@@ -1,10 +1,7 @@
-#include <list>
-
 #include "geoSegment.h"
 
 GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB)
-    : GeoObject(parent, name, std::list<GeoObject*>()){
-    this->objectType = SEGMENT;
+    : GeoCurve(parent, name, SEGMENT){
     
     this->parentObjs.push_back(pointA);
     this->parentObjs.push_back(pointB);
@@ -36,42 +33,22 @@ void GeoSegment::ReloadSelf() {
     lineVect = pointB->GetPos() - pointA->GetPos();
 }
 
-wxPoint2DDouble GeoSegment::ProjectPoint(wxPoint2DDouble &pt) {
-    return util::ProjectAtoLineBC(pt, pointA->GetPos(), pointB->GetPos());
-}
+wxPoint2DDouble GeoSegment::GetClosestPoint(const wxPoint2DDouble &pt) {
+    wxPoint2DDouble projectedPoint = util::ProjectAToLineBVec(pt, mainPoint, lineVect);
 
-double GeoSegment::GetDistance(wxPoint2DDouble &pt) {
-    wxPoint2DDouble P1 = pointA->GetPos();
-    wxPoint2DDouble P2 = pointB->GetPos();
-
-    if (P1 == P2) {
-        return P1.GetDistance(pt);
+    if (GetParameter(projectedPoint) > 1){
+        return GetPointFromParameter(1);
+    } else if (GetParameter(projectedPoint) < 0){
+        return GetPointFromParameter(0);
     }
 
-    wxPoint2DDouble projectedPt = util::ProjectAtoLineBC(pt, P1, P2);
-    if (P1 == projectedPt) {
-        return P1.GetDistance(pt);
-    }
-
-    if (P1.m_x == P2.m_x){
-        if (0 >= (projectedPt.m_y-P1.m_y) / (P2.m_y - P1.m_y) || (projectedPt.m_y-P1.m_y) / (P2.m_y - P1.m_y) >= 1){
-            return parent->FromDIP(100);
-        }
-    } else {
-        if (0 >= (projectedPt.m_x-P1.m_x) / (P2.m_x - P1.m_x) || (projectedPt.m_x-P1.m_x) / (P2.m_x - P1.m_x) >= 1){
-            return parent->FromDIP(100);
-        }
-    }
-
-    return projectedPt.GetDistance(pt);
+    return projectedPoint;
 }
 
-wxPoint2DDouble GeoSegment::GetPos()
-{
-    return defaultPoint;
+double GeoSegment::GetParameter(const wxPoint2DDouble &pt) {
+    return util::VectDivide(pt - mainPoint, lineVect);
 }
 
-bool GeoSegment::SetPos(wxPoint2DDouble &pt)
-{
-    return false;
+wxPoint2DDouble GeoSegment::GetPointFromParameter(const double &param) {
+    return mainPoint + param * lineVect;
 }

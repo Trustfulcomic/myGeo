@@ -11,9 +11,7 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     splitter->SetMinimumPaneSize(FromDIP(160));
 
     canvas = new DrawingCanvas(splitter, wxID_ANY, wxDefaultPosition, this->FromDIP(wxSize(640,480)));
-    this->Bind(wxEVT_CHAR_HOOK, [this](wxKeyEvent &event){
-        this->canvas->OnChar(event);
-    });
+    this->Bind(wxEVT_CHAR_HOOK, &MyFrame::OnChar, this);
     auto toolsPanel = BuildToolsPanel(splitter);
 
     splitter->SplitVertically(toolsPanel, canvas);
@@ -96,10 +94,48 @@ void MyFrame::SelectToolPane(Tool *tool) {
     currentTool = tool;
 
     tool->BindToCanvas(canvas);
+    tool->ReloadObjects({0.0, 0.0});
     canvas->DeselectAll();
 }
 
 void MyFrame::SashMove(wxSplitterEvent &event) {
     canvas->transform.Translate(static_cast<double>(sashPosition - event.GetSashPosition()), 0.0);
     sashPosition = event.GetSashPosition();
+}
+
+void MyFrame::OnChar(wxKeyEvent &event) {
+    switch (event.GetKeyCode()){
+        case WXK_LEFT:
+            canvas->transform.Translate(-FromDIP(10), 0.0);
+            break;
+        case WXK_RIGHT:
+            canvas->transform.Translate(FromDIP(10), 0.0);
+            break;
+        case WXK_DOWN:
+            canvas->transform.Translate(0.0, FromDIP(10));
+            break;
+        case WXK_UP:
+            canvas->transform.Translate(0.0, -FromDIP(10));
+            break;
+        case WXK_DELETE:
+            std::cout << "Delete" << std::endl;
+            std::list<GeoObject*> toDelete;
+
+            for (auto geoObj : canvas->geoPoints) {
+                if (geoObj->selected)
+                    toDelete.push_back(geoObj);
+            }
+            for (auto geoObj : canvas->geoCurves) {
+                if (geoObj->selected)
+                    toDelete.push_back(geoObj);
+            }
+
+            for (auto toDelObj : toDelete){
+                delete toDelObj;
+            }
+
+            currentTool->ReloadObjects({0.0, 0.0});
+
+            break;
+    }
 }

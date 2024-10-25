@@ -1,5 +1,4 @@
 #include "handTool.h"
-#include <iostream>
 
 HandTool::HandTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id, const wxPoint &pos, const wxSize &size) 
     : Tool(parent, drawingCanvas, id, pos, size){
@@ -44,12 +43,13 @@ void HandTool::OnMouseDown(wxMouseEvent &event) {
     }
 
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
+    SortObjects(mouse_pt);
 
-    GeoObject *nearestObj = GetNearestGeoObj(mouse_pt);
+    GeoObject *nearestObj = GetNearestClickObject();
     if (nearestObj != nullptr) {    
-        if (nearestObj->IsDraggable()){
+        if (nearestObj->IsPoint() && static_cast<GeoPoint*>(nearestObj)->IsDraggable()){
             isDragging = true;
-            draggingObj = nearestObj;
+            draggingObj = static_cast<GeoPoint*>(nearestObj);
         }
         selectedObj = nearestObj;
         selectedObj->selected = true;
@@ -61,7 +61,8 @@ void HandTool::OnMouseDown(wxMouseEvent &event) {
 
 void HandTool::OnMouseMove(wxMouseEvent &event) {
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
-    CheckHighlight(mouse_pt);
+    SortObjects(mouse_pt);
+    CheckHighlight();
 
     if (isDragging){
         draggingObj->SetPos(mouse_pt);

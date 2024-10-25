@@ -37,23 +37,26 @@ void PointTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
 void PointTool::OnMouseDown(wxMouseEvent &event) {
     creating_point = true;
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
-    wxString nullName = "";
+    SortObjects(mouse_pt);
 
-    GeoObject *nearestObj = GetNearestGeoObj(mouse_pt);
+    GeoObject *nearestObj = GetNearestClickObject();
     if (nearestObj == nullptr){
-        this->drawingCanvas->geoObjects.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt));
-        creatingPoint = (GeoPoint*)drawingCanvas->geoObjects.back();
+        this->drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt));
+        creatingPoint = (GeoPoint*)drawingCanvas->geoPoints.back();
+        ReloadObjects(mouse_pt);
     } else if (nearestObj->IsPoint()){
         creatingPoint = (GeoPoint*)nearestObj;
     } else {
-        this->drawingCanvas->geoObjects.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt, nearestObj));
-        creatingPoint = (GeoPoint*)drawingCanvas->geoObjects.back();
+        this->drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt, static_cast<GeoCurve*>(nearestObj)));
+        creatingPoint = (GeoPoint*)drawingCanvas->geoPoints.back();
+        ReloadObjects(mouse_pt);
     }
 }
 
 void PointTool::OnMouseMove(wxMouseEvent &event){
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
-    CheckHighlight(mouse_pt);
+    SortObjects(mouse_pt);
+    CheckHighlight();
 
     if (creating_point) {
         creatingPoint->SetPos(mouse_pt);

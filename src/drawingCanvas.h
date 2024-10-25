@@ -1,8 +1,13 @@
 #pragma once
 #include <wx/wx.h>
-#include <list>
+#include <wx/graphics.h>
+#include <wx/dcbuffer.h>
 
-#include "geoObjects/geoObject.h"
+#include <list>
+#include <iostream>
+
+#include "geoObjects/geoPoint.h"
+#include "geoObjects/geoCurve.h"
 
 class DrawingCanvas : public wxWindow {
 public:
@@ -11,12 +16,13 @@ public:
 
     void DeselectAll();
     
-    std::list<GeoObject*> geoObjects = {};
+    std::list<GeoPoint*> geoPoints = {};
+    std::list<GeoCurve*> geoCurves = {};
 
     wxAffineMatrix2D transform;
     wxPoint2DDouble TransformPoint(wxPoint2DDouble pt, bool inv = true);
 
-    void OnChar(wxKeyEvent& event);
+    void RemoveObj(GeoObject* obj);
 private:
     void OnPaint(wxPaintEvent& event);
 }; 

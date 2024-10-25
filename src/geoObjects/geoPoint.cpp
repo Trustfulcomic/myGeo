@@ -1,22 +1,19 @@
-#include <wx/wx.h>
-#include <wx/graphics.h>
-
 #include "geoPoint.h"
+
 #include "geoLine.h"
 #include "geoSegment.h"
 
-std::unordered_map<GeoObjectType, PointDefinition> GeoPoint::typeToPointDefinition = {
+std::unordered_map<GeoCurveType, PointDefinition> GeoPoint::typeToPointDefinition = {
     {LINE, POINT_ON_LINE},
     {SEGMENT, POINT_ON_SEGMENT}
 };
 
-GeoPoint::GeoPoint(wxWindow *parent, wxString &name, wxPoint2DDouble &pos, GeoObject *parentObj)
-    : GeoObject(parent, name, std::list<GeoObject*>()) {
-    this->objectType = POINT;
-
+GeoPoint::GeoPoint(wxWindow *parent, wxString &name, wxPoint2DDouble &pos, GeoCurve *parentObj)
+    : GeoObject(parent, name) {
     this->pointRadius = parent->FromDIP(4);
     this->outlineColor = *wxBLACK;
 
+    this->isPoint = true;
     this->draggable = true;
 
     if (parentObj == nullptr){
@@ -61,7 +58,7 @@ void GeoPoint::DrawOnContext(wxGraphicsContext *gc) const {
     gc->DrawEllipse(pos.m_x - pointRadius, pos.m_y - pointRadius, 2 * pointRadius, 2 * pointRadius);
 }
 
-double GeoPoint::GetDistance(wxPoint2DDouble &pt) {
+double GeoPoint::GetDistance(const wxPoint2DDouble &pt) {
     return this->pos.GetDistance(pt);
 }
 
@@ -76,23 +73,13 @@ bool GeoPoint::SetPos(wxPoint2DDouble &pos) {
             return true;
         
         case POINT_ON_LINE:
-            this->pos = ((GeoLine*)parentObjs.front())->ProjectPoint(pos);
-            this->lineVectMult = util::VectDivide(this->pos - (static_cast<GeoLine*>(parentObjs.front()))->GetPoint(), (static_cast<GeoLine*>(parentObjs.front()))->GetVect());
+            this->pos = (static_cast<GeoCurve*>(parentObjs.front()))->GetClosestPoint(pos);
+            this->parameter = (static_cast<GeoCurve*>(parentObjs.front()))->GetParameter(this->pos);
             return true;
 
         case POINT_ON_SEGMENT:
-            this->pos = ((GeoSegment*)parentObjs.front())->ProjectPoint(pos);
-            this->lineVectMult = util::VectDivide(this->pos - (static_cast<GeoSegment*>(parentObjs.front()))->GetPoint(), (static_cast<GeoSegment*>(parentObjs.front()))->GetVect());
-
-            if (lineVectMult < 0){
-                this->lineVectMult = 0;
-                this->pos = (static_cast<GeoLine*>(parentObjs.front()))->GetPoint() + lineVectMult * (static_cast<GeoLine*>(parentObjs.front()))->GetVect();
-            }
-            if (lineVectMult > 1){
-                this->lineVectMult = 1;
-                this->pos = (static_cast<GeoLine*>(parentObjs.front()))->GetPoint() + lineVectMult * (static_cast<GeoLine*>(parentObjs.front()))->GetVect();
-            }
-
+            this->pos = (static_cast<GeoCurve*>(parentObjs.front()))->GetClosestPoint(pos);
+            this->parameter = (static_cast<GeoCurve*>(parentObjs.front()))->GetParameter(this->pos);
             return true;
     }
 
@@ -105,11 +92,11 @@ void GeoPoint::ReloadSelf() {
             break;
         
         case POINT_ON_LINE:
-            this->pos = (static_cast<GeoLine*>(parentObjs.front()))->GetPoint() + lineVectMult * (static_cast<GeoLine*>(parentObjs.front()))->GetVect();
+            pos = (static_cast<GeoCurve*>(parentObjs.front()))->GetPointFromParameter(parameter);
             break;
 
         case POINT_ON_SEGMENT:
-            this->pos = (static_cast<GeoLine*>(parentObjs.front()))->GetPoint() + lineVectMult * (static_cast<GeoLine*>(parentObjs.front()))->GetVect();
+            pos = (static_cast<GeoCurve*>(parentObjs.front()))->GetPointFromParameter(parameter);
             break;
     }
 }

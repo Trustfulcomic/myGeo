@@ -9,7 +9,7 @@ enum LineDefinition {
     LINE_BY_TWO_POINTS
 };
 
-class GeoLine : public GeoObject {
+class GeoLine : public GeoCurve {
 public:
     GeoLine(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB);
 
@@ -17,14 +17,13 @@ public:
 
     virtual void ReloadSelf() override;
 
-    double GetDistance(wxPoint2DDouble &pt);
-    wxPoint2DDouble ProjectPoint(wxPoint2DDouble &pt);
+    wxPoint2DDouble GetClosestPoint(const wxPoint2DDouble &pt) override;
+
+    double GetParameter(const wxPoint2DDouble &pt) override;
+    wxPoint2DDouble GetPointFromParameter(const double &param) override;
 
     wxPoint2DDouble GetVect(){ return lineVect; }
     wxPoint2DDouble GetPoint(){ return mainPoint; }
-
-    wxPoint2DDouble GetPos();
-    bool SetPos(wxPoint2DDouble &pt);
 
 private:
     GeoPoint *pointA;

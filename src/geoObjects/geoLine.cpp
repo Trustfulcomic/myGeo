@@ -3,8 +3,7 @@
 #include "../drawingCanvas.h"
 
 GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB)
-    : GeoObject(parent, name, std::list<GeoObject*>()) {
-    this->objectType = LINE;
+    : GeoCurve(parent, name, LINE) {
 
     this->parentObjs.push_back(pointA);
     this->parentObjs.push_back(pointB);
@@ -78,33 +77,14 @@ void GeoLine::ReloadSelf() {
     }
 }
 
-double GeoLine::GetDistance(wxPoint2DDouble &pt) {
-    wxPoint2DDouble P1 = pointA->GetPos();
-    wxPoint2DDouble P2 = pointB->GetPos();
-
-    if (P1 == P2) {
-        return P1.GetDistance(pt);
-    }
-
-    wxPoint2DDouble projectedPt = util::ProjectAtoLineBC(pt, P1, P2);
-    return pt.GetDistance(projectedPt);
+wxPoint2DDouble GeoLine::GetClosestPoint(const wxPoint2DDouble &pt) {
+    return util::ProjectAToLineBVec(pt, mainPoint, lineVect);
 }
 
-wxPoint2DDouble GeoLine::ProjectPoint(wxPoint2DDouble &pt) {
-    switch (definition){
-        case LINE_BY_TWO_POINTS:
-            wxPoint2DDouble pointAPos = pointA->GetPos();
-            wxPoint2DDouble pointBPos = pointB->GetPos();
-
-            return util::ProjectAtoLineBC(pt, pointAPos, pointBPos);
-    }
+double GeoLine::GetParameter(const wxPoint2DDouble &pt) {
+    return util::VectDivide(pt - mainPoint, lineVect);
 }
 
-wxPoint2DDouble GeoLine::GetPos()
-{
-    return defaultPoint;
-}
-
-bool GeoLine::SetPos(wxPoint2DDouble &pt) {
-    return false;
+wxPoint2DDouble GeoLine::GetPointFromParameter(const double &param) {
+    return mainPoint + param * lineVect;
 }

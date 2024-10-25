@@ -2,10 +2,12 @@
 #include <wx/wx.h>
 #include <wx/graphics.h>
 
-#include "geoObject.h"
+#include <list>
+
+#include "geoCurve.h"
 #include "geoPoint.h"
 
-class GeoSegment : public GeoObject {
+class GeoSegment : public GeoCurve {
 public:
     GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB);
 
@@ -13,14 +15,13 @@ public:
 
     virtual void ReloadSelf() override;
 
-    wxPoint2DDouble ProjectPoint(wxPoint2DDouble &pt);
+    wxPoint2DDouble GetClosestPoint(const wxPoint2DDouble &pt) override;
+
+    double GetParameter(const wxPoint2DDouble &pt) override;
+    wxPoint2DDouble GetPointFromParameter(const double &param) override;
 
     wxPoint2DDouble GetVect(){ return lineVect; }
     wxPoint2DDouble GetPoint(){ return mainPoint; }
-
-    double GetDistance(wxPoint2DDouble &pt);
-    wxPoint2DDouble GetPos();
-    bool SetPos(wxPoint2DDouble &pt);
 
 private:
     GeoPoint *pointA;

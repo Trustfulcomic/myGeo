@@ -21,7 +21,7 @@ private:
     void OnMouseEnter(wxMouseEvent& event) override;
 
     bool isDragging = false;
-    GeoObject* draggingObj = nullptr;
+    GeoPoint* draggingObj = nullptr;
     GeoObject* selectedObj = nullptr;
 
     bool isDraggingCanvas = false;

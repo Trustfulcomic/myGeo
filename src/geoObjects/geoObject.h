@@ -4,15 +4,9 @@
 
 #include "../utils/utils.h"
 
-enum GeoObjectType {
-    POINT,
-    LINE,
-    SEGMENT
-};
-
 class GeoObject {
 public:
-    GeoObject(wxWindow *parent, wxString &name, std::list<GeoObject*> parentObjs);
+    GeoObject(wxWindow *parent, wxString &name);
     ~GeoObject();
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const = 0;
@@ -21,16 +15,12 @@ public:
     wxColor fillColor;
     int outlineWidth = 1;
 
-    virtual double GetDistance(wxPoint2DDouble &pt) = 0;
-    virtual wxPoint2DDouble GetPos() = 0;
-    virtual bool SetPos(wxPoint2DDouble &pt) = 0;
-
-    virtual bool IsDraggable() {return draggable;}
-    virtual bool IsPoint() {return objectType == POINT;}
-    GeoObjectType GetType() {return objectType;}
+    bool IsPoint(){return isPoint;}
 
     void AddChild(GeoObject* obj) {childObjs.push_back(obj);}
     void RemoveChild(GeoObject* obj) {childObjs.remove(obj);}
+
+    virtual double GetDistance(const wxPoint2DDouble &pt) = 0;
 
     void ReloadAllChildren();
     virtual void ReloadSelf() = 0;
@@ -38,19 +28,15 @@ public:
     bool highlited = false;
     bool selected = false;
 
-    wxPoint2DDouble defaultPoint = {0.0, 0.0};
-
 protected:
     wxWindow *parent;
-
-    bool draggable = false;
 
     std::list<GeoObject*> parentObjs{};
     std::list<GeoObject*> childObjs{};
 
     int parentsToUpdate = 0;
 
-    GeoObjectType objectType;
+    bool isPoint = false;
 
 private:
     wxString name;

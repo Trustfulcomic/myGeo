@@ -40,16 +40,18 @@ void SegBy2PTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
 
 void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
-    wxString nullName = "";
+    SortObjects(mouse_pt);
 
-    GeoObject *nearestObj = GetNearestGeoObj(mouse_pt);
+    GeoObject *nearestObj = GetNearestClickObject();
     GeoObject *closestPoint = nullptr;
     if (nearestObj == nullptr){
-        drawingCanvas->geoObjects.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt));
-        closestPoint = drawingCanvas->geoObjects.back();
+        drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt));
+        closestPoint = drawingCanvas->geoPoints.back();
+        ReloadObjects(mouse_pt);
     } else if (!nearestObj->IsPoint()){
-        drawingCanvas->geoObjects.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt, nearestObj));
-        closestPoint = drawingCanvas->geoObjects.back();
+        drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt, static_cast<GeoCurve*>(nearestObj)));
+        closestPoint = drawingCanvas->geoPoints.back();
+        ReloadObjects(mouse_pt);
     } else {
         closestPoint = nearestObj;
     }
@@ -57,7 +59,8 @@ void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
     if (closestPoint != nullptr && closestPoint->GetDistance(mouse_pt) < drawingCanvas->FromDIP(8)){
         if (creating_line && firstPoint != closestPoint) {
             firstPoint->selected = false;
-            drawingCanvas->geoObjects.push_back(new GeoSegment(drawingCanvas, nullName, (GeoPoint*)firstPoint, (GeoPoint*)closestPoint));
+            drawingCanvas->geoCurves.push_back(new GeoSegment(drawingCanvas, nullName, (GeoPoint*)firstPoint, (GeoPoint*)closestPoint));
+            ReloadObjects(mouse_pt);
             
             creating_line = false;
             firstPoint = nullptr;
@@ -71,7 +74,8 @@ void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
 
 void SegBy2PTool::OnMouseMove(wxMouseEvent &event) {
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
-    CheckHighlight(mouse_pt);
+    SortObjects(mouse_pt);
+    CheckHighlight();
 }
 
 void SegBy2PTool::OnMouseUp(wxMouseEvent &event){

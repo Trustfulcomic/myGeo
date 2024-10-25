@@ -22,6 +22,7 @@ private:
 
     DrawingCanvas *canvas;
 
+    void OnChar(wxKeyEvent &event);
     void SashMove(wxSplitterEvent &event);
     int sashPosition;
 };

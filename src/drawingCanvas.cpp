@@ -1,8 +1,3 @@
-#include <wx/graphics.h>
-#include <wx/dcbuffer.h>
-
-#include <iostream>
-
 #include "drawingCanvas.h"
 
 DrawingCanvas::DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size)
@@ -21,6 +16,11 @@ wxPoint2DDouble DrawingCanvas::TransformPoint(wxPoint2DDouble pt, bool inv /*=tr
     return transform_cpy.TransformPoint(pt);
 }
 
+void DrawingCanvas::RemoveObj(GeoObject *obj) {
+    geoPoints.remove(static_cast<GeoPoint*>(obj));
+    geoCurves.remove(static_cast<GeoCurve*>(obj));
+}
+
 void DrawingCanvas::OnPaint(wxPaintEvent &event)
 {
     wxAutoBufferedPaintDC dc(this);
@@ -30,7 +30,10 @@ void DrawingCanvas::OnPaint(wxPaintEvent &event)
     wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
     if (gc){
         gc->SetTransform(gc->CreateMatrix(transform));
-        for (auto geoObj : geoObjects){
+        for (auto geoObj : geoCurves){
+            geoObj->DrawOnContext(gc);
+        }
+        for (auto geoObj : geoPoints){
             geoObj->DrawOnContext(gc);
         }
         delete gc;
@@ -38,38 +41,12 @@ void DrawingCanvas::OnPaint(wxPaintEvent &event)
     Refresh();
 }
 
-void DrawingCanvas::OnChar(wxKeyEvent &event) {
-    switch (event.GetKeyCode()){
-        case WXK_LEFT:
-            transform.Translate(-FromDIP(10), 0.0);
-            break;
-        case WXK_RIGHT:
-            transform.Translate(FromDIP(10), 0.0);
-            break;
-        case WXK_DOWN:
-            transform.Translate(0.0, FromDIP(10));
-            break;
-        case WXK_UP:
-            transform.Translate(0.0, -FromDIP(10));
-            break;
-        case WXK_DELETE:
-            std::cout << "Delete" << std::endl;
-            std::list<GeoObject*> toDelete;
-
-            for (auto geoObj : geoObjects) {
-                if (geoObj->selected)
-                    toDelete.push_back(geoObj);
-            }
-
-            for (auto toDelObj : toDelete){
-                delete toDelObj;
-            }
-            break;
-    }
-}
-
 void DrawingCanvas::DeselectAll(){
-    for (auto geoObj : geoObjects){
+    for (auto geoObj : geoPoints){
+        geoObj->highlited = false;
+        geoObj->selected = false;
+    }
+    for (auto geoObj : geoCurves){
         geoObj->highlited = false;
         geoObj->selected = false;
     }
