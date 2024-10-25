@@ -10,7 +10,6 @@ DrawingCanvas::DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos
     this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 
     this->Bind(wxEVT_PAINT, &DrawingCanvas::OnPaint, this);
-    this->Bind(wxEVT_CHAR, &DrawingCanvas::OnChar, this);
 }
 
 wxPoint2DDouble DrawingCanvas::TransformPoint(wxPoint2DDouble pt, bool inv /*=true*/) {
@@ -40,30 +39,32 @@ void DrawingCanvas::OnPaint(wxPaintEvent &event)
 }
 
 void DrawingCanvas::OnChar(wxKeyEvent &event) {
-    if (event.GetKeyCode() == WXK_LEFT){
-        transform.Translate(-FromDIP(10), 0.0);
-    }
-    if (event.GetKeyCode() == WXK_RIGHT){
-        transform.Translate(FromDIP(10), 0.0);
-    }
-    if (event.GetKeyCode() == WXK_DOWN){
-        transform.Translate(0.0, FromDIP(10));
-    }
-    if (event.GetKeyCode() == WXK_UP){
-        transform.Translate(0.0, -FromDIP(10));
-    }
-    if (event.GetKeyCode() == WXK_DELETE){
-        std::cout << "Delete" << std::endl;
-        std::list<GeoObject*> toDelete;
+    switch (event.GetKeyCode()){
+        case WXK_LEFT:
+            transform.Translate(-FromDIP(10), 0.0);
+            break;
+        case WXK_RIGHT:
+            transform.Translate(FromDIP(10), 0.0);
+            break;
+        case WXK_DOWN:
+            transform.Translate(0.0, FromDIP(10));
+            break;
+        case WXK_UP:
+            transform.Translate(0.0, -FromDIP(10));
+            break;
+        case WXK_DELETE:
+            std::cout << "Delete" << std::endl;
+            std::list<GeoObject*> toDelete;
 
-        for (auto geoObj : geoObjects) {
-            if (geoObj->selected)
-                toDelete.push_back(geoObj);
-        }
+            for (auto geoObj : geoObjects) {
+                if (geoObj->selected)
+                    toDelete.push_back(geoObj);
+            }
 
-        for (auto toDelObj : toDelete){
-            delete toDelObj;
-        }
+            for (auto toDelObj : toDelete){
+                delete toDelObj;
+            }
+            break;
     }
 }
 
