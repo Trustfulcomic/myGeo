@@ -135,6 +135,7 @@ void MyFrame::OnChar(wxKeyEvent &event) {
             }
 
             currentTool->ReloadObjects({0.0, 0.0});
+            currentTool->ResetState();
 
             break;
     }

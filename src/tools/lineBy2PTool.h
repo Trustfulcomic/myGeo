@@ -23,5 +23,5 @@ private:
     void OnMouseEnter(wxMouseEvent& event) override;
 
     bool creating_line = false;
-    GeoObject *firstPoint;
+    GeoObject *firstPoint = nullptr;
 };
