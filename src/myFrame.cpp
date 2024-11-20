@@ -23,7 +23,7 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     this->SetMinSize({FromDIP(400), FromDIP(200)});
     Maximize();
 
-    currentTool = nullptr;
+    toolBind = new ToolBind(canvas);
     SelectToolPane(tools[0]);
 
     BuildMenuBar();
@@ -90,10 +90,9 @@ void MyFrame::SelectToolPane(Tool *tool) {
         toolPane->Refresh();
     }
 
-    if (currentTool) currentTool->ResetState();
-    currentTool = tool;
+    toolBind->ResetState();
+    toolBind->ChangeTool(tool);
 
-    tool->BindToCanvas(canvas);
     tool->ReloadObjects({0.0, 0.0});
     canvas->DeselectAll();
 }
@@ -134,8 +133,7 @@ void MyFrame::OnChar(wxKeyEvent &event) {
                 delete toDelObj;
             }
 
-            currentTool->ReloadObjects({0.0, 0.0});
-            currentTool->ResetState();
+            toolBind->ResetState();
 
             break;
     }

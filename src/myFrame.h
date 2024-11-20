@@ -18,7 +18,7 @@ private:
     void SelectToolPane(Tool *tool);
 
     std::vector<Tool*> tools;
-    Tool *currentTool;
+    ToolBind *toolBind;
 
     DrawingCanvas *canvas;
 

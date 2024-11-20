@@ -5,20 +5,13 @@ HandTool::HandTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id
 
 }
 
-void HandTool::BindToCanvas(DrawingCanvas *canvas) {
-    canvas->Bind(wxEVT_LEFT_DOWN, &HandTool::OnMouseDown, this);
-    canvas->Bind(wxEVT_MOTION, &HandTool::OnMouseMove, this);
-    canvas->Bind(wxEVT_LEFT_UP, &HandTool::OnMouseUp, this);
-    canvas->Bind(wxEVT_LEAVE_WINDOW, &HandTool::OnMouseLeave, this);
-    canvas->Bind(wxEVT_RIGHT_DOWN, [this](wxMouseEvent&){this->ResetState();});
-    canvas->Bind(wxEVT_ENTER_WINDOW, &HandTool::OnMouseEnter, this);
-}
-
 void HandTool::ResetState() {
     isDragging = false;
     draggingObj = nullptr;
     selectedObj = nullptr;
     isDraggingCanvas = false;
+
+    ReloadObjects({0.0, 0.0});
 }
 
 void HandTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {

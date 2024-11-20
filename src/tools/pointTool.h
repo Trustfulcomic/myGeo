@@ -8,7 +8,6 @@ class PointTool : public Tool {
 public:
     PointTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
 
-    void BindToCanvas(DrawingCanvas *canvas) override;
     void ResetState() override;
 private:
     void DrawContent(wxGraphicsContext *gc, const wxRect &rect) const override;
