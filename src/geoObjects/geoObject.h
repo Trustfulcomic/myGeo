@@ -1,5 +1,6 @@
 #pragma once
 #include <wx/wx.h>
+#include <vector>
 #include <list>
 
 #include "../utils/utils.h"
@@ -7,7 +8,7 @@
 class GeoObject {
 public:
     GeoObject(wxWindow *parent, wxString &name);
-    ~GeoObject();
+    virtual ~GeoObject();
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const = 0;
 
@@ -31,7 +32,7 @@ public:
 protected:
     wxWindow *parent;
 
-    std::list<GeoObject*> parentObjs{};
+    std::vector<GeoObject*> parentObjs{};
     std::list<GeoObject*> childObjs{};
 
     int parentsToUpdate = 0;

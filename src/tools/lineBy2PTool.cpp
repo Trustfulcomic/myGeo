@@ -52,7 +52,7 @@ void LineBy2PTool::OnMouseDown(wxMouseEvent &event) {
     if (closestPoint != nullptr && closestPoint->GetDistance(mouse_pt) < drawingCanvas->FromDIP(8)){
         if (creating_line && firstPoint != closestPoint) {
             firstPoint->selected = false;
-            drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, nullName, (GeoPoint*)firstPoint, (GeoPoint*)closestPoint));
+            drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, nullName, firstPoint, closestPoint, LINE_BY_TWO_POINTS));
             ReloadObjects(mouse_pt);
             
             creating_line = false;

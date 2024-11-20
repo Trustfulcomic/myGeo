@@ -4,14 +4,17 @@
 
 #include "geoObject.h"
 #include "geoPoint.h"
+#include "geoSegment.h"
 
 enum LineDefinition {
-    LINE_BY_TWO_POINTS
+    LINE_BY_TWO_POINTS,
+    LINE_BY_POINT_AND_LINE_PERP,
+    LINE_BY_POINT_AND_LINE_PARAL
 };
 
 class GeoLine : public GeoCurve {
 public:
-    GeoLine(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB);
+    GeoLine(wxWindow *parent, wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
 
     void DrawOnContext(wxGraphicsContext *gc) const override;
 
@@ -26,8 +29,6 @@ public:
     wxPoint2DDouble GetPoint(){ return mainPoint; }
 
 private:
-    GeoPoint *pointA;
-    GeoPoint *pointB;
 
     wxPoint2DDouble lineVect;
     wxPoint2DDouble mainPoint;

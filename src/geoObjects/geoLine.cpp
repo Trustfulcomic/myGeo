@@ -2,32 +2,26 @@
 
 #include "../drawingCanvas.h"
 
-GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB)
+GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def)
     : GeoCurve(parent, name, LINE) {
 
-    this->parentObjs.push_back(pointA);
-    this->parentObjs.push_back(pointB);
-    pointA->AddChild(this);
-    pointB->AddChild(this);
+    this->parentObjs.push_back(objA);
+    this->parentObjs.push_back(objB);
+    objA->AddChild(this);
+    objB->AddChild(this);
 
-    mainPoint = pointA->GetPos();
-    lineVect = pointB->GetPos() - pointA->GetPos();
-
-    this->pointA = pointA;
-    this->pointB = pointB;
+    this->definition = def;
+    ReloadSelf();
 
     this->outlineColor = wxColor(0, 0, 0);
     this->outlineWidth = 2;
-
-    this->definition = LINE_BY_TWO_POINTS;
 }
 
 void GeoLine::DrawOnContext(wxGraphicsContext *gc) const {
-    if (pointA->GetPos() == pointB->GetPos())
+    if (lineVect.m_x == 0 && lineVect.m_y == 0)
         return;
 
     wxSize canvasSize = parent->GetSize();
-    wxPoint2DDouble lineVect = pointB->GetPos() - pointA->GetPos();
 
     wxPoint2DDouble topLeft = {0.0, 0.0};
     wxPoint2DDouble bottomRight = {static_cast<double>(parent->GetSize().GetWidth()), static_cast<double>(parent->GetSize().GetHeight())};
@@ -41,20 +35,20 @@ void GeoLine::DrawOnContext(wxGraphicsContext *gc) const {
     if (lineVect.m_x == 0 || abs(lineVect.m_y / lineVect.m_x) > 1) {
         //Vertical
 
-        double tTop = (topLeft.m_y-pointA->GetPos().m_y)/lineVect.m_y;
-        double tBotttom = (bottomRight.m_y-pointA->GetPos().m_y)/lineVect.m_y;
+        double tTop = (topLeft.m_y-mainPoint.m_y)/lineVect.m_y;
+        double tBotttom = (bottomRight.m_y-mainPoint.m_y)/lineVect.m_y;
 
-        edgePointA = pointA->GetPos() + tTop*lineVect;
-        edgePointB = pointA->GetPos() + tBotttom*lineVect;
+        edgePointA = mainPoint + tTop*lineVect;
+        edgePointB = mainPoint + tBotttom*lineVect;
 
     } else {
         // Horizontal
 
-        double tLeft = (topLeft.m_x-pointA->GetPos().m_x)/lineVect.m_x;
-        double tRight = (bottomRight.m_x-pointA->GetPos().m_x)/lineVect.m_x;
+        double tLeft = (topLeft.m_x-mainPoint.m_x)/lineVect.m_x;
+        double tRight = (bottomRight.m_x-mainPoint.m_x)/lineVect.m_x;
 
-        edgePointA = pointA->GetPos() + tLeft*lineVect;
-        edgePointB = pointA->GetPos() + tRight*lineVect;
+        edgePointA = mainPoint + tLeft*lineVect;
+        edgePointB = mainPoint + tRight*lineVect;
 
     }
     
@@ -71,9 +65,17 @@ void GeoLine::DrawOnContext(wxGraphicsContext *gc) const {
 void GeoLine::ReloadSelf() {
     switch (definition) {
         case LINE_BY_TWO_POINTS:
-            mainPoint = pointA->GetPos();
-            lineVect = pointB->GetPos() - pointA->GetPos();
+            mainPoint = static_cast<GeoPoint*>(parentObjs[0])->GetPos();
+            lineVect = static_cast<GeoPoint*>(parentObjs[1])->GetPos()
+                       - static_cast<GeoPoint*>(parentObjs[0])->GetPos();
             break;
+        case LINE_BY_POINT_AND_LINE_PERP:
+            mainPoint = static_cast<GeoPoint*>(parentObjs[0])->GetPos();
+            lineVect = static_cast<GeoLine*>(parentObjs[1])->GetVect(); // TODO perp vector
+            break;
+        case LINE_BY_POINT_AND_LINE_PARAL:
+            mainPoint = static_cast<GeoPoint*>(parentObjs[0])->GetPos();
+            lineVect = static_cast<GeoLine*>(parentObjs[1])->GetVect();
     }
 }
 

@@ -22,6 +22,7 @@ GeoObject::~GeoObject() {
     }
 
     for (auto childObj : childObjs){
+        std::cout << childObj << std::endl;
         delete childObj;
     }
 }
