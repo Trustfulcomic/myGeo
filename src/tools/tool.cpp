@@ -115,3 +115,47 @@ void Tool::CheckHighlight() {
         }
     }
 }
+
+ToolBind::ToolBind(DrawingCanvas *canvas) {
+    BindToCanvas(canvas);
+}
+
+void ToolBind::BindToCanvas(DrawingCanvas *canvas) {
+    this->canvas = canvas;
+
+    canvas->Bind(wxEVT_LEFT_DOWN, &ToolBind::OnMouseDown, this);
+    canvas->Bind(wxEVT_MOTION, &ToolBind::OnMouseMove, this);
+    canvas->Bind(wxEVT_LEFT_UP, &ToolBind::OnMouseUp, this);
+    canvas->Bind(wxEVT_LEAVE_WINDOW, &ToolBind::OnMouseLeave, this);
+    canvas->Bind(wxEVT_RIGHT_DOWN, [this](wxMouseEvent&){this->ResetState();});
+    canvas->Bind(wxEVT_ENTER_WINDOW, &ToolBind::OnMouseEnter, this);
+}
+
+void ToolBind::ChangeTool(Tool *tool)
+{
+    this->currentTool = tool;
+}
+
+void ToolBind::OnMouseDown(wxMouseEvent &event) {
+    if (currentTool) currentTool->OnMouseDown(event);
+}
+
+void ToolBind::OnMouseMove(wxMouseEvent &event) {
+    if (currentTool) currentTool->OnMouseMove(event);
+}
+
+void ToolBind::OnMouseUp(wxMouseEvent &event) {
+    if (currentTool) currentTool->OnMouseUp(event);   
+}
+
+void ToolBind::OnMouseLeave(wxMouseEvent &event) {
+    if (currentTool) currentTool->OnMouseLeave(event);
+}
+
+void ToolBind::OnMouseEnter(wxMouseEvent &event) {
+    if (currentTool) currentTool->OnMouseEnter(event);
+}
+
+void ToolBind::ResetState() {
+    if (currentTool) currentTool->ResetState();
+}

@@ -10,7 +10,6 @@ class LineBy2PTool : public Tool {
 public:
     LineBy2PTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
 
-    void BindToCanvas(DrawingCanvas *canvas) override;
     void ResetState() override;
     
 private:

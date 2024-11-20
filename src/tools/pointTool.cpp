@@ -5,18 +5,11 @@ PointTool::PointTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID 
     
 }
 
-void PointTool::BindToCanvas(DrawingCanvas *canvas) {
-    canvas->Bind(wxEVT_LEFT_DOWN, &PointTool::OnMouseDown, this);
-    canvas->Bind(wxEVT_MOTION, &PointTool::OnMouseMove, this);
-    canvas->Bind(wxEVT_LEFT_UP, &PointTool::OnMouseUp, this);
-    canvas->Bind(wxEVT_LEAVE_WINDOW, &PointTool::OnMouseLeave, this);
-    canvas->Bind(wxEVT_RIGHT_DOWN, [this](wxMouseEvent&){this->ResetState();});
-    canvas->Bind(wxEVT_ENTER_WINDOW, &PointTool::OnMouseEnter, this);
-}
-
 void PointTool::ResetState() {
     creating_point = false;
     creatingPoint = nullptr;
+
+    ReloadObjects({0.0, 0.0});
 }
 
 void PointTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {

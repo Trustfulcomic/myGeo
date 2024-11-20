@@ -7,20 +7,13 @@ LineBy2PTool::LineBy2PTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWin
 
 }
 
-void LineBy2PTool::BindToCanvas(DrawingCanvas *canvas) {
-    canvas->Bind(wxEVT_LEFT_DOWN, &LineBy2PTool::OnMouseDown, this);
-    canvas->Bind(wxEVT_MOTION, &LineBy2PTool::OnMouseMove, this);
-    canvas->Bind(wxEVT_LEFT_UP, &LineBy2PTool::OnMouseUp, this);
-    canvas->Bind(wxEVT_LEAVE_WINDOW, &LineBy2PTool::OnMouseLeave, this);
-    canvas->Bind(wxEVT_RIGHT_DOWN, [this](wxMouseEvent&){this->ResetState();});
-    canvas->Bind(wxEVT_ENTER_WINDOW, &LineBy2PTool::OnMouseEnter, this);
-}
-
 void LineBy2PTool::ResetState() {
     creating_line = false;
     if (firstPoint != nullptr)
         firstPoint->selected = false;
     firstPoint = nullptr;
+
+    ReloadObjects({0.0, 0.0});
 }
 
 void LineBy2PTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
