@@ -17,7 +17,7 @@ enum PointDefinition {
 
 class GeoPoint : public GeoObject {
 public:
-    GeoPoint(wxWindow *parent, wxString &name, wxPoint2DDouble &pos, GeoCurve *parentObj = nullptr);
+    GeoPoint(wxWindow *parent, wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj = nullptr);
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const override;
 
@@ -25,7 +25,7 @@ public:
 
     double GetDistance(const wxPoint2DDouble &pt);
     wxPoint2DDouble GetPos();
-    bool SetPos(wxPoint2DDouble &pos);
+    bool SetPos(const wxPoint2DDouble &pos);
 
     virtual void ReloadSelf() override;
 

@@ -1,6 +1,7 @@
 #include "geoLine.h"
 
 #include "../drawingCanvas.h"
+#include "../utils/utils.h"
 
 GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def)
     : GeoCurve(parent, name, LINE) {
@@ -71,7 +72,7 @@ void GeoLine::ReloadSelf() {
             break;
         case LINE_BY_POINT_AND_LINE_PERP:
             mainPoint = static_cast<GeoPoint*>(parentObjs[0])->GetPos();
-            lineVect = static_cast<GeoLine*>(parentObjs[1])->GetVect(); // TODO perp vector
+            lineVect = util::PerpVector(static_cast<GeoLine*>(parentObjs[1])->GetVect());
             break;
         case LINE_BY_POINT_AND_LINE_PARAL:
             mainPoint = static_cast<GeoPoint*>(parentObjs[0])->GetPos();

@@ -35,19 +35,7 @@ void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
     SortObjects(mouse_pt);
 
-    GeoObject *nearestObj = GetNearestClickObject();
-    GeoObject *closestPoint = nullptr;
-    if (nearestObj == nullptr){
-        drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt));
-        closestPoint = drawingCanvas->geoPoints.back();
-        ReloadObjects(mouse_pt);
-    } else if (!nearestObj->IsPoint()){
-        drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt, static_cast<GeoCurve*>(nearestObj)));
-        closestPoint = drawingCanvas->geoPoints.back();
-        ReloadObjects(mouse_pt);
-    } else {
-        closestPoint = nearestObj;
-    }
+    GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
 
     if (closestPoint != nullptr && closestPoint->GetDistance(mouse_pt) < drawingCanvas->FromDIP(8)){
         if (creating_line && firstPoint != closestPoint) {

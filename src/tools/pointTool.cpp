@@ -32,18 +32,7 @@ void PointTool::OnMouseDown(wxMouseEvent &event) {
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
     SortObjects(mouse_pt);
 
-    GeoObject *nearestObj = GetNearestClickObject();
-    if (nearestObj == nullptr){
-        this->drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt));
-        creatingPoint = (GeoPoint*)drawingCanvas->geoPoints.back();
-        ReloadObjects(mouse_pt);
-    } else if (nearestObj->IsPoint()){
-        creatingPoint = (GeoPoint*)nearestObj;
-    } else {
-        this->drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, mouse_pt, static_cast<GeoCurve*>(nearestObj)));
-        creatingPoint = (GeoPoint*)drawingCanvas->geoPoints.back();
-        ReloadObjects(mouse_pt);
-    }
+    creatingPoint = CreatePointAtPos(mouse_pt);
 }
 
 void PointTool::OnMouseMove(wxMouseEvent &event){

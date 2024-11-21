@@ -26,6 +26,7 @@ public:
     void SortObjects(const wxPoint2DDouble &pt);
     GeoObject* GetNearestObject();
     GeoObject* GetNearestClickObject();
+    GeoPoint* CreatePointAtPos(const wxPoint2DDouble &pt);
 
     bool selected = false;
 
@@ -59,6 +60,7 @@ public:
 
     void BindToCanvas(DrawingCanvas* canvas);
     void ChangeTool(Tool* tool);
+    Tool *GetCurrentTool(){return currentTool;}
 
     void ResetState();
 

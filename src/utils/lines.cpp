@@ -15,6 +15,10 @@ wxPoint2DDouble util::ProjectAToLineBVec(const wxPoint2DDouble &A, const wxPoint
     return util::ProjectAtoLineBC(A, B, B+vec);
 }
 
+wxPoint2DDouble util::PerpVector(const wxPoint2DDouble &A){
+    return {A.m_y, -A.m_x};
+}
+
 double util::VectDivide(const wxPoint2DDouble &A, const wxPoint2DDouble &B){
     if (B.m_x == 0 && B.m_y == 0) 
         return 0.0;

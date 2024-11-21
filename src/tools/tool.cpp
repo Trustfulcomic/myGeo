@@ -96,6 +96,24 @@ GeoObject *Tool::GetNearestClickObject() {
         return nearestCurve;
 }
 
+GeoPoint *Tool::CreatePointAtPos(const wxPoint2DDouble &pt) {
+    GeoObject *nearestObj = GetNearestClickObject();
+    GeoPoint *closestPoint = nullptr;
+    if (nearestObj == nullptr){
+        drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, pt));
+        closestPoint = drawingCanvas->geoPoints.back();
+        ReloadObjects(pt);
+    } else if (!nearestObj->IsPoint()){
+        drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, pt, static_cast<GeoCurve*>(nearestObj)));
+        closestPoint = drawingCanvas->geoPoints.back();
+        ReloadObjects(pt);
+    } else {
+        closestPoint = static_cast<GeoPoint*>(nearestObj);
+    }
+
+    return closestPoint;
+}
+
 void Tool::CheckHighlight() {
     GeoObject* highlightedObj = GetNearestClickObject();
 
