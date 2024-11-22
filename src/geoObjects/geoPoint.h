@@ -10,8 +10,7 @@
 
 enum PointDefinition {
     FREE_POINT,
-    POINT_ON_LINE,
-    POINT_ON_SEGMENT,
+    POINT_ON_CURVE,
     POINT_ON_INTERSECT
 };
 

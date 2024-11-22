@@ -11,23 +11,36 @@ GeoObject::GeoObject(wxWindow *parent, const wxString &name) {
 }
 
 GeoObject::~GeoObject() {
-    forDeletion = true;
-
     auto canvas = (DrawingCanvas*) parent;
     canvas->RemoveObj(this);
 
     for (auto parentObj : parentObjs){
-        if (!parentObj->forDeletion)
-            parentObj->RemoveChild(this);
+        parentObj->RemoveChild(this);
     }
 
-    for (auto childObj : childObjs){
-        std::cout << childObj << std::endl;
-        delete childObj;
+    while (childObjs.size() > 0){
+        auto childToDelete = childObjs.front(); 
+
+        delete childToDelete;
+        childObjs.remove(childToDelete);
     }
 }
 
-void GeoObject::ReloadAllChildren() {
+void GeoObject::AddChild(GeoObject *obj) {
+    bool isAlreadyChild = false;
+    for (auto childObj : childObjs){
+        if (childObj == obj) {
+            isAlreadyChild = true;
+            break;
+        }
+    }
+
+    if (!isAlreadyChild)
+        childObjs.push_back(obj);
+}
+
+void GeoObject::ReloadAllChildren()
+{
     std::queue<GeoObject*> objQ; objQ.push(this);
 
     // BFS to determine number of parents that need could be updated
@@ -56,4 +69,4 @@ void GeoObject::ReloadAllChildren() {
             }
         }
     }
-} 
+}

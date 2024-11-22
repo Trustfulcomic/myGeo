@@ -3,11 +3,6 @@
 #include "geoLine.h"
 #include "geoSegment.h"
 
-std::unordered_map<GeoCurveType, PointDefinition> GeoPoint::typeToPointDefinition = {
-    {LINE, POINT_ON_LINE},
-    {SEGMENT, POINT_ON_SEGMENT}
-};
-
 GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj)
     : GeoObject(parent, name) {
     this->pointRadius = parent->FromDIP(4);
@@ -21,22 +16,18 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, const wxPoint2DDouble
     } else {
         parentObj->AddChild(this);
         this->parentObjs.push_back(parentObj);
-        this->definition = typeToPointDefinition[parentObj->GetType()];
+        this->definition = POINT_ON_CURVE;
     }
 
     SetPos(pos);
 
     switch (definition){
         case FREE_POINT:
-            this->fillColor = wxColor(120, 120, 120);
+            this->fillColor = wxColor(0, 0, 255);
             break;
         
-        case POINT_ON_LINE:
-            this->fillColor = wxColor(0, 0, 255);
-            break;
-
-        case POINT_ON_SEGMENT:
-            this->fillColor = wxColor(0, 0, 255);
+        case POINT_ON_CURVE:
+            this->fillColor = wxColor(120, 100, 255);
             break;
     }
 }
@@ -72,12 +63,7 @@ bool GeoPoint::SetPos(const wxPoint2DDouble &pos) {
             this->pos = pos;
             return true;
         
-        case POINT_ON_LINE:
-            this->pos = (static_cast<GeoCurve*>(parentObjs.front()))->GetClosestPoint(pos);
-            this->parameter = (static_cast<GeoCurve*>(parentObjs.front()))->GetParameter(this->pos);
-            return true;
-
-        case POINT_ON_SEGMENT:
+        case POINT_ON_CURVE:
             this->pos = (static_cast<GeoCurve*>(parentObjs.front()))->GetClosestPoint(pos);
             this->parameter = (static_cast<GeoCurve*>(parentObjs.front()))->GetParameter(this->pos);
             return true;
@@ -91,11 +77,7 @@ void GeoPoint::ReloadSelf() {
         case FREE_POINT:
             break;
         
-        case POINT_ON_LINE:
-            pos = (static_cast<GeoCurve*>(parentObjs.front()))->GetPointFromParameter(parameter);
-            break;
-
-        case POINT_ON_SEGMENT:
+        case POINT_ON_CURVE:
             pos = (static_cast<GeoCurve*>(parentObjs.front()))->GetPointFromParameter(parameter);
             break;
     }

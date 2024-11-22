@@ -18,7 +18,7 @@ public:
 
     bool IsPoint(){return isPoint;}
 
-    void AddChild(GeoObject* obj) {childObjs.push_back(obj);}
+    void AddChild(GeoObject* obj);
     void RemoveChild(GeoObject* obj) {childObjs.remove(obj);}
 
     virtual double GetDistance(const wxPoint2DDouble &pt) = 0;
@@ -41,6 +41,5 @@ protected:
 
 private:
     wxString name;
-    bool forDeletion = false;
 
 };
