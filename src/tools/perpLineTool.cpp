@@ -6,19 +6,20 @@ PerpLineTool::PerpLineTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWin
 }
 
 void PerpLineTool::ResetState() {
-    creating_line = false;
     if (point != nullptr){
         point->selected = false;
         point = nullptr;
     }
-    if (line != nullptr){
-        line->selected = false;
-        line = nullptr;
+    if (curve != nullptr){
+        curve->selected = false;
+        curve = nullptr;
     }
     if (tempLine != nullptr){
         delete tempLine;
         tempLine = nullptr;
+        drawingCanvas->tempGeoCurve = nullptr;
     }
+    moving_point = false;
 
     ReloadObjects({0.0, 0.0});
 }
@@ -42,7 +43,51 @@ void PerpLineTool::OnMouseDown(wxMouseEvent &event) {
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
     SortObjects(mouse_pt);
 
+    GeoObject* closestObj = GetNearestClickObject();
 
+    if (tempLine != nullptr){
+        GeoPoint* mainPoint = CreatePointAtPos(mouse_pt);
+        drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, nullName, mainPoint, curve, LINE_BY_POINT_AND_CURVE_PERP));
+        ResetState();
+    } else if (point != nullptr){
+        if (closestObj != nullptr && !closestObj->IsPoint()){
+            drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, nullName, point, static_cast<GeoCurve*>(closestObj), LINE_BY_POINT_AND_CURVE_PERP));
+            ResetState();
+        }
+    } else {
+        if (closestObj == nullptr){
+            closestObj = CreatePointAtPos(mouse_pt);
+        }
+
+        if (closestObj->IsPoint()){
+            moving_point = true;
+            point = static_cast<GeoPoint*>(closestObj);
+            point->selected = true;
+        } else {
+            drawingCanvas->tempGeoCurve = new GeoLine(drawingCanvas, nullName, drawingCanvas->mousePt, closestObj, LINE_BY_POINT_AND_CURVE_PERP);
+            tempLine = static_cast<GeoLine*>(drawingCanvas->tempGeoCurve);
+            curve = static_cast<GeoCurve*>(closestObj);
+            curve->selected = true;
+        }
+    }
 }
 
-// TODOOOOO
+void PerpLineTool::OnMouseMove(wxMouseEvent &event) {
+    if (moving_point){
+        point->SetPos(drawingCanvas->mousePt->GetPos());
+    }
+    SortObjects(drawingCanvas->mousePt->GetPos());
+    CheckHighlight();
+}
+
+void PerpLineTool::OnMouseUp(wxMouseEvent &event) {
+    moving_point = false;
+}
+
+void PerpLineTool::OnMouseLeave(wxMouseEvent &event) {
+    moving_point = false;
+}
+
+void PerpLineTool::OnMouseEnter(wxMouseEvent &event) {
+
+}

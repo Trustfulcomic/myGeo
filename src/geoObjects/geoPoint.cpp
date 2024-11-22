@@ -8,7 +8,7 @@ std::unordered_map<GeoCurveType, PointDefinition> GeoPoint::typeToPointDefinitio
     {SEGMENT, POINT_ON_SEGMENT}
 };
 
-GeoPoint::GeoPoint(wxWindow *parent, wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj)
+GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj)
     : GeoObject(parent, name) {
     this->pointRadius = parent->FromDIP(4);
     this->outlineColor = *wxBLACK;

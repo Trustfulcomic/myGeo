@@ -5,7 +5,7 @@
 #include "geoObject.h"
 #include "../drawingCanvas.h"
 
-GeoObject::GeoObject(wxWindow *parent, wxString &name) {
+GeoObject::GeoObject(wxWindow *parent, const wxString &name) {
     this->parent = parent;
     this->name = name;
 }

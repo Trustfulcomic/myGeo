@@ -20,8 +20,8 @@ private:
     void OnMouseLeave(wxMouseEvent& event) override;
     void OnMouseEnter(wxMouseEvent& event) override;
 
-    bool creating_line = false;
+    bool moving_point = false;
     GeoPoint *point = nullptr;
-    GeoObject *line = nullptr;
+    GeoCurve *curve = nullptr;
     GeoLine *tempLine = nullptr;
 };

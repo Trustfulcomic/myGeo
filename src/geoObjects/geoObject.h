@@ -7,7 +7,7 @@
 
 class GeoObject {
 public:
-    GeoObject(wxWindow *parent, wxString &name);
+    GeoObject(wxWindow *parent, const wxString &name);
     virtual ~GeoObject();
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const = 0;

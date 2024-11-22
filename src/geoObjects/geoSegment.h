@@ -13,12 +13,15 @@ public:
 
     void DrawOnContext(wxGraphicsContext *gc) const override;
 
-    virtual void ReloadSelf() override;
+    void ReloadSelf() override;
 
+    wxPoint2DDouble GetPerpPoint(const wxPoint2DDouble &pt) override;
     wxPoint2DDouble GetClosestPoint(const wxPoint2DDouble &pt) override;
 
     double GetParameter(const wxPoint2DDouble &pt) override;
     wxPoint2DDouble GetPointFromParameter(const double &param) override;
+
+    wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) override;
 
     wxPoint2DDouble GetVect(){ return lineVect; }
     wxPoint2DDouble GetPoint(){ return mainPoint; }

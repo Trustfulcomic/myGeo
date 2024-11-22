@@ -5,6 +5,8 @@ DrawingCanvas::DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos
     this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 
     this->Bind(wxEVT_PAINT, &DrawingCanvas::OnPaint, this);
+
+    mousePt = new GeoPoint(this, "", {0, 0});
 }
 
 wxPoint2DDouble DrawingCanvas::TransformPoint(wxPoint2DDouble pt, bool inv /*=true*/) {
@@ -35,6 +37,9 @@ void DrawingCanvas::OnPaint(wxPaintEvent &event)
         }
         for (auto geoObj : geoPoints){
             geoObj->DrawOnContext(gc);
+        }
+        if (tempGeoCurve != nullptr){
+            tempGeoCurve->DrawOnContext(gc);
         }
         delete gc;
     }

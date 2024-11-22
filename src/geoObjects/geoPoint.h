@@ -17,7 +17,7 @@ enum PointDefinition {
 
 class GeoPoint : public GeoObject {
 public:
-    GeoPoint(wxWindow *parent, wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj = nullptr);
+    GeoPoint(wxWindow *parent, const wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj = nullptr);
 
     virtual void DrawOnContext(wxGraphicsContext *gc) const override;
 

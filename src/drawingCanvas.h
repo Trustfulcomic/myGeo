@@ -19,6 +19,10 @@ public:
     std::list<GeoPoint*> geoPoints = {};
     std::list<GeoCurve*> geoCurves = {};
 
+    GeoCurve* tempGeoCurve = nullptr;
+
+    GeoPoint* mousePt = nullptr;
+
     wxAffineMatrix2D transform;
     wxPoint2DDouble TransformPoint(wxPoint2DDouble pt, bool inv = true);
 

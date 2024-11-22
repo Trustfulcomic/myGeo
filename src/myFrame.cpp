@@ -82,6 +82,14 @@ void MyFrame::SetupToolPanes(wxWindow *parent, wxSizer *sizer) {
     });
     tools.push_back(lineBy2PTool);
     sizer->Add(lineBy2PTool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));
+
+    auto perpLineTool = new PerpLineTool(parent, canvas, wxID_ANY);
+    perpLineTool->Bind(wxEVT_LEFT_DOWN, [this, perpLineTool](wxMouseEvent &event){
+        SelectToolPane(perpLineTool);
+    });
+    tools.push_back(perpLineTool);
+    sizer->Add(perpLineTool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));
+    
 }
 
 void MyFrame::SelectToolPane(Tool *tool) {

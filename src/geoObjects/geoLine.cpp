@@ -70,13 +70,16 @@ void GeoLine::ReloadSelf() {
             lineVect = static_cast<GeoPoint*>(parentObjs[1])->GetPos()
                        - static_cast<GeoPoint*>(parentObjs[0])->GetPos();
             break;
-        case LINE_BY_POINT_AND_LINE_PERP:
+        case LINE_BY_POINT_AND_CURVE_PERP:
             mainPoint = static_cast<GeoPoint*>(parentObjs[0])->GetPos();
-            lineVect = util::PerpVector(static_cast<GeoLine*>(parentObjs[1])->GetVect());
+            lineVect = util::PerpVector(static_cast<GeoCurve*>(parentObjs[1])->GetTangentAtPoint(
+                                        static_cast<GeoCurve*>(parentObjs[1])->GetPerpPoint(
+                                        static_cast<GeoPoint*>(parentObjs[0])->GetPos())));
             break;
         case LINE_BY_POINT_AND_LINE_PARAL:
             mainPoint = static_cast<GeoPoint*>(parentObjs[0])->GetPos();
             lineVect = static_cast<GeoLine*>(parentObjs[1])->GetVect();
+            break;
     }
 }
 
@@ -90,4 +93,8 @@ double GeoLine::GetParameter(const wxPoint2DDouble &pt) {
 
 wxPoint2DDouble GeoLine::GetPointFromParameter(const double &param) {
     return mainPoint + param * lineVect;
+}
+
+wxPoint2DDouble GeoLine::GetTangentAtPoint(const wxPoint2DDouble &pt) {
+    return lineVect;
 }

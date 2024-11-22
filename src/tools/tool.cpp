@@ -160,6 +160,10 @@ void ToolBind::OnMouseDown(wxMouseEvent &event) {
 
 void ToolBind::OnMouseMove(wxMouseEvent &event) {
     if (currentTool) currentTool->OnMouseMove(event);
+
+    wxPoint2DDouble mouse_pt = canvas->TransformPoint(event.GetPosition());
+    canvas->mousePt->SetPos(mouse_pt);
+    if (canvas->tempGeoCurve != nullptr) canvas->tempGeoCurve->ReloadSelf();
 }
 
 void ToolBind::OnMouseUp(wxMouseEvent &event) {

@@ -33,6 +33,11 @@ void GeoSegment::ReloadSelf() {
     lineVect = pointB->GetPos() - pointA->GetPos();
 }
 
+wxPoint2DDouble GeoSegment::GetPerpPoint(const wxPoint2DDouble &pt) {
+    wxPoint2DDouble projectedPoint = util::ProjectAToLineBVec(pt, mainPoint, lineVect);
+    return projectedPoint;
+}
+
 wxPoint2DDouble GeoSegment::GetClosestPoint(const wxPoint2DDouble &pt) {
     wxPoint2DDouble projectedPoint = util::ProjectAToLineBVec(pt, mainPoint, lineVect);
 
@@ -51,4 +56,8 @@ double GeoSegment::GetParameter(const wxPoint2DDouble &pt) {
 
 wxPoint2DDouble GeoSegment::GetPointFromParameter(const double &param) {
     return mainPoint + param * lineVect;
+}
+
+wxPoint2DDouble GeoSegment::GetTangentAtPoint(const wxPoint2DDouble &pt) {
+    return lineVect;
 }
