@@ -54,42 +54,21 @@ void MyFrame::BuildMenuBar() {
     SetMenuBar(menuBar);
 }
 
+#define ADD_TOOL(toolName)                                                          \
+    {auto tool = new toolName(parent, canvas, wxID_ANY);                            \
+    tool->Bind(wxEVT_LEFT_DOWN, [this, tool](wxMouseEvent &event){                  \
+        SelectToolPane(tool);                                                       \
+    });                                                                             \
+    tools.push_back(tool);                                                          \
+    sizer->Add(tool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));}
+
+
 void MyFrame::SetupToolPanes(wxWindow *parent, wxSizer *sizer) {
-    auto pointTool = new PointTool(parent, canvas, wxID_ANY);
-    pointTool->Bind(wxEVT_LEFT_DOWN, [this, pointTool](wxMouseEvent &event){
-        SelectToolPane(pointTool);
-    });
-    tools.push_back(pointTool);
-    sizer->Add(pointTool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));
-
-    auto handTool = new HandTool(parent, canvas, wxID_ANY);
-    handTool->Bind(wxEVT_LEFT_DOWN, [this, handTool](wxMouseEvent &event){
-        SelectToolPane(handTool);
-    });
-    tools.push_back(handTool);
-    sizer->Add(handTool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));
-
-    auto segBy2PTool = new SegBy2PTool(parent, canvas, wxID_ANY);
-    segBy2PTool->Bind(wxEVT_LEFT_DOWN, [this, segBy2PTool](wxMouseEvent &event){
-        SelectToolPane(segBy2PTool);
-    });
-    tools.push_back(segBy2PTool);
-    sizer->Add(segBy2PTool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));
-
-    auto lineBy2PTool = new LineBy2PTool(parent, canvas, wxID_ANY);
-    lineBy2PTool->Bind(wxEVT_LEFT_DOWN, [this, lineBy2PTool](wxMouseEvent &event){
-        SelectToolPane(lineBy2PTool);
-    });
-    tools.push_back(lineBy2PTool);
-    sizer->Add(lineBy2PTool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));
-
-    auto perpLineTool = new PerpLineTool(parent, canvas, wxID_ANY);
-    perpLineTool->Bind(wxEVT_LEFT_DOWN, [this, perpLineTool](wxMouseEvent &event){
-        SelectToolPane(perpLineTool);
-    });
-    tools.push_back(perpLineTool);
-    sizer->Add(perpLineTool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));
-    
+    ADD_TOOL(PointTool);
+    ADD_TOOL(HandTool);
+    ADD_TOOL(SegBy2PTool);
+    ADD_TOOL(LineBy2PTool);
+    ADD_TOOL(PerpLineTool);
 }
 
 void MyFrame::SelectToolPane(Tool *tool) {
