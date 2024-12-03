@@ -21,6 +21,7 @@ private:
     void OnMouseLeave(wxMouseEvent& event) override;
     void OnMouseEnter(wxMouseEvent& event) override;
 
-    bool creating_line = false;
-    GeoObject *firstPoint = nullptr;
+    bool moving_point = false;
+    GeoPoint *firstPoint = nullptr;
+    GeoLine *tempLine = nullptr;
 };

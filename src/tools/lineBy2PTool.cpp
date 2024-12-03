@@ -8,10 +8,16 @@ LineBy2PTool::LineBy2PTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWin
 }
 
 void LineBy2PTool::ResetState() {
-    creating_line = false;
+    moving_point = false;
     if (firstPoint != nullptr)
         firstPoint->selected = false;
     firstPoint = nullptr;
+
+    if (tempLine != nullptr){
+        delete tempLine;
+        tempLine = nullptr;
+        drawingCanvas->tempGeoCurve = nullptr;
+    }
 
     ReloadObjects({0.0, 0.0});
 }
@@ -32,30 +38,27 @@ void LineBy2PTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const 
 }
 
 void LineBy2PTool::OnMouseDown(wxMouseEvent &event) {
-    wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
+    wxPoint2DDouble mouse_pt = drawingCanvas->mousePt->GetPos();
     SortObjects(mouse_pt);
 
     GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
 
-    if (closestPoint != nullptr && closestPoint->GetDistance(mouse_pt) < drawingCanvas->FromDIP(8)){
-        if (creating_line && firstPoint != closestPoint) {
-            firstPoint->selected = false;
+    if (tempLine == nullptr){
+        firstPoint = closestPoint;
+        firstPoint->selected = true;
+
+        tempLine = new GeoLine(drawingCanvas, nullName, drawingCanvas->mousePt, firstPoint, LINE_BY_TWO_POINTS);
+        drawingCanvas->tempGeoCurve = tempLine;
+    } else {
+        if (closestPoint != firstPoint){
             drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, nullName, firstPoint, closestPoint, LINE_BY_TWO_POINTS));
-            ReloadObjects(mouse_pt);
-            
-            creating_line = false;
-            firstPoint = nullptr;
-        } else {
-            creating_line = true;
-            firstPoint = closestPoint;
-            closestPoint->selected = true;
-        }
+            ResetState();
+        }   
     }
 }
 
 void LineBy2PTool::OnMouseMove(wxMouseEvent &event) {
-    wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
-    SortObjects(mouse_pt);
+    SortObjects(drawingCanvas->mousePt->GetPos());
     CheckHighlight();
 }
 
