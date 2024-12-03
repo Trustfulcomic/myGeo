@@ -5,5 +5,5 @@ project(
     VERSION 1.0
 )
 
-add_subdirectory(thirdparty)
+add_subdirectory(wxWidgets)
 add_subdirectory(src)
