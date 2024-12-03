@@ -75,6 +75,7 @@ void PerpLineTool::OnMouseDown(wxMouseEvent &event) {
 void PerpLineTool::OnMouseMove(wxMouseEvent &event) {
     if (moving_point){
         point->SetPos(drawingCanvas->mousePt->GetPos());
+        point->ReloadAllChildren();
     }
     SortObjects(drawingCanvas->mousePt->GetPos());
     CheckHighlight();
