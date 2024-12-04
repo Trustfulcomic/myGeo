@@ -76,9 +76,11 @@ void GeoLine::ReloadSelf() {
                                         static_cast<GeoCurve*>(parentObjs[1])->GetPerpPoint(
                                         static_cast<GeoPoint*>(parentObjs[0])->GetPos())));
             break;
-        case LINE_BY_POINT_AND_LINE_PARAL:
+        case LINE_BY_POINT_AND_CURVE_PARAL:
             mainPoint = static_cast<GeoPoint*>(parentObjs[0])->GetPos();
-            lineVect = static_cast<GeoLine*>(parentObjs[1])->GetVect();
+            lineVect = static_cast<GeoCurve*>(parentObjs[1])->GetTangentAtPoint(
+                       static_cast<GeoCurve*>(parentObjs[1])->GetPerpPoint(
+                       static_cast<GeoPoint*>(parentObjs[0])->GetPos()));
             break;
     }
 }

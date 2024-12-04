@@ -6,6 +6,9 @@
 #include "drawingCanvas.h"
 #include "tools/tools.h"
 
+/** Main frame class.
+ * 
+ */
 class MyFrame : public wxFrame {
 public:
     MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size);

@@ -69,6 +69,7 @@ void MyFrame::SetupToolPanes(wxWindow *parent, wxSizer *sizer) {
     ADD_TOOL(SegBy2PTool);
     ADD_TOOL(LineBy2PTool);
     ADD_TOOL(PerpLineTool);
+    ADD_TOOL(ParalLineTool);
 }
 
 void MyFrame::SelectToolPane(Tool *tool) {

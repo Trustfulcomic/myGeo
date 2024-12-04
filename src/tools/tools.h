@@ -3,3 +3,4 @@
 #include "segBy2PTool.h"
 #include "lineBy2PTool.h"
 #include "perpLineTool.h"
+#include "paralLineTool.h"
