@@ -8,10 +8,16 @@ SegBy2PTool::SegBy2PTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindo
 }
 
 void SegBy2PTool::ResetState() {
-    creating_line = false;
-    if (firstPoint != nullptr)
+    if (firstPoint != nullptr){
         firstPoint->selected = false;
-    firstPoint = nullptr;
+        firstPoint = nullptr;
+    }
+
+    if (tempSegment != nullptr){
+        delete tempSegment;
+        drawingCanvas->tempGeoCurve = nullptr;
+        tempSegment = nullptr;
+    }
 
     ReloadObjects({0.0, 0.0});
 }
@@ -32,30 +38,27 @@ void SegBy2PTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
 }
 
 void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
-    wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
+    wxPoint2DDouble mouse_pt = drawingCanvas->mousePt->GetPos();
     SortObjects(mouse_pt);
 
     GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
 
-    if (closestPoint != nullptr && closestPoint->GetDistance(mouse_pt) < drawingCanvas->FromDIP(8)){
-        if (creating_line && firstPoint != closestPoint) {
-            firstPoint->selected = false;
-            drawingCanvas->geoCurves.push_back(new GeoSegment(drawingCanvas, nullName, (GeoPoint*)firstPoint, (GeoPoint*)closestPoint));
-            ReloadObjects(mouse_pt);
-            
-            creating_line = false;
-            firstPoint = nullptr;
-        } else {
-            creating_line = true;
-            firstPoint = closestPoint;
-            closestPoint->selected = true;
-        }
+    if (tempSegment == nullptr){
+        firstPoint = closestPoint;
+        firstPoint->selected = true;
+
+        tempSegment = new GeoSegment(drawingCanvas, nullName, drawingCanvas->mousePt, firstPoint);
+        drawingCanvas->tempGeoCurve = tempSegment;
+    } else {
+        if (closestPoint != firstPoint){
+            drawingCanvas->geoCurves.push_back(new GeoSegment(drawingCanvas, nullName, firstPoint, closestPoint));
+            ResetState();
+        }   
     }
 }
 
 void SegBy2PTool::OnMouseMove(wxMouseEvent &event) {
-    wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
-    SortObjects(mouse_pt);
+    SortObjects(drawingCanvas->mousePt->GetPos());
     CheckHighlight();
 }
 

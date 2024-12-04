@@ -21,6 +21,6 @@ private:
     void OnMouseLeave(wxMouseEvent& event) override;
     void OnMouseEnter(wxMouseEvent& event) override;
 
-    bool creating_line = false;
-    GeoObject *firstPoint;
+    GeoPoint *firstPoint;
+    GeoSegment* tempSegment = nullptr;
 };
