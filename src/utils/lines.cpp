@@ -15,6 +15,11 @@ wxPoint2DDouble util::ProjectAToLineBVec(const wxPoint2DDouble &A, const wxPoint
     return util::ProjectAtoLineBC(A, B, B+vec);
 }
 
+wxPoint2DDouble util::IntersectLines(const wxPoint2DDouble &A, const wxPoint2DDouble &a, const wxPoint2DDouble &B, const wxPoint2DDouble &b) {
+    double t_b = (DetMatrix2x2(a,A)-DetMatrix2x2(a,B))/(DetMatrix2x2(a,b));
+    return B + b*t_b;
+}
+
 wxPoint2DDouble util::PerpVector(const wxPoint2DDouble &A){
     return {A.m_y, -A.m_x};
 }
