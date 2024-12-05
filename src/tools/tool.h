@@ -26,6 +26,7 @@ public:
     void SortObjects(const wxPoint2DDouble &pt);
     GeoObject* GetNearestObject();
     GeoObject* GetNearestClickObject();
+    std::vector<GeoObject*> GetClickObjects();
     GeoPoint* CreatePointAtPos(const wxPoint2DDouble &pt);
 
     bool selected = false;

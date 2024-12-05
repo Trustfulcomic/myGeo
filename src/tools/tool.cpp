@@ -96,6 +96,27 @@ GeoObject *Tool::GetNearestClickObject() {
         return nearestCurve;
 }
 
+std::vector<GeoObject*> Tool::GetClickObjects() {
+    std::vector<GeoObject*> clickObjects;
+
+    for (GeoObject* geoObj : geoPointsSorted){
+        if (geoObj->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8)){
+            clickObjects.push_back(geoObj);
+        } else {
+            break;
+        }
+    }
+    for (GeoObject* geoObj : geoCurvesSorted){
+        if (geoObj->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8)){
+            clickObjects.push_back(geoObj);
+        } else {
+            break;
+        }
+    }
+
+    return clickObjects;
+}
+
 GeoPoint *Tool::CreatePointAtPos(const wxPoint2DDouble &pt) {
     GeoObject *nearestObj = GetNearestClickObject();
     GeoPoint *closestPoint = nullptr;
@@ -115,22 +136,18 @@ GeoPoint *Tool::CreatePointAtPos(const wxPoint2DDouble &pt) {
 }
 
 void Tool::CheckHighlight() {
-    GeoObject* highlightedObj = GetNearestClickObject();
+    std::vector<GeoObject*> highlightedObj = GetClickObjects();
 
     for (auto geoObj : drawingCanvas->geoPoints){
-        if (static_cast<GeoPoint*>(highlightedObj) == geoObj){
-            geoObj->highlited = true;
-        } else {
-            geoObj->highlited = false;
-        }
+        geoObj->highlited = false;
     }
 
     for (auto geoObj : drawingCanvas->geoCurves){
-        if (static_cast<GeoCurve*>(highlightedObj) == geoObj){
-            geoObj->highlited = true;
-        } else {
-            geoObj->highlited = false;
-        }
+        geoObj->highlited = false;
+    }
+
+    for (auto geoObj : highlightedObj){
+        geoObj->highlited = true;
     }
 }
 
