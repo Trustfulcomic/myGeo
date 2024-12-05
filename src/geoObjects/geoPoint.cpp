@@ -32,6 +32,25 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, const wxPoint2DDouble
     }
 }
 
+GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj1, GeoCurve *parentObj2)
+    : GeoObject(parent, name) {
+    this->pointRadius = parent->FromDIP(4);
+    this->outlineColor = *wxBLACK;
+    this->fillColor = wxColor(100, 100, 100);
+
+    this->isPoint = true;
+    this->draggable = false;
+
+    this->parentObjs.push_back(parentObj1);
+    parentObj1->AddChild(this);
+    this->parentObjs.push_back(parentObj2);
+    parentObj2->AddChild(this);
+
+    this->definition = POINT_ON_INTERSECT;
+
+    ReloadSelf();
+}
+
 void GeoPoint::DrawOnContext(wxGraphicsContext *gc) const {
     if (highlited || selected) {
         gc->SetPen(*wxTRANSPARENT_PEN);
@@ -58,6 +77,9 @@ wxPoint2DDouble GeoPoint::GetPos() {
 }
 
 bool GeoPoint::SetPos(const wxPoint2DDouble &pos) {
+    if (!draggable)
+        return false;
+
     switch (definition){
         case FREE_POINT:
             this->pos = pos;
@@ -67,6 +89,9 @@ bool GeoPoint::SetPos(const wxPoint2DDouble &pos) {
             this->pos = (static_cast<GeoCurve*>(parentObjs.front()))->GetClosestPoint(pos);
             this->parameter = (static_cast<GeoCurve*>(parentObjs.front()))->GetParameter(this->pos);
             return true;
+
+        case POINT_ON_INTERSECT:
+            return false;
     }
 
     return false;
@@ -79,6 +104,15 @@ void GeoPoint::ReloadSelf() {
         
         case POINT_ON_CURVE:
             pos = (static_cast<GeoCurve*>(parentObjs.front()))->GetPointFromParameter(parameter);
+            break;
+
+        case POINT_ON_INTERSECT:
+            // TODO - works only for lines rn
+            GeoLine* firstLine = static_cast<GeoLine*>(parentObjs[0]);
+            GeoLine* secondLine = static_cast<GeoLine*>(parentObjs[1]);
+
+            pos = util::IntersectLines(firstLine->GetPoint(), firstLine->GetVect(),
+                                       secondLine->GetPoint(), secondLine->GetVect());
             break;
     }
 }

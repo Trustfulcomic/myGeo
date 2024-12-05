@@ -119,20 +119,26 @@ std::vector<GeoObject*> Tool::GetClickObjects() {
 
 GeoPoint *Tool::CreatePointAtPos(const wxPoint2DDouble &pt) {
     GeoObject *nearestObj = GetNearestClickObject();
-    GeoPoint *closestPoint = nullptr;
+    std::vector<GeoObject*> clickableObjs = GetClickObjects();
+
+    GeoPoint *createdPoint = nullptr;
     if (nearestObj == nullptr){
         drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, pt));
-        closestPoint = drawingCanvas->geoPoints.back();
+        createdPoint = drawingCanvas->geoPoints.back();
         ReloadObjects(pt);
-    } else if (!nearestObj->IsPoint()){
+    } else if (nearestObj->IsPoint()){
+        createdPoint = static_cast<GeoPoint*>(nearestObj);
+    } else if (clickableObjs.size() == 1){
         drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, pt, static_cast<GeoCurve*>(nearestObj)));
-        closestPoint = drawingCanvas->geoPoints.back();
+        createdPoint = drawingCanvas->geoPoints.back();
         ReloadObjects(pt);
     } else {
-        closestPoint = static_cast<GeoPoint*>(nearestObj);
+        drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, nullName, static_cast<GeoCurve*>(clickableObjs[0]), static_cast<GeoCurve*>(clickableObjs[1])));
+        createdPoint = drawingCanvas->geoPoints.back();
+        ReloadObjects(pt);
     }
 
-    return closestPoint;
+    return createdPoint;
 }
 
 void Tool::CheckHighlight() {
