@@ -1,5 +1,11 @@
 #include "tool.h"
 
+/// @brief The default constructor of Tool.
+/// @param parent Parent window in which the tool is drawn.
+/// @param drawingCanvas The canvas on which this tool has effect.
+/// @param id ID of the wxWindow
+/// @param pos Position of the wxWindow
+/// @param size Size of the wxWindow
 Tool::Tool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id, const wxPoint &pos, const wxSize &size) 
     : wxWindow(parent, id, pos, size, wxFULL_REPAINT_ON_RESIZE) {
     
@@ -10,6 +16,9 @@ Tool::Tool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id, const 
     ReloadObjects({0.0, 0.0});
 }
 
+/// @brief Draws the Tool icon.
+/// @details Draws the outside rectangle and highlight. Calls DrawContent() to draw the actual icon.
+/// @param event Corresponding wxPaintEvent
 void Tool::OnPaint(wxPaintEvent &event) {
     wxAutoBufferedPaintDC dc(this);
     dc.SetBackground(wxBrush(this->GetParent()->GetBackgroundColour()));
@@ -35,6 +44,9 @@ void Tool::OnPaint(wxPaintEvent &event) {
     delete gc;
 }
 
+/// @brief Reloads all GeoObjects stored inside the tool.
+/// @details Retrieves GeoPoints and GeoCurves from \a drawingCanvas and stores them in \a geoPointsSorted and \a geoCurvesSorted. Calls SortObjects() afterwards.
+/// @param pt Reference point according to which the objects are sorted.
 void Tool::ReloadObjects(const wxPoint2DDouble &pt) {
     geoPointsSorted = std::vector<GeoPoint*>{std::begin(drawingCanvas->geoPoints), std::end(drawingCanvas->geoPoints)};
     geoCurvesSorted = std::vector<GeoCurve*>{std::begin(drawingCanvas->geoCurves), std::end(drawingCanvas->geoCurves)};
@@ -42,6 +54,9 @@ void Tool::ReloadObjects(const wxPoint2DDouble &pt) {
     SortObjects(pt);
 }
 
+/// @brief Sorts the stored objects according to \p pt .
+/// @details Sets the \a currentReferencePoint to \p pt and sorts \a geoPointsSorted and \a geoCurvesSorted separately according to GeoObject::GetDistance()
+/// @param pt The reference point according to which the objects are sorted.
 void Tool::SortObjects(const wxPoint2DDouble &pt) {
     currentReferencePoint = pt;
 
@@ -68,6 +83,8 @@ void Tool::SortObjects(const wxPoint2DDouble &pt) {
     }
 }
 
+/// @brief Returns the nearest object according to the \a currentReferencePoint.
+/// @return The nearest GeoObject
 GeoObject *Tool::GetNearestObject() {
     GeoObject *nearestObj = nullptr;
 
@@ -81,6 +98,9 @@ GeoObject *Tool::GetNearestObject() {
     return nearestObj;
 }
 
+/// @brief Returns the nearest "clickable" object according to \a currentReferencePoint.
+/// @details GeoPoints have higher priority than GeoCurves. If there is a GeoPoint in the click range of 8px, the nearest one gets returned. If there is not a GeoPoint, then the closest GeoCurve is returned. Otherwise nullptr.
+/// @return The nearest "clickable" GeoObject
 GeoObject *Tool::GetNearestClickObject() {
     GeoPoint *nearestPoint = nullptr;
     GeoCurve *nearestCurve = nullptr;
@@ -96,6 +116,8 @@ GeoObject *Tool::GetNearestClickObject() {
         return nearestCurve;
 }
 
+/// @brief Returns a vector of all the GeoObjects in the 8px click range.
+/// @return Vector containg the GooObjects.
 std::vector<GeoObject*> Tool::GetClickObjects() {
     std::vector<GeoObject*> clickObjects;
 
@@ -117,6 +139,13 @@ std::vector<GeoObject*> Tool::GetClickObjects() {
     return clickObjects;
 }
 
+/// @brief Creates or selects GeoPoint at \p pt .
+/// @details If there is no GeoObject in the click range of 8px, then a new GeoPoint is created at \p pt .
+/// If there is a GeoPoint in the click range, then the nearest one gets returned.
+/// If there is only one GeoCurve in the click range, then a new GeoPoint is created at \p pt connected to this curve.
+/// Otherwise if there is more than one GeoCurve, then a new GeoPoint is created at the intersection of the 2 closest curves (might be changed in the future).
+/// @param pt The point according to which all the distances are determined.
+/// @return Returns the created or selected GeoPoint.
 GeoPoint *Tool::CreatePointAtPos(const wxPoint2DDouble &pt) {
     GeoObject *nearestObj = GetNearestClickObject();
     std::vector<GeoObject*> clickableObjs = GetClickObjects();
@@ -141,6 +170,7 @@ GeoPoint *Tool::CreatePointAtPos(const wxPoint2DDouble &pt) {
     return createdPoint;
 }
 
+/// @brief Highlights all objects in the 8px click range.
 void Tool::CheckHighlight() {
     std::vector<GeoObject*> highlightedObj = GetClickObjects();
 

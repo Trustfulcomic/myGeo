@@ -15,11 +15,8 @@
 class Tool : public wxWindow {
 public:
     Tool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
-    
-    wxSize DoGetBestSize() const override {
-        return FromDIP(wxSize(45, 45));
-    }
 
+    /// Resets the state of the tool.
     virtual void ResetState() = 0;
 
     void ReloadObjects(const wxPoint2DDouble &pt);
@@ -29,8 +26,10 @@ public:
     std::vector<GeoObject*> GetClickObjects();
     GeoPoint* CreatePointAtPos(const wxPoint2DDouble &pt);
 
+    /// Is the tool currently selected.
     bool selected = false;
 
+    /// The current deafult name of all created GeoObjects.
     wxString nullName = "";
 
     friend class ToolBind;
@@ -39,13 +38,17 @@ protected:
     virtual void DrawContent(wxGraphicsContext *gc, const wxRect &rect) const = 0;
     void CheckHighlight();
 
+    /// All the GeoPoints stored in the tool (hopefully sorted according to \a currentReferencePoint).
     std::vector<GeoPoint*> geoPointsSorted;
+    /// All the GeoCurves stored in the tool (hopefully sorted according to \a currentReferencePoint).
     std::vector<GeoCurve*> geoCurvesSorted;
 
+    /// The canvas this tool effects.
     DrawingCanvas *drawingCanvas;
 
 private:
     void OnPaint(wxPaintEvent &event);
+    /// The point according to which the objects are sorted.
     wxPoint2DDouble currentReferencePoint;
 
     virtual void OnMouseDown(wxMouseEvent& event) = 0;
