@@ -5,11 +5,16 @@
 #include "geoObject.h"
 #include "../drawingCanvas.h"
 
+/// @brief The constructor of GeoObject.
+/// @param parent DrawingCanvas on which the object will be drawn.
+/// @param name The name of the object.
 GeoObject::GeoObject(wxWindow *parent, const wxString &name) {
     this->parent = parent;
     this->name = name;
 }
 
+/// @brief Destroys the GeoObject properly.
+/// @details Removes itself from the DrawingCanvas ( \a parent ) and all of its parent GeoObjects. Starts DFS to destroy all dependent children. 
 GeoObject::~GeoObject() {
     auto canvas = (DrawingCanvas*) parent;
     canvas->RemoveObj(this);
@@ -26,6 +31,8 @@ GeoObject::~GeoObject() {
     }
 }
 
+/// @brief Adds a child GeoObject, if it is not already.
+/// @param obj The object to add.
 void GeoObject::AddChild(GeoObject *obj) {
     bool isAlreadyChild = false;
     for (auto childObj : childObjs){
@@ -39,8 +46,9 @@ void GeoObject::AddChild(GeoObject *obj) {
         childObjs.push_back(obj);
 }
 
-void GeoObject::ReloadAllChildren()
-{
+/// @brief Reloads all children.
+/// @details Traverses the DAG formed by GeoObjects in topological order.
+void GeoObject::ReloadAllChildren() {
     std::queue<GeoObject*> objQ; objQ.push(this);
 
     // BFS to determine number of parents that need could be updated
@@ -56,7 +64,7 @@ void GeoObject::ReloadAllChildren()
         }
     }
 
-    // BFS to traverse the geoObject DAG in topological order
+    // BFS to traverse the GeoObject DAG in topological order
     objQ.push(this);
     while(!objQ.empty()){
         GeoObject* topObj = objQ.front(); objQ.pop();

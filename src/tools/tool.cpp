@@ -1,6 +1,6 @@
 #include "tool.h"
 
-/// @brief The default constructor of Tool.
+/// @brief The constructor of Tool.
 /// @param parent Parent window in which the tool is drawn.
 /// @param drawingCanvas The canvas on which this tool has effect.
 /// @param id ID of the wxWindow
@@ -187,7 +187,7 @@ void Tool::CheckHighlight() {
     }
 }
 
-/// @brief The default constructor of ToolBind.
+/// @brief The constructor of ToolBind.
 /// @param canvas Canvas that will be effeted by the tools.
 ToolBind::ToolBind(DrawingCanvas *canvas) {
     BindToCanvas(canvas);
