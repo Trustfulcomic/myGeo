@@ -75,6 +75,8 @@ private:
     void OnMouseLeave(wxMouseEvent& event);
     void OnMouseEnter(wxMouseEvent& event);
 
+    /// The canvas that is effected by \a currentTool
     DrawingCanvas* canvas = nullptr;
+    /// The currently selected tool
     Tool* currentTool = nullptr;
 };

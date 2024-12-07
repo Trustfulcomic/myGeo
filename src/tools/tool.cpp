@@ -187,10 +187,14 @@ void Tool::CheckHighlight() {
     }
 }
 
+/// @brief The default constructor of ToolBind.
+/// @param canvas Canvas that will be effeted by the tools.
 ToolBind::ToolBind(DrawingCanvas *canvas) {
     BindToCanvas(canvas);
 }
 
+/// @brief Binds the \p canvas events.
+/// @param canvas Canvas that will be effected by the tools.
 void ToolBind::BindToCanvas(DrawingCanvas *canvas) {
     this->canvas = canvas;
 
@@ -202,35 +206,48 @@ void ToolBind::BindToCanvas(DrawingCanvas *canvas) {
     canvas->Bind(wxEVT_ENTER_WINDOW, &ToolBind::OnMouseEnter, this);
 }
 
-void ToolBind::ChangeTool(Tool *tool)
-{
+/// @brief Changes the \a currentTool.
+/// @param tool The tool that will be selected.
+void ToolBind::ChangeTool(Tool *tool) {
     this->currentTool = tool;
 }
 
+/// @brief Passes the OnMouseDown event to \a currentTool.
+/// @param event The event being handeled.
 void ToolBind::OnMouseDown(wxMouseEvent &event) {
     if (currentTool) currentTool->OnMouseDown(event);
 }
 
+/// @brief Passes the OnMouseMove event to \a currentTool.
+/// @param event The event being handeled.
 void ToolBind::OnMouseMove(wxMouseEvent &event) {
     if (currentTool) currentTool->OnMouseMove(event);
 
+    // Moves the GeoPoint following the cursor.
     wxPoint2DDouble mouse_pt = canvas->TransformPoint(event.GetPosition());
     canvas->mousePt->SetPos(mouse_pt);
     if (canvas->tempGeoCurve != nullptr) canvas->tempGeoCurve->ReloadSelf();
 }
 
+/// @brief Passes the OnMouseUp event to \a currentTool.
+/// @param event The event being handeled.
 void ToolBind::OnMouseUp(wxMouseEvent &event) {
     if (currentTool) currentTool->OnMouseUp(event);   
 }
 
+/// @brief Passes the OnMouseLeave event to \a currentTool.
+/// @param event The event being handeled.
 void ToolBind::OnMouseLeave(wxMouseEvent &event) {
     if (currentTool) currentTool->OnMouseLeave(event);
 }
 
+/// @brief Passes the OnMouseEnter event to \a currentTool.
+/// @param event The event being handeled.
 void ToolBind::OnMouseEnter(wxMouseEvent &event) {
     if (currentTool) currentTool->OnMouseEnter(event);
 }
 
+/// @brief Resets the state of \a currentTool by calling Tool::ResetState().
 void ToolBind::ResetState() {
     if (currentTool) currentTool->ResetState();
 }
