@@ -15,6 +15,11 @@
 class Tool : public wxWindow {
 public:
     Tool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
+    
+    /// Returns the best size for the tool pane
+    wxSize DoGetBestSize() const override {
+        return FromDIP(wxSize(45, 45));
+    }
 
     /// Resets the state of the tool.
     virtual void ResetState() = 0;
