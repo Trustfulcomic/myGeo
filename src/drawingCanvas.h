@@ -16,13 +16,18 @@ public:
 
     void DeselectAll();
     
+    /// List of all GeoPoints
     std::list<GeoPoint*> geoPoints = {};
+    /// List of all GeoCurves
     std::list<GeoCurve*> geoCurves = {};
 
+    /// Temporary GeoCurve used in some tools
     GeoCurve* tempGeoCurve = nullptr;
 
+    /// GeoPoint that always follows the cursor
     GeoPoint* mousePt = nullptr;
 
+    /// Affine matrix used for camera
     wxAffineMatrix2D transform;
     wxPoint2DDouble TransformPoint(wxPoint2DDouble pt, bool inv = true);
 
