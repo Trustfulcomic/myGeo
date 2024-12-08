@@ -4,7 +4,7 @@
 
 #include "geoObject.h"
 #include "geoPoint.h"
-#include "geoSegment.h"
+#include "geoLineBase.h"
 
 enum LineDefinition {
     LINE_BY_TWO_POINTS,
@@ -12,7 +12,7 @@ enum LineDefinition {
     LINE_BY_POINT_AND_CURVE_PARAL
 };
 
-class GeoLine : public GeoCurve {
+class GeoLine : public GeoLineBase {
 public:
     GeoLine(wxWindow *parent, wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
 
@@ -27,15 +27,6 @@ public:
 
     wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) override;
 
-    wxPoint2DDouble GetVect(){ return lineVect; }
-    wxPoint2DDouble GetPoint(){ return mainPoint; }
-    void SetPoint(const wxPoint2DDouble &pt) { mainPoint = pt; }
-
 private:
-
-    wxPoint2DDouble lineVect;
-    wxPoint2DDouble mainPoint;
-
     LineDefinition definition;
-
 };

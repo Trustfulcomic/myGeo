@@ -4,7 +4,7 @@
 #include "../utils/utils.h"
 
 GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def)
-    : GeoCurve(parent, name, LINE) {
+    : GeoLineBase(parent, name, LINE) {
 
     this->parentObjs.push_back(objA);
     this->parentObjs.push_back(objB);
