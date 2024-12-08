@@ -1,7 +1,7 @@
 #include "geoSegment.h"
 
 GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB)
-    : GeoCurve(parent, name, SEGMENT){
+    : GeoLineBase(parent, name, SEGMENT){
     
     this->parentObjs.push_back(pointA);
     this->parentObjs.push_back(pointB);

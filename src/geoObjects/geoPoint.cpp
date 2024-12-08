@@ -108,8 +108,8 @@ void GeoPoint::ReloadSelf() {
 
         case POINT_ON_INTERSECT:
             // TODO - works only for lines rn
-            GeoLine* firstLine = static_cast<GeoLine*>(parentObjs[0]);
-            GeoLine* secondLine = static_cast<GeoLine*>(parentObjs[1]);
+            GeoLineBase* firstLine = static_cast<GeoLineBase*>(parentObjs[0]);
+            GeoLineBase* secondLine = static_cast<GeoLineBase*>(parentObjs[1]);
 
             pos = util::IntersectLines(firstLine->GetPoint(), firstLine->GetVect(),
                                        secondLine->GetPoint(), secondLine->GetVect());

@@ -4,10 +4,10 @@
 
 #include <list>
 
-#include "geoCurve.h"
 #include "geoPoint.h"
+#include "geoLineBase.h"
 
-class GeoSegment : public GeoCurve {
+class GeoSegment : public GeoLineBase {
 public:
     GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB);
 
@@ -29,7 +29,4 @@ public:
 private:
     GeoPoint *pointA;
     GeoPoint *pointB;
-
-    wxPoint2DDouble lineVect;
-    wxPoint2DDouble mainPoint;
 };
