@@ -4,6 +4,10 @@
 
 #include "myFrame.h"
 
+/// @brief The constructor of MyFrame
+/// @param title Title of the frame
+/// @param pos Position of the frame
+/// @param size Size of the frame
 MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     : wxFrame(nullptr, wxID_ANY, title, pos, size){
 
@@ -29,6 +33,9 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     BuildMenuBar();
 }
 
+/// @brief Builds the tool sidepanel.
+/// @param parent Parent of the panel.
+/// @return The created panel.
 wxPanel *MyFrame::BuildToolsPanel(wxWindow *parent) {
     auto *toolsPanel = new wxScrolled<wxPanel>(parent, wxID_ANY);
     toolsPanel->SetScrollRate(0, FromDIP(10));
@@ -47,6 +54,7 @@ wxPanel *MyFrame::BuildToolsPanel(wxWindow *parent) {
     return toolsPanel;
 }
 
+/// @brief Builds the menu bar.
 void MyFrame::BuildMenuBar() {
     wxMenuBar *menuBar = new wxMenuBar();
     wxMenu *fileMenu = new wxMenu();
@@ -63,6 +71,9 @@ void MyFrame::BuildMenuBar() {
     sizer->Add(tool, 0, wxRIGHT | wxBOTTOM, FromDIP(5));}
 
 
+/// @brief Creates individual tool panes.
+/// @param parent Parent on which the tools will be displayed.
+/// @param sizer Sizer used for the panes.
 void MyFrame::SetupToolPanes(wxWindow *parent, wxSizer *sizer) {
     ADD_TOOL(PointTool);
     ADD_TOOL(HandTool);
@@ -72,6 +83,8 @@ void MyFrame::SetupToolPanes(wxWindow *parent, wxSizer *sizer) {
     ADD_TOOL(ParalLineTool);
 }
 
+/// @brief Selects a tool.
+/// @param tool The tool to select.
 void MyFrame::SelectToolPane(Tool *tool) {
     for (auto toolPane : tools) {
         toolPane->selected = (toolPane == tool);
@@ -85,11 +98,15 @@ void MyFrame::SelectToolPane(Tool *tool) {
     canvas->DeselectAll();
 }
 
+/// @brief Handles a sash move of the sidepanel.
+/// @param event The event of sash move.
 void MyFrame::SashMove(wxSplitterEvent &event) {
     canvas->transform.Translate(static_cast<double>(sashPosition - event.GetSashPosition()), 0.0);
     sashPosition = event.GetSashPosition();
 }
 
+/// @brief Handles a character press.
+/// @param event The event of char press.
 void MyFrame::OnChar(wxKeyEvent &event) {
     switch (event.GetKeyCode()){
         case WXK_LEFT:
