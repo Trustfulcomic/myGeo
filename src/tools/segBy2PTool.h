@@ -6,6 +6,7 @@
 #include "../geoObjects/geoPoint.h"
 #include "../geoObjects/geoSegment.h"
 
+/// @brief Class for a tool that creates a GeoSegment by two endpoints.
 class SegBy2PTool : public Tool {
 public:
     SegBy2PTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
@@ -21,6 +22,8 @@ private:
     void OnMouseLeave(wxMouseEvent& event) override;
     void OnMouseEnter(wxMouseEvent& event) override;
 
+    /// The first selected endpoint
     GeoPoint *firstPoint;
+    /// The temporary GeoSegment when first point already selected
     GeoSegment* tempSegment = nullptr;
 };

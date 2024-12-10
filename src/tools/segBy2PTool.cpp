@@ -2,11 +2,14 @@
 
 #include <iostream>
 
+/// @brief Same as Tool constructor.
 SegBy2PTool::SegBy2PTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id, const wxPoint &pos, const wxSize &size)
     : Tool (parent, drawingCanvas, id, pos, size){
 
 }
 
+/// @brief Resets the state of the tool.
+/// @details Deselects point if selected and deletes the temporary curve if it exists (also reloads objects by calling ReloadObjects() aftrewards).
 void SegBy2PTool::ResetState() {
     if (firstPoint != nullptr){
         firstPoint->selected = false;

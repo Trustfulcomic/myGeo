@@ -37,9 +37,13 @@ public:
     /// The current deafult name of all created GeoObjects.
     wxString nullName = "";
 
+    /// Friends ToolBind such that it can access the event handeling.
     friend class ToolBind;
 
 protected:
+    /// @brief Draws the inside of the tool pane.
+    /// @param gc Context to draw on.
+    /// @param rect Rectangle in which to draw the inside.
     virtual void DrawContent(wxGraphicsContext *gc, const wxRect &rect) const = 0;
     void CheckHighlight();
 
@@ -56,10 +60,15 @@ private:
     /// The point according to which the objects are sorted.
     wxPoint2DDouble currentReferencePoint;
 
+    /// Handels the OnMouseDown event.
     virtual void OnMouseDown(wxMouseEvent& event) = 0;
+    /// Handels the OnMouseMove event.
     virtual void OnMouseMove(wxMouseEvent& event) = 0;
+    /// Handels the OnMouseUp event.
     virtual void OnMouseUp(wxMouseEvent& event) = 0;
+    /// Handels the OnMouseLeave event.
     virtual void OnMouseLeave(wxMouseEvent& event) = 0;
+    /// Handels the OnMouseEnter event.
     virtual void OnMouseEnter(wxMouseEvent& event) = 0;
 };
 
