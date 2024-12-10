@@ -11,10 +11,7 @@ public:
     wxPoint2DDouble GetPoint(){ return mainPoint; }
     void SetPoint(const wxPoint2DDouble &pt) { mainPoint = pt; }
 
-    friend class GeoLine;
-    friend class GeoSegment;
-
-private:
+protected:
     wxPoint2DDouble lineVect;
     wxPoint2DDouble mainPoint;
 };
