@@ -6,6 +6,7 @@
 #include "../geoObjects/geoPoint.h"
 #include "../geoObjects/geoLine.h"
 
+/// @brief Class for a tool that creates a line by two points lying on it
 class LineBy2PTool : public Tool {
 public:
     LineBy2PTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
@@ -21,7 +22,10 @@ private:
     void OnMouseLeave(wxMouseEvent& event) override;
     void OnMouseEnter(wxMouseEvent& event) override;
 
+    /// True if moving a point
     bool moving_point = false;
+    /// The first point selected
     GeoPoint *firstPoint = nullptr;
+    /// The temporary line if the first point is already selected
     GeoLine *tempLine = nullptr;
 };

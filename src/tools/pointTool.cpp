@@ -1,10 +1,13 @@
 #include "pointTool.h"
 
+/// @brief Same as Tool constructor.
 PointTool::PointTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id, const wxPoint &pos, const wxSize &size)
     : Tool(parent, drawingCanvas, id, pos, size) {
     
 }
 
+/// @brief Resets the state of the tool.
+/// @details Sets \a creating_point false and loses pointer to the currently dragged point. Rloads objects afterwards.
 void PointTool::ResetState() {
     creating_point = false;
     creatingPoint = nullptr;

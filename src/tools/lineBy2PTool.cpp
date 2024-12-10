@@ -2,11 +2,14 @@
 
 #include <iostream>
 
+/// @brief Same as Tool constructor 
 LineBy2PTool::LineBy2PTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id, const wxPoint &pos, const wxSize &size)
     : Tool (parent, drawingCanvas, id, pos, size){
 
 }
 
+/// @brief Resets the state of the tool
+/// @details Deselects the point if selected. Destroys the temorary curve if present. Sets \a moving_point to false. Rloads objects afterwards.
 void LineBy2PTool::ResetState() {
     moving_point = false;
     if (firstPoint != nullptr)

@@ -1,10 +1,13 @@
 #include "handTool.h"
 
+/// @brief Same as the tool contructor
 HandTool::HandTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id, const wxPoint &pos, const wxSize &size) 
     : Tool(parent, drawingCanvas, id, pos, size){
 
 }
 
+/// @brief Resets the state of the tool
+/// @details Sets \a isDragging, \a draggingObj, \a selectedObj and \a isDraggingCanvas to false/nullptr. Rloads objects afterward.
 void HandTool::ResetState() {
     isDragging = false;
     draggingObj = nullptr;

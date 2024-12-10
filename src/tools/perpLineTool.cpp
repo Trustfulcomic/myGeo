@@ -1,10 +1,13 @@
 #include "perpLineTool.h"
 
+/// @brief Same as Tool constructor 
 PerpLineTool::PerpLineTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id, const wxPoint &pos, const wxSize &size)
     : Tool (parent, drawingCanvas, id, pos, size) {
 
 }
 
+/// @brief Resets the state of the tool
+/// @details Deselects the point if selected. Deselects the curve if selected. Destroys the temporary line if present. Sets \a moving_point to false. Reloads objects aftrewards.
 void PerpLineTool::ResetState() {
     if (point != nullptr){
         point->selected = false;

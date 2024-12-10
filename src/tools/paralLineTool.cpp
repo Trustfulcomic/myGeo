@@ -1,10 +1,13 @@
 #include "paralLineTool.h"
 
+/// @brief Same as Tool constructor 
 ParalLineTool::ParalLineTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id, const wxPoint &pos, const wxSize &size)
     : Tool (parent, drawingCanvas, id, pos, size) {
 
 }
 
+/// @brief Resets the state of the tool
+/// @details Deselects the point if selected. Deselects the curve if selected. Destroys the temporary line if present. Sets \a moving_point to false. Reloads objects aftrewards.
 void ParalLineTool::ResetState() {
     if (point != nullptr){
         point->selected = false;
