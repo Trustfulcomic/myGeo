@@ -3,6 +3,11 @@
 #include "geoLine.h"
 #include "geoSegment.h"
 
+/// @brief Constructor for a free point or a point attached to a curve
+/// @param parent DrawingCanvas on which the point is
+/// @param name Name of the object
+/// @param pos Position of the point
+/// @param parentObj Optional curve to which the point is attached
 GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj)
     : GeoObject(parent, name) {
     this->pointRadius = parent->FromDIP(4);
@@ -32,6 +37,11 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, const wxPoint2DDouble
     }
 }
 
+/// @brief Contructor for a point on an intersection of two curves
+/// @param parent DrawingCanvas on which the point is
+/// @param name Name of the object
+/// @param parentObj1 First curve on which the point is
+/// @param parentObj2 Second curve on which the point is
 GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj1, GeoCurve *parentObj2)
     : GeoObject(parent, name) {
     this->pointRadius = parent->FromDIP(4);
