@@ -1,4 +1,5 @@
 #include "tool.h"
+#include <iostream>
 
 /// @brief The constructor of Tool.
 /// @param parent Parent window in which the tool is drawn.
@@ -105,9 +106,9 @@ GeoObject *Tool::GetNearestClickObject() {
     GeoPoint *nearestPoint = nullptr;
     GeoCurve *nearestCurve = nullptr;
 
-    if (geoPointsSorted.size() != 0 && geoPointsSorted[0]->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8))
+    if (geoPointsSorted.size() != 0 && geoPointsSorted[0]->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8) / drawingCanvas->GetScale())
         nearestPoint = geoPointsSorted[0];
-    if (geoCurvesSorted.size() != 0 && geoCurvesSorted[0]->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8))
+    if (geoCurvesSorted.size() != 0 && geoCurvesSorted[0]->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8) / drawingCanvas->GetScale())
         nearestCurve = geoCurvesSorted[0];
 
     if (nearestPoint != nullptr)
@@ -122,14 +123,14 @@ std::vector<GeoObject*> Tool::GetClickObjects() {
     std::vector<GeoObject*> clickObjects;
 
     for (GeoObject* geoObj : geoPointsSorted){
-        if (geoObj->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8)){
+        if (geoObj->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8) / drawingCanvas->GetScale()){
             clickObjects.push_back(geoObj);
         } else {
             break;
         }
     }
     for (GeoObject* geoObj : geoCurvesSorted){
-        if (geoObj->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8)){
+        if (geoObj->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8) / drawingCanvas->GetScale()){
             clickObjects.push_back(geoObj);
         } else {
             break;

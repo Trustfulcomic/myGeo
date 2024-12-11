@@ -66,7 +66,7 @@ void HandTool::OnMouseMove(wxMouseEvent &event) {
     }
 
     if (isDraggingCanvas){
-        drawingCanvas->transform.Translate(event.GetPosition().x - canvasDragPoint.m_x, event.GetPosition().y - canvasDragPoint.m_y);
+        drawingCanvas->transform.Translate((event.GetPosition().x - canvasDragPoint.m_x)/drawingCanvas->GetScale(), (event.GetPosition().y - canvasDragPoint.m_y)/drawingCanvas->GetScale());
         canvasDragPoint = event.GetPosition();
     }
 }

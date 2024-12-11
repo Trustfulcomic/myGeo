@@ -25,6 +25,7 @@ private:
     /// Canvas on which the objects are displayes.
     DrawingCanvas *canvas;
 
+    void OnScroll(wxMouseEvent &event);
     void OnChar(wxKeyEvent &event);
     void SashMove(wxSplitterEvent &event);
     /// Position of the sash.

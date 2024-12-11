@@ -31,7 +31,11 @@ public:
     wxAffineMatrix2D transform;
     wxPoint2DDouble TransformPoint(wxPoint2DDouble pt, bool inv = true);
 
+    double GetScale(){ return scale; }
+    void ApplyScale(double factor);
+
     void RemoveObj(GeoObject* obj);
 private:
     void OnPaint(wxPaintEvent& event);
+    double scale = 1;
 }; 

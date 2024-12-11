@@ -61,13 +61,15 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj1,
     ReloadSelf();
 }
 
-void GeoPoint::DrawOnContext(wxGraphicsContext *gc) const {
+void GeoPoint::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {
+    wxPoint2DDouble trans_pos = transform.TransformPoint(pos);
+
     if (highlited || selected) {
         gc->SetPen(*wxTRANSPARENT_PEN);
         gc->SetBrush(wxBrush(wxColour(200, 150, 150, 150)));
 
-        gc->DrawEllipse(pos.m_x - pointRadius - parent->FromDIP(3),
-                        pos.m_y - pointRadius - parent->FromDIP(3),
+        gc->DrawEllipse(trans_pos.m_x - pointRadius - parent->FromDIP(3),
+                        trans_pos.m_y - pointRadius - parent->FromDIP(3),
                         2 * pointRadius + parent->FromDIP(7),
                         2 * pointRadius + parent->FromDIP(7));
     }
@@ -75,7 +77,7 @@ void GeoPoint::DrawOnContext(wxGraphicsContext *gc) const {
     gc->SetPen(wxPen(this->outlineColor));
     gc->SetBrush(wxBrush(this->fillColor));
 
-    gc->DrawEllipse(pos.m_x - pointRadius, pos.m_y - pointRadius, 2 * pointRadius, 2 * pointRadius);
+    gc->DrawEllipse(trans_pos.m_x - pointRadius, trans_pos.m_y - pointRadius, 2 * pointRadius, 2 * pointRadius);
 }
 
 double GeoPoint::GetDistance(const wxPoint2DDouble &pt) {

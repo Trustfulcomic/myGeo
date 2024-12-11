@@ -23,14 +23,17 @@ GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPo
     this->outlineWidth = 2;
 }
 
-void GeoSegment::DrawOnContext(wxGraphicsContext *gc) const {
+void GeoSegment::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {
+    wxPoint2DDouble trans_pointA = transform.TransformPoint(pointA->GetPos());
+    wxPoint2DDouble trans_pointB = transform.TransformPoint(pointB->GetPos());
+
     if (highlited || selected) {
         gc->SetPen(wxPen(wxColour(200, 150, 150, 150), this->outlineWidth + 3));
-        gc->StrokeLine(pointA->GetPos().m_x, pointA->GetPos().m_y, pointB->GetPos().m_x, pointB->GetPos().m_y);
+        gc->StrokeLine(trans_pointA.m_x, trans_pointA.m_y, trans_pointB.m_x, trans_pointB.m_y);
     }
 
     gc->SetPen(wxPen(this->outlineColor, this->outlineWidth));
-    gc->StrokeLine(pointA->GetPos().m_x, pointA->GetPos().m_y, pointB->GetPos().m_x, pointB->GetPos().m_y);
+    gc->StrokeLine(trans_pointA.m_x, trans_pointA.m_y, trans_pointB.m_x, trans_pointB.m_y);
 }
 
 void GeoSegment::ReloadSelf() {

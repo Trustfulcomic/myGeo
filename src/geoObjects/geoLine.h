@@ -18,7 +18,7 @@ class GeoLine : public GeoLineBase {
 public:
     GeoLine(wxWindow *parent, wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
 
-    void DrawOnContext(wxGraphicsContext *gc) const override;
+    void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 
     void ReloadSelf() override;
 

@@ -27,6 +27,14 @@ wxPoint2DDouble DrawingCanvas::TransformPoint(wxPoint2DDouble pt, bool inv /*=tr
     return transform_cpy.TransformPoint(pt);
 }
 
+void DrawingCanvas::ApplyScale(double factor) {
+    if (scale < 0.001 && factor < 1) return;
+    if (scale > 1000 && factor > 1) return;
+
+    transform.Scale(factor, factor);
+    scale *= factor;
+}
+
 /// @brief Removes object from \a geoPoints and \a geoCurves
 /// @param obj The object to remove
 void DrawingCanvas::RemoveObj(GeoObject *obj) {
@@ -43,15 +51,14 @@ void DrawingCanvas::OnPaint(wxPaintEvent &event) {
 
     wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
     if (gc){
-        gc->SetTransform(gc->CreateMatrix(transform));
         for (auto geoObj : geoCurves){
-            geoObj->DrawOnContext(gc);
+            geoObj->DrawOnContext(gc, transform);
         }
         for (auto geoObj : geoPoints){
-            geoObj->DrawOnContext(gc);
+            geoObj->DrawOnContext(gc, transform);
         }
         if (tempGeoCurve != nullptr){
-            tempGeoCurve->DrawOnContext(gc);
+            tempGeoCurve->DrawOnContext(gc, transform);
         }
         delete gc;
     }

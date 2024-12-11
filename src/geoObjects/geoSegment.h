@@ -12,7 +12,7 @@ class GeoSegment : public GeoLineBase {
 public:
     GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB);
 
-    void DrawOnContext(wxGraphicsContext *gc) const override;
+    void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 
     void ReloadSelf() override;
 

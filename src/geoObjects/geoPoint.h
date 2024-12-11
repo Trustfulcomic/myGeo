@@ -21,7 +21,7 @@ public:
     GeoPoint(wxWindow *parent, const wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj = nullptr);
     GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj1, GeoCurve *parentObj2);
 
-    virtual void DrawOnContext(wxGraphicsContext *gc) const override;
+    virtual void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 
     /// Returns true if point is \a draggable
     bool IsDraggable(){return draggable;}

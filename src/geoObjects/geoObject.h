@@ -13,7 +13,7 @@ public:
 
     /// @brief  Draws itself on a wxGraphicsContext.
     /// @param gc The context to be drawn on.
-    virtual void DrawOnContext(wxGraphicsContext *gc) const = 0;
+    virtual void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const = 0;
 
     /// Outline color of the GeoObject.
     wxColor outlineColor;

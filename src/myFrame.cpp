@@ -16,6 +16,7 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
 
     canvas = new DrawingCanvas(splitter, wxID_ANY, wxDefaultPosition, this->FromDIP(wxSize(640,480)));
     this->Bind(wxEVT_CHAR_HOOK, &MyFrame::OnChar, this);
+    this->Bind(wxEVT_MOUSEWHEEL, &MyFrame::OnScroll, this);
     auto toolsPanel = BuildToolsPanel(splitter);
 
     splitter->SplitVertically(toolsPanel, canvas);
@@ -98,14 +99,26 @@ void MyFrame::SelectToolPane(Tool *tool) {
     canvas->DeselectAll();
 }
 
-/// @brief Handles a sash move of the sidepanel.
+/// @brief Handels the mouse scroll event
+/// @param event The event of scroll
+void MyFrame::OnScroll(wxMouseEvent &event) {
+    int rotation = event.GetWheelRotation();
+
+    if (rotation > 0) {
+        canvas->ApplyScale(0.97);
+    } else {
+        canvas->ApplyScale(1/0.97);
+    }
+}
+
+/// @brief Handels a sash move of the sidepanel.
 /// @param event The event of sash move.
 void MyFrame::SashMove(wxSplitterEvent &event) {
     canvas->transform.Translate(static_cast<double>(sashPosition - event.GetSashPosition()), 0.0);
     sashPosition = event.GetSashPosition();
 }
 
-/// @brief Handles a character press.
+/// @brief Handels a character press.
 /// @param event The event of char press.
 void MyFrame::OnChar(wxKeyEvent &event) {
     switch (event.GetKeyCode()){

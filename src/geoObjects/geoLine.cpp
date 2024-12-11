@@ -24,16 +24,17 @@ GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoObject *objA, GeoObject *o
     this->outlineWidth = 2;
 }
 
-void GeoLine::DrawOnContext(wxGraphicsContext *gc) const {
+void GeoLine::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {
     if (lineVect.m_x == 0 && lineVect.m_y == 0)
         return;
+
+    wxPoint2DDouble trans_mainPoint = transform.TransformPoint(mainPoint);
+    wxPoint2DDouble trans_lineVect = lineVect * (static_cast<DrawingCanvas*>(parent))->GetScale();
 
     wxSize canvasSize = parent->GetSize();
 
     wxPoint2DDouble topLeft = {0.0, 0.0};
     wxPoint2DDouble bottomRight = {static_cast<double>(parent->GetSize().GetWidth()), static_cast<double>(parent->GetSize().GetHeight())};
-    topLeft = ((DrawingCanvas*)parent)->TransformPoint(topLeft);
-    bottomRight = ((DrawingCanvas*)parent)->TransformPoint(bottomRight);
 
     wxPoint2DDouble edgePointA, edgePointB;
 
@@ -42,23 +43,22 @@ void GeoLine::DrawOnContext(wxGraphicsContext *gc) const {
     if (lineVect.m_x == 0 || abs(lineVect.m_y / lineVect.m_x) > 1) {
         //Vertical
 
-        double tTop = (topLeft.m_y-mainPoint.m_y)/lineVect.m_y;
-        double tBotttom = (bottomRight.m_y-mainPoint.m_y)/lineVect.m_y;
+        double tTop = (topLeft.m_y-trans_mainPoint.m_y)/trans_lineVect.m_y;
+        double tBotttom = (bottomRight.m_y-trans_mainPoint.m_y)/trans_lineVect.m_y;
 
-        edgePointA = mainPoint + tTop*lineVect;
-        edgePointB = mainPoint + tBotttom*lineVect;
+        edgePointA = trans_mainPoint + tTop*trans_lineVect;
+        edgePointB = trans_mainPoint + tBotttom*trans_lineVect;
 
     } else {
         // Horizontal
 
-        double tLeft = (topLeft.m_x-mainPoint.m_x)/lineVect.m_x;
-        double tRight = (bottomRight.m_x-mainPoint.m_x)/lineVect.m_x;
+        double tLeft = (topLeft.m_x-trans_mainPoint.m_x)/trans_lineVect.m_x;
+        double tRight = (bottomRight.m_x-trans_mainPoint.m_x)/trans_lineVect.m_x;
 
-        edgePointA = mainPoint + tLeft*lineVect;
-        edgePointB = mainPoint + tRight*lineVect;
+        edgePointA = trans_mainPoint + tLeft*trans_lineVect;
+        edgePointB = trans_mainPoint + tRight*trans_lineVect;
 
     }
-    
 
     if (highlited || selected) {
         gc->SetPen(wxPen(wxColour(200, 150, 150, 150), this->outlineWidth + 3));
