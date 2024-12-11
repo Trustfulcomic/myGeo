@@ -7,6 +7,7 @@
 #include "geoPoint.h"
 #include "geoLineBase.h"
 
+/// @brief Class for a segment
 class GeoSegment : public GeoLineBase {
 public:
     GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB);
@@ -23,10 +24,9 @@ public:
 
     wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) override;
 
-    wxPoint2DDouble GetVect(){ return lineVect; }
-    wxPoint2DDouble GetPoint(){ return mainPoint; }
-
 private:
+    /// First endpoint of the segment
     GeoPoint *pointA;
+    /// Second enpoint of the segment
     GeoPoint *pointB;
 };

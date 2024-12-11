@@ -5,6 +5,7 @@
 
 #include "../utils/utils.h"
 
+/// @brief Class for all geometrical objects
 class GeoObject {
 public:
     GeoObject(wxWindow *parent, const wxString &name);

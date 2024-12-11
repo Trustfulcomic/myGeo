@@ -1,5 +1,10 @@
 #include "geoSegment.h"
 
+/// @brief Basic constructor for GeoSegment
+/// @param parent DrawingCanvas on which the object is displayed
+/// @param name Name of the object
+/// @param pointA First endpoint of the segment
+/// @param pointB Second enpoint of the segment
 GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB)
     : GeoLineBase(parent, name, SEGMENT){
     

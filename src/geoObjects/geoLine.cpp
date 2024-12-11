@@ -3,6 +3,12 @@
 #include "../drawingCanvas.h"
 #include "../utils/utils.h"
 
+/// @brief Basic constructor for line using two objects
+/// @param parent DrawingCanvas on which the object is
+/// @param name Name of the object
+/// @param objA First parent of the object
+/// @param objB Second parent of the object
+/// @param def Definition of the line
 GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def)
     : GeoLineBase(parent, name, LINE) {
 

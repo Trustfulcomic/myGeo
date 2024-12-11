@@ -6,12 +6,14 @@
 #include "geoPoint.h"
 #include "geoLineBase.h"
 
+/// @brief All possible definitions of line
 enum LineDefinition {
     LINE_BY_TWO_POINTS,
     LINE_BY_POINT_AND_CURVE_PERP,
     LINE_BY_POINT_AND_CURVE_PARAL
 };
 
+/// @brief Class for a line
 class GeoLine : public GeoLineBase {
 public:
     GeoLine(wxWindow *parent, wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
@@ -28,5 +30,6 @@ public:
     wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) override;
 
 private:
+    /// @brief Definition of the line
     LineDefinition definition;
 };
