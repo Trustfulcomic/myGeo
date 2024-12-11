@@ -104,11 +104,16 @@ void MyFrame::SelectToolPane(Tool *tool) {
 void MyFrame::OnScroll(wxMouseEvent &event) {
     int rotation = event.GetWheelRotation();
 
+    wxPoint2DDouble originalMousePt = canvas->TransformPoint(event.GetPosition());
+
     if (rotation > 0) {
         canvas->ApplyScale(0.97);
     } else {
         canvas->ApplyScale(1/0.97);
     }
+
+    wxPoint2DDouble newMousePt = canvas->TransformPoint(event.GetPosition());
+    canvas->transform.Translate(newMousePt.m_x - originalMousePt.m_x, newMousePt.m_y - originalMousePt.m_y);
 }
 
 /// @brief Handels a sash move of the sidepanel.

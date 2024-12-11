@@ -31,11 +31,13 @@ public:
     wxAffineMatrix2D transform;
     wxPoint2DDouble TransformPoint(wxPoint2DDouble pt, bool inv = true);
 
+    /// Returns the current scale of the canvas
     double GetScale(){ return scale; }
     void ApplyScale(double factor);
 
     void RemoveObj(GeoObject* obj);
 private:
     void OnPaint(wxPaintEvent& event);
+    /// Current scale of the canvas
     double scale = 1;
 }; 

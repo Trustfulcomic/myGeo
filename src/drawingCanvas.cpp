@@ -27,6 +27,8 @@ wxPoint2DDouble DrawingCanvas::TransformPoint(wxPoint2DDouble pt, bool inv /*=tr
     return transform_cpy.TransformPoint(pt);
 }
 
+/// @brief Applies factor to the current scale
+/// @param factor The factor to apply
 void DrawingCanvas::ApplyScale(double factor) {
     if (scale < 0.001 && factor < 1) return;
     if (scale > 1000 && factor > 1) return;
