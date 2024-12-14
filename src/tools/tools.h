@@ -4,4 +4,4 @@
 #include "lineBy2PTool.h"
 #include "perpLineTool.h"
 #include "paralLineTool.h"
-#include "perpBisector.h"
+#include "perpBisectorTool.h"

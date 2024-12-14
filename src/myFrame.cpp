@@ -82,7 +82,7 @@ void MyFrame::SetupToolPanes(wxWindow *parent, wxSizer *sizer) {
     ADD_TOOL(LineBy2PTool);
     ADD_TOOL(PerpLineTool);
     ADD_TOOL(ParalLineTool);
-    ADD_TOOL(PerpBisector);
+    ADD_TOOL(PerpBisectorTool);
 }
 
 /// @brief Selects a tool.

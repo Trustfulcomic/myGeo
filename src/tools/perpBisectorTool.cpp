@@ -1,16 +1,16 @@
-#include "perpBisector.h"
+#include "perpBisectorTool.h"
 
 #include <iostream>
 
 /// @brief Same as Tool constructor 
-PerpBisector::PerpBisector(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id, const wxPoint &pos, const wxSize &size)
+PerpBisectorTool::PerpBisectorTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id, const wxPoint &pos, const wxSize &size)
     : Tool (parent, drawingCanvas, id, pos, size){
 
 }
 
 /// @brief Resets the state of the tool
 /// @details Deselects the point if selected. Destroys the temorary curve if present. Sets \a moving_point to false. Rloads objects afterwards.
-void PerpBisector::ResetState() {
+void PerpBisectorTool::ResetState() {
     moving_point = false;
     if (firstPoint != nullptr)
         firstPoint->selected = false;
@@ -25,7 +25,7 @@ void PerpBisector::ResetState() {
     ReloadObjects({0.0, 0.0});
 }
 
-void PerpBisector::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
+void PerpBisectorTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
     gc->SetPen(*wxWHITE_PEN);
     gc->SetBrush(*wxWHITE_BRUSH);
 
@@ -40,7 +40,7 @@ void PerpBisector::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const 
                     rect.GetHeight() / 2.0);
 }
 
-void PerpBisector::OnMouseDown(wxMouseEvent &event) {
+void PerpBisectorTool::OnMouseDown(wxMouseEvent &event) {
     wxPoint2DDouble mouse_pt = drawingCanvas->mousePt->GetPos();
     SortObjects(mouse_pt);
 
@@ -60,16 +60,16 @@ void PerpBisector::OnMouseDown(wxMouseEvent &event) {
     }
 }
 
-void PerpBisector::OnMouseMove(wxMouseEvent &event) {
+void PerpBisectorTool::OnMouseMove(wxMouseEvent &event) {
     SortObjects(drawingCanvas->mousePt->GetPos());
     CheckHighlight();
 }
 
-void PerpBisector::OnMouseUp(wxMouseEvent &event){
+void PerpBisectorTool::OnMouseUp(wxMouseEvent &event){
 }
 
-void PerpBisector::OnMouseLeave(wxMouseEvent &event){
+void PerpBisectorTool::OnMouseLeave(wxMouseEvent &event){
 }
 
-void PerpBisector::OnMouseEnter(wxMouseEvent &event){
+void PerpBisectorTool::OnMouseEnter(wxMouseEvent &event){
 }

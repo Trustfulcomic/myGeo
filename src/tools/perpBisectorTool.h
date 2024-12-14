@@ -7,9 +7,9 @@
 #include "../geoObjects/geoLine.h"
 
 /// @brief Class for a tool that creates a perpendicular bisector
-class PerpBisector : public Tool {
+class PerpBisectorTool : public Tool {
 public:
-    PerpBisector(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
+    PerpBisectorTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
 
     void ResetState() override;
     
