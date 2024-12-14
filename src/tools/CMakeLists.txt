@@ -6,4 +6,5 @@ target_sources(myGeo PRIVATE    tool.cpp
                                 lineBy2PTool.cpp
                                 perpLineTool.cpp
                                 paralLineTool.cpp
-                                perpBisectorTool.cpp)
+                                perpBisectorTool.cpp
+                                midpointTool.cpp)

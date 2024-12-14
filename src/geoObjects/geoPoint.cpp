@@ -168,12 +168,14 @@ void GeoPoint::ReloadSelf() {
 
         case POINT_ON_INTERSECT:
             // TODO - works only for lines rn
+            {
             GeoLineBase* firstLine = static_cast<GeoLineBase*>(parentObjs[0]);
             GeoLineBase* secondLine = static_cast<GeoLineBase*>(parentObjs[1]);
 
             pos = util::IntersectLines(firstLine->GetPoint(), firstLine->GetVect(),
                                        secondLine->GetPoint(), secondLine->GetVect());
             break;
+            }
 
         case MIDPOINT:
             if (parentObjs.size() == 2){

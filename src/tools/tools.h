@@ -5,3 +5,4 @@
 #include "perpLineTool.h"
 #include "paralLineTool.h"
 #include "perpBisectorTool.h"
+#include "midpointTool.h"

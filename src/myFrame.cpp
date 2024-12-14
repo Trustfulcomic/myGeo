@@ -83,6 +83,7 @@ void MyFrame::SetupToolPanes(wxWindow *parent, wxSizer *sizer) {
     ADD_TOOL(PerpLineTool);
     ADD_TOOL(ParalLineTool);
     ADD_TOOL(PerpBisectorTool);
+    ADD_TOOL(MidpointTool);
 }
 
 /// @brief Selects a tool.
