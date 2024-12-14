@@ -6,6 +6,7 @@ namespace util {
     wxPoint2DDouble IntersectLines(const wxPoint2DDouble &A, const wxPoint2DDouble &a, const wxPoint2DDouble &B, const wxPoint2DDouble &b);
     wxPoint2DDouble PerpVector(const wxPoint2DDouble &A);
     double VectDivide(const wxPoint2DDouble &A, const wxPoint2DDouble &B);
+    wxPoint2DDouble NormVector(const wxPoint2DDouble &vec);
 
     double DetMatrix2x2(const wxPoint2DDouble &a, const wxPoint2DDouble &b); 
 }

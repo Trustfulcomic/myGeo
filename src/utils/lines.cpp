@@ -58,3 +58,14 @@ double util::VectDivide(const wxPoint2DDouble &A, const wxPoint2DDouble &B){
         return A.m_x / B.m_x;
     }
 }
+
+/// @brief Normalizes a nonzero vector
+/// @param vec The vector to normalize
+/// @return The normalized vector
+wxPoint2DDouble util::NormVector(const wxPoint2DDouble &vec) {
+    double length = vec.GetVectorLength();
+    if (length == 0) {
+        return vec;
+    }
+    return vec / length;
+}
