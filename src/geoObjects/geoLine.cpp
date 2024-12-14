@@ -88,6 +88,12 @@ void GeoLine::ReloadSelf() {
                        static_cast<GeoCurve*>(parentObjs[1])->GetPerpPoint(
                        static_cast<GeoPoint*>(parentObjs[0])->GetPos()));
             break;
+        case LINE_PERPENDICULAR_BISECTOR:
+            mainPoint = (static_cast<GeoPoint*>(parentObjs[0])->GetPos()
+                         + static_cast<GeoPoint*>(parentObjs[1])->GetPos())/2;
+            lineVect = util::PerpVector(static_cast<GeoPoint*>(parentObjs[0])->GetPos()
+                                        - static_cast<GeoPoint*>(parentObjs[1])->GetPos());
+            break;
     }
 }
 

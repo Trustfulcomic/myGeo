@@ -10,7 +10,8 @@
 enum LineDefinition {
     LINE_BY_TWO_POINTS,
     LINE_BY_POINT_AND_CURVE_PERP,
-    LINE_BY_POINT_AND_CURVE_PARAL
+    LINE_BY_POINT_AND_CURVE_PARAL,
+    LINE_PERPENDICULAR_BISECTOR
 };
 
 /// @brief Class for a line
