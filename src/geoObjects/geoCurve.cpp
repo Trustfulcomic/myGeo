@@ -4,7 +4,7 @@
 /// @param parent DrawingCanvas on which the object is
 /// @param name Name of the object
 /// @param type Type of the curve
-GeoCurve::GeoCurve(wxWindow *parent, wxString &name, GeoCurveType type)
+GeoCurve::GeoCurve(wxWindow *parent, const wxString &name, GeoCurveType type)
     : GeoObject(parent, name){
     
     this->type = type;

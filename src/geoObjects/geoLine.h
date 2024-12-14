@@ -16,7 +16,7 @@ enum LineDefinition {
 /// @brief Class for a line
 class GeoLine : public GeoLineBase {
 public:
-    GeoLine(wxWindow *parent, wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
+    GeoLine(wxWindow *parent, const wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
 
     void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 

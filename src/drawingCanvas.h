@@ -8,6 +8,7 @@
 
 #include "geoObjects/geoPoint.h"
 #include "geoObjects/geoCurve.h"
+#include "nameHandler.h"
 
 class DrawingCanvas : public wxWindow {
 public:
@@ -36,6 +37,9 @@ public:
     void ApplyScale(double factor);
 
     void RemoveObj(GeoObject* obj);
+
+    /// Name handler for all objects on the canvas
+    NameHandler nameHandler = NameHandler();
 private:
     void OnPaint(wxPaintEvent& event);
     /// Current scale of the canvas

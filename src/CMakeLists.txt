@@ -5,7 +5,8 @@ include_directories(.)
 add_executable(myGeo ${SRCES})
 target_sources(myGeo PRIVATE    main.cpp
                                 myFrame.cpp
-                                drawingCanvas.cpp)
+                                drawingCanvas.cpp
+                                nameHandler.cpp)
 
 add_subdirectory(geoObjects)
 add_subdirectory(tools)

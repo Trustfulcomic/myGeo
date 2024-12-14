@@ -9,7 +9,7 @@
 /// @param objA First parent of the object
 /// @param objB Second parent of the object
 /// @param def Definition of the line
-GeoLine::GeoLine(wxWindow *parent, wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def)
+GeoLine::GeoLine(wxWindow *parent, const wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def)
     : GeoLineBase(parent, name, LINE) {
 
     this->parentObjs.push_back(objA);

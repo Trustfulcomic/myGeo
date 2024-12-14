@@ -5,7 +5,7 @@
 /// @param name Name of the object
 /// @param pointA First endpoint of the segment
 /// @param pointB Second enpoint of the segment
-GeoSegment::GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB)
+GeoSegment::GeoSegment(wxWindow *parent, const wxString &name, GeoPoint *pointA, GeoPoint *pointB)
     : GeoLineBase(parent, name, SEGMENT){
     
     this->parentObjs.push_back(pointA);

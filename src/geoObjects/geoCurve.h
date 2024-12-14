@@ -13,7 +13,7 @@ enum GeoCurveType {
 /// @brief Abstract class for a curve
 class GeoCurve : public GeoObject {
 public:
-    GeoCurve(wxWindow *parent, wxString &name, GeoCurveType type);
+    GeoCurve(wxWindow *parent, const wxString &name, GeoCurveType type);
 
     /// Returns the type of the curve
     GeoCurveType GetType() {return type;}

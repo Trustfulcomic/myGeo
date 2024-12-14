@@ -50,11 +50,11 @@ void PerpLineTool::OnMouseDown(wxMouseEvent &event) {
 
     if (tempLine != nullptr){
         GeoPoint* mainPoint = CreatePointAtPos(mouse_pt);
-        drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, nullName, mainPoint, curve, LINE_BY_POINT_AND_CURVE_PERP));
+        drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), mainPoint, curve, LINE_BY_POINT_AND_CURVE_PERP));
         ResetState();
     } else if (point != nullptr){
         if (closestObj != nullptr && !closestObj->IsPoint()){
-            drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, nullName, point, static_cast<GeoCurve*>(closestObj), LINE_BY_POINT_AND_CURVE_PERP));
+            drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), point, static_cast<GeoCurve*>(closestObj), LINE_BY_POINT_AND_CURVE_PERP));
             ResetState();
         }
     } else {

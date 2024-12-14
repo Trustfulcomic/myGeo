@@ -13,6 +13,7 @@ public:
 
     /// @brief  Draws itself on a wxGraphicsContext.
     /// @param gc The context to be drawn on.
+    /// @param transform The transofrm used on the canvas.
     virtual void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const = 0;
 
     /// Outline color of the GeoObject.
@@ -59,4 +60,6 @@ protected:
 private:
     /// Name of the object.
     wxString name;
+
+    friend class NameHandler;
 };

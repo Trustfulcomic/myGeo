@@ -7,7 +7,7 @@
 class GeoLineBase : public GeoCurve {
 public:
     /// @brief The same construtor as GeoCurve
-    GeoLineBase(wxWindow *parent, wxString &name, GeoCurveType type) : GeoCurve(parent, name, type) {};
+    GeoLineBase(wxWindow *parent, const wxString &name, GeoCurveType type) : GeoCurve(parent, name, type) {};
 
     /// @brief Returns the vector lying on the line 
     /// @return \a lineVect

@@ -11,6 +11,8 @@
 GeoObject::GeoObject(wxWindow *parent, const wxString &name) {
     this->parent = parent;
     this->name = name;
+
+    if (name != "") static_cast<DrawingCanvas*>(parent)->nameHandler.RenameObject(this, name);
 }
 
 /// @brief Destroys the GeoObject properly.
@@ -18,6 +20,7 @@ GeoObject::GeoObject(wxWindow *parent, const wxString &name) {
 GeoObject::~GeoObject() {
     auto canvas = (DrawingCanvas*) parent;
     canvas->RemoveObj(this);
+    canvas->nameHandler.RemoveObject(this);
 
     for (auto parentObj : parentObjs){
         parentObj->RemoveChild(this);

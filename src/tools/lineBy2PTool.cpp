@@ -54,7 +54,7 @@ void LineBy2PTool::OnMouseDown(wxMouseEvent &event) {
         drawingCanvas->tempGeoCurve = tempLine;
     } else {
         if (closestPoint != firstPoint){
-            drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, nullName, firstPoint, closestPoint, LINE_BY_TWO_POINTS));
+            drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstPoint, closestPoint, LINE_BY_TWO_POINTS));
             ResetState();
         }   
     }

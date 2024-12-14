@@ -10,7 +10,7 @@
 /// @brief Class for a segment
 class GeoSegment : public GeoLineBase {
 public:
-    GeoSegment(wxWindow *parent, wxString &name, GeoPoint *pointA, GeoPoint *pointB);
+    GeoSegment(wxWindow *parent, const wxString &name, GeoPoint *pointA, GeoPoint *pointB);
 
     void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 

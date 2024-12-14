@@ -54,7 +54,7 @@ void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
         drawingCanvas->tempGeoCurve = tempSegment;
     } else {
         if (closestPoint != firstPoint){
-            drawingCanvas->geoCurves.push_back(new GeoSegment(drawingCanvas, nullName, firstPoint, closestPoint));
+            drawingCanvas->geoCurves.push_back(new GeoSegment(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstPoint, closestPoint));
             ResetState();
         }   
     }
