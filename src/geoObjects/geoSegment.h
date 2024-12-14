@@ -24,6 +24,8 @@ public:
 
     wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) override;
 
+    wxPoint2DDouble GetMidpoint() override;
+
 private:
     /// First endpoint of the segment
     GeoPoint *pointA;

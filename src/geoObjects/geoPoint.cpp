@@ -61,6 +61,51 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj1,
     ReloadSelf();
 }
 
+/// @brief Contructor for a midpoint of a segment given by two points
+/// @param parent DrawingCanvas on which the point is
+/// @param name Name of the object
+/// @param parentObj1 First endpoint of the segment
+/// @param parentObj2 Second endpoint of the segment
+GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj1, GeoPoint *parentObj2)
+    : GeoObject(parent, name) {
+    this->pointRadius = parent->FromDIP(4);
+    this->outlineColor = *wxBLACK;
+    this->fillColor = wxColor(100, 100, 100);
+
+    this->isPoint = true;
+    this->draggable = false;
+
+    this->parentObjs.push_back(parentObj1);
+    parentObj1->AddChild(this);
+    this->parentObjs.push_back(parentObj2);
+    parentObj2->AddChild(this);
+
+    this->definition = MIDPOINT;
+
+    ReloadSelf();
+}
+
+/// @brief Contructor for a midpoint of curve
+/// @param parent DrawingCanvas on which the point is
+/// @param name Name of the object
+/// @param parentObj The curve from which the midpoint is done
+GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj)
+    : GeoObject(parent, name) {
+        this->pointRadius = parent->FromDIP(4);
+    this->outlineColor = *wxBLACK;
+    this->fillColor = wxColor(100, 100, 100);
+
+    this->isPoint = true;
+    this->draggable = false;
+
+    this->parentObjs.push_back(parentObj);
+    parentObj->AddChild(this);
+
+    this->definition = MIDPOINT;
+
+    ReloadSelf();
+}
+
 void GeoPoint::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {
     wxPoint2DDouble trans_pos = transform.TransformPoint(pos);
 
@@ -104,6 +149,9 @@ bool GeoPoint::SetPos(const wxPoint2DDouble &pos) {
 
         case POINT_ON_INTERSECT:
             return false;
+        
+        case MIDPOINT:
+            return false;
     }
 
     return false;
@@ -125,6 +173,15 @@ void GeoPoint::ReloadSelf() {
 
             pos = util::IntersectLines(firstLine->GetPoint(), firstLine->GetVect(),
                                        secondLine->GetPoint(), secondLine->GetVect());
+            break;
+
+        case MIDPOINT:
+            if (parentObjs.size() == 2){
+                pos = (static_cast<GeoPoint*>(parentObjs[0])->GetPos()
+                       + static_cast<GeoPoint*>(parentObjs[1])->GetPos())/2;
+            } else {
+                pos = static_cast<GeoCurve*>(parentObjs[0])->GetMidpoint();
+            }
             break;
     }
 }

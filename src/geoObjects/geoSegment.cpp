@@ -69,3 +69,7 @@ wxPoint2DDouble GeoSegment::GetPointFromParameter(const double &param) {
 wxPoint2DDouble GeoSegment::GetTangentAtPoint(const wxPoint2DDouble &pt) {
     return lineVect;
 }
+
+wxPoint2DDouble GeoSegment::GetMidpoint() {
+    return (pointA->GetPos() + pointB->GetPos())/2;
+}

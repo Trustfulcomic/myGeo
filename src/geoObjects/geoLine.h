@@ -30,6 +30,8 @@ public:
 
     wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) override;
 
+    wxPoint2DDouble GetMidpoint() override;
+
 private:
     /// @brief Definition of the line
     LineDefinition definition;

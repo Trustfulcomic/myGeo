@@ -50,6 +50,10 @@ public:
     /// @warning Point must be on the curve
     virtual wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) = 0;
 
+    /// @brief Finds the midpoint of the curve
+    /// @returns The midpoint
+    virtual wxPoint2DDouble GetMidpoint() = 0;
+
 private:
     /// Type of the curve
     GeoCurveType type;

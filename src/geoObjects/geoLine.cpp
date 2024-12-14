@@ -112,3 +112,7 @@ wxPoint2DDouble GeoLine::GetPointFromParameter(const double &param) {
 wxPoint2DDouble GeoLine::GetTangentAtPoint(const wxPoint2DDouble &pt) {
     return lineVect;
 }
+
+wxPoint2DDouble GeoLine::GetMidpoint() {
+    return {0.0, 0.0};
+}
