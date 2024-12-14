@@ -94,6 +94,21 @@ void GeoLine::ReloadSelf() {
             lineVect = util::PerpVector(static_cast<GeoPoint*>(parentObjs[0])->GetPos()
                                         - static_cast<GeoPoint*>(parentObjs[1])->GetPos());
             break;
+        case ANGLE_BISECTOR:
+            if (parentObjs.size() == 2){
+                GeoLineBase* firstLine = static_cast<GeoLineBase*>(parentObjs[0]);
+                GeoLineBase* secondLine = static_cast<GeoLineBase*>(parentObjs[1]);
+
+                mainPoint = util::IntersectLines(firstLine->GetPoint(), firstLine->GetVect(),
+                                        secondLine->GetPoint(), secondLine->GetVect());
+                lineVect = util::NormVector(firstLine->GetVect()) + util::NormVector(secondLine->GetVect());
+            } else {
+                mainPoint = static_cast<GeoPoint*>(parentObjs[1])->GetPos();
+                lineVect = util::NormVector(static_cast<GeoPoint*>(parentObjs[0])->GetPos() - static_cast<GeoPoint*>(parentObjs[1])->GetPos());
+                           + util::NormVector(static_cast<GeoPoint*>(parentObjs[2])->GetPos() - static_cast<GeoPoint*>(parentObjs[1])->GetPos());
+            }
+            break;
+            
     }
 }
 
