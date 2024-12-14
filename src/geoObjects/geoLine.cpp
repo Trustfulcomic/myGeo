@@ -24,6 +24,30 @@ GeoLine::GeoLine(wxWindow *parent, const wxString &name, GeoObject *objA, GeoObj
     this->outlineWidth = 2;
 }
 
+/// @brief Constructor for an angle bisector given by 3 points
+/// @param parent DrawingCanvas on which the object is
+/// @param name Name of the object
+/// @param ptA First point
+/// @param ptB Second point (apex)
+/// @param ptC Third point
+GeoLine::GeoLine(wxWindow *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC)
+    : GeoLineBase(parent, name, LINE){
+
+    this->parentObjs.push_back(ptA);
+    this->parentObjs.push_back(ptB);
+    this->parentObjs.push_back(ptC);
+    ptA->AddChild(this);
+    ptB->AddChild(this);
+    ptC->AddChild(this);
+
+    this->definition = ANGLE_BISECTOR;
+
+    this->outlineColor = wxColor(0, 0, 0);
+    this->outlineWidth = 2;
+
+    ReloadSelf();
+}
+
 void GeoLine::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {
     if (lineVect.m_x == 0 && lineVect.m_y == 0)
         return;

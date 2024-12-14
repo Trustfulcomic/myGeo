@@ -17,3 +17,11 @@ GeoCurve::GeoCurve(wxWindow *parent, const wxString &name, GeoCurveType type)
 double GeoCurve::GetDistance(const wxPoint2DDouble &pt) {
     return pt.GetDistance(this->GetClosestPoint(pt));
 }
+
+bool GeoCurve::IsAsLine() {
+    if (type == LINE || type == SEGMENT){
+        return true;
+    } else {
+        return false;
+    }
+}

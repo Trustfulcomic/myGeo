@@ -20,6 +20,7 @@ enum LineDefinition {
 class GeoLine : public GeoLineBase {
 public:
     GeoLine(wxWindow *parent, const wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
+    GeoLine(wxWindow *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC);
 
     void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 
