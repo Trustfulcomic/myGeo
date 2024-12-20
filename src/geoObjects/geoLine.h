@@ -13,7 +13,8 @@ enum LineDefinition {
     LINE_BY_POINT_AND_CURVE_PARAL,
     LINE_PERPENDICULAR_BISECTOR,
     ANGLE_BISECTOR,
-    ANGLE_BISECTOR_PERP // Used for second angle bisector when selecting two lines
+    ANGLE_BISECTOR_PERP, // Used for second angle bisector when selecting two lines
+    TRANSFORMED_LINE
 };
 
 /// @brief Class for a line
@@ -21,6 +22,7 @@ class GeoLine : public GeoLineBase {
 public:
     GeoLine(wxWindow *parent, const wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
     GeoLine(wxWindow *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC);
+    GeoLine(wxWindow *parent, const wxString &name, GeoLine *parentObj, GeoTransform *geoTransform);
 
     void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 

@@ -131,6 +131,7 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj, 
     this->geoTransform = geoTransform;
     this->definition = TRANSFORMED_POINT;
 
+    ReloadSelf();
 }
 
 void GeoPoint::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {

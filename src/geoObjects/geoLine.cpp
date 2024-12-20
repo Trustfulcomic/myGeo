@@ -48,6 +48,29 @@ GeoLine::GeoLine(wxWindow *parent, const wxString &name, GeoPoint *ptA, GeoPoint
     ReloadSelf();
 }
 
+/// @brief Constructor for line defined by line and GeoTransform
+/// @param parent DrawingCanvas on which the object is
+/// @param name Name of the object
+/// @param parentObj The parent object to be transformed
+/// @param geoTransform The used transformation
+GeoLine::GeoLine(wxWindow *parent, const wxString &name, GeoLine *parentObj, GeoTransform *geoTransform) 
+    : GeoLineBase(parent, name, LINE) {
+    this->parentObjs.push_back(parentObj);
+    parentObj->AddChild(this);
+
+    for (GeoObject* obj : geoTransform->GetDeps()){
+        this->parentObjs.push_back(obj);
+        obj->AddChild(this);
+    }
+
+    this->definition = TRANSFORMED_LINE;
+
+    this->outlineColor = wxColor(0, 0, 0);
+    this->outlineWidth = 2;
+
+    ReloadSelf();
+}
+
 void GeoLine::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {
     if (lineVect.m_x == 0 && lineVect.m_y == 0)
         return;
@@ -146,6 +169,11 @@ void GeoLine::ReloadSelf() {
                 lineVect = util::PerpVector(util::NormVector(static_cast<GeoPoint*>(parentObjs[0])->GetPos() - static_cast<GeoPoint*>(parentObjs[1])->GetPos())
                                             + util::NormVector(static_cast<GeoPoint*>(parentObjs[2])->GetPos() - static_cast<GeoPoint*>(parentObjs[1])->GetPos()));
             }
+            break;
+        
+        case TRANSFORMED_LINE:
+            mainPoint = geoTransform->TransformPoint(static_cast<GeoLineBase*>(parentObjs[0])->GetPoint());
+            lineVect = geoTransform->TransformVect(static_cast<GeoLineBase*>(parentObjs[0])->GetVect());
             break;
             
     }
