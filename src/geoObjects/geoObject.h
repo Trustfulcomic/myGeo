@@ -4,6 +4,7 @@
 #include <list>
 
 #include "../utils/utils.h"
+#include "../geoTransforms/geoTransformBase.h"
 
 /// @brief Class for all geometrical objects
 class GeoObject {
@@ -56,6 +57,9 @@ protected:
 
     /// True if object is point.
     bool isPoint = false;
+
+    /// Geometrical transofrmation if used in definition
+    GeoTransform* geoTransform = nullptr;
 
 private:
     /// Name of the object.

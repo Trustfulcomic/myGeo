@@ -1,11 +1,5 @@
 #include "geoTransform.h"
 
-/// @brief Basic constructor for GeoTransform
-/// @param param Parameter of the transformation id necessary
-GeoTransform::GeoTransform(const double& param) {
-    this->param = param;
-}
-
 /// @brief Basic constructor for point reflection
 /// @param parent Point defining the transformation
 PointReflection::PointReflection(GeoPoint* parent) : GeoTransform() {
@@ -20,6 +14,10 @@ wxPoint2DDouble PointReflection::TransformVect(const wxPoint2DDouble &vect) {
     return TransformPoint(vect);
 }
 
+std::list<GeoObject*> PointReflection::GetDeps() {
+    return {parent};
+}
+
 /// @brief Basic constructor for line reflection
 /// @param parent Line defining the transformation
 LineReflection::LineReflection(GeoLineBase *parent) : GeoTransform() {
@@ -32,4 +30,8 @@ wxPoint2DDouble LineReflection::TransformPoint(const wxPoint2DDouble &pt) {
 
 wxPoint2DDouble LineReflection::TransformVect(const wxPoint2DDouble &vect) {
     return TransformPoint(vect);
+}
+
+std::list<GeoObject*> LineReflection::GetDeps() {
+    return {parent};
 }

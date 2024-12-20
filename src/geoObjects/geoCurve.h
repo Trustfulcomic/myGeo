@@ -55,7 +55,6 @@ public:
     virtual wxPoint2DDouble GetMidpoint() = 0;
 
     /// @brief Check if the curve is instance of GeoLineBase
-    /// @return 
     bool IsAsLine();
 
 private:

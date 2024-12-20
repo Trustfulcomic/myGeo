@@ -32,6 +32,10 @@ GeoObject::~GeoObject() {
         delete childToDelete;
         childObjs.remove(childToDelete);
     }
+
+    if (geoTransform != nullptr){
+        delete geoTransform;
+    }
 }
 
 /// @brief Adds a child GeoObject, if it is not already.

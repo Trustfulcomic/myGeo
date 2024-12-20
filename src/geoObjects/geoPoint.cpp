@@ -91,7 +91,7 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj1,
 /// @param parentObj The curve from which the midpoint is done
 GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj)
     : GeoObject(parent, name) {
-        this->pointRadius = parent->FromDIP(4);
+    this->pointRadius = parent->FromDIP(4);
     this->outlineColor = *wxBLACK;
     this->fillColor = wxColor(100, 100, 100);
 
@@ -104,6 +104,33 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj)
     this->definition = MIDPOINT;
 
     ReloadSelf();
+}
+
+/// @brief Constructor for a point defined by a point and GeoTransfomr
+/// @param parent DrawingCanvas on which the point is
+/// @param name Name of the object
+/// @param parentObj The parent object to be transformed
+/// @param geoTransform The used transformation
+GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj, GeoTransform *geoTransform)
+    : GeoObject(parent, name) {
+    this->pointRadius = parent->FromDIP(4);
+    this->outlineColor = *wxBLACK;
+    this->fillColor = wxColor(100, 100, 100);
+
+    this->isPoint = true;
+    this->draggable = false;
+
+    this->parentObjs.push_back(parentObj);
+    parentObj->AddChild(this);
+
+    for (GeoObject* obj : geoTransform->GetDeps()){
+        this->parentObjs.push_back(obj);
+        obj->AddChild(this);
+    }
+
+    this->geoTransform = geoTransform;
+    this->definition = TRANSFORMED_POINT;
+
 }
 
 void GeoPoint::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {
@@ -152,6 +179,9 @@ bool GeoPoint::SetPos(const wxPoint2DDouble &pos) {
         
         case MIDPOINT:
             return false;
+        
+        case TRANSFORMED_POINT:
+            return false;
     }
 
     return false;
@@ -184,6 +214,10 @@ void GeoPoint::ReloadSelf() {
             } else {
                 pos = static_cast<GeoCurve*>(parentObjs[0])->GetMidpoint();
             }
+            break;
+
+        case TRANSFORMED_POINT:
+            pos = geoTransform->TransformPoint(static_cast<GeoPoint*>(parentObjs[0])->GetPos());
             break;
     }
 }

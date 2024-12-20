@@ -23,7 +23,7 @@ private:
     void OnMouseEnter(wxMouseEvent& event) override;
 
     /// The first selected endpoint
-    GeoPoint *firstPoint;
+    GeoPoint *firstPoint = nullptr;
     /// The temporary GeoSegment when first point already selected
     GeoSegment* tempSegment = nullptr;
 };

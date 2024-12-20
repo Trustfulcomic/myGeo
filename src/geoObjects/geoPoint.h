@@ -13,7 +13,8 @@ enum PointDefinition {
     FREE_POINT,
     POINT_ON_CURVE,
     POINT_ON_INTERSECT,
-    MIDPOINT
+    MIDPOINT,
+    TRANSFORMED_POINT
 };
 
 /// @brief Class for a point
@@ -23,6 +24,7 @@ public:
     GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj1, GeoCurve *parentObj2);
     GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj1, GeoPoint *parentObj2);
     GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj);
+    GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj, GeoTransform *geoTransform);
 
     virtual void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 

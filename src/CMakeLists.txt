@@ -9,6 +9,7 @@ target_sources(myGeo PRIVATE    main.cpp
                                 nameHandler.cpp)
 
 add_subdirectory(geoObjects)
+add_subdirectory(geoTransforms)
 add_subdirectory(tools)
 add_subdirectory(utils)
 
