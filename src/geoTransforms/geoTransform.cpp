@@ -29,7 +29,7 @@ wxPoint2DDouble LineReflection::TransformPoint(const wxPoint2DDouble &pt) {
 }
 
 wxPoint2DDouble LineReflection::TransformVect(const wxPoint2DDouble &vect) {
-    return TransformPoint(vect);
+    return TransformPoint(vect) - TransformPoint({0,0});
 }
 
 std::list<GeoObject*> LineReflection::GetDeps() {

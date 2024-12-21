@@ -9,4 +9,5 @@ target_sources(myGeo PRIVATE    tool.cpp
                                 perpBisectorTool.cpp
                                 midpointTool.cpp
                                 angleBisectorTool.cpp
-                                pointReflectTool.cpp)
+                                pointReflectTool.cpp
+                                lineReflectTool.cpp)
