@@ -198,3 +198,7 @@ wxPoint2DDouble GeoLine::GetTangentAtPoint(const wxPoint2DDouble &pt) {
 wxPoint2DDouble GeoLine::GetMidpoint() {
     return {0.0, 0.0};
 }
+
+GeoObject *GeoLine::GetTransformed(GeoTransform *geoTransform) {
+    return new GeoLine(parent, static_cast<DrawingCanvas*>(parent)->nameHandler.GetNextCurveName(), this, geoTransform);
+}

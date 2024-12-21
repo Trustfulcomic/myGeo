@@ -33,6 +33,8 @@ public:
 
     wxPoint2DDouble GetMidpoint() override;
 
+    GeoObject* GetTransformed(GeoTransform *geoTransform) override;
+
 private:
     /// First endpoint of the segment
     GeoPoint *pointA;

@@ -37,6 +37,8 @@ public:
 
     wxPoint2DDouble GetMidpoint() override;
 
+    GeoObject* GetTransformed(GeoTransform *geoTransform) override;
+
 private:
     /// @brief Definition of the line
     LineDefinition definition;

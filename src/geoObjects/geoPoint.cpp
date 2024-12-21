@@ -3,6 +3,8 @@
 #include "geoLine.h"
 #include "geoSegment.h"
 
+#include "../drawingCanvas.h"
+
 /// @brief Constructor for a free point or a point attached to a curve
 /// @param parent DrawingCanvas on which the point is
 /// @param name Name of the object
@@ -221,4 +223,8 @@ void GeoPoint::ReloadSelf() {
             pos = geoTransform->TransformPoint(static_cast<GeoPoint*>(parentObjs[0])->GetPos());
             break;
     }
+}
+
+GeoObject *GeoPoint::GetTransformed(GeoTransform *geoTransform) {
+    return new GeoPoint(parent, static_cast<DrawingCanvas*>(parent)->nameHandler.GetNextCurveName(), this, geoTransform);
 }

@@ -34,6 +34,11 @@ public:
     /// @param pt Point from which the distance is calculated.
     virtual double GetDistance(const wxPoint2DDouble &pt) = 0;
 
+    /// @brief Creates a transformed object using geometrical transform
+    /// @param geoTransform The transform to use
+    /// @return The transformed object
+    virtual GeoObject* GetTransformed(GeoTransform *geoTransform) = 0;
+
     void ReloadAllChildren();
     /// Reloads itself (recalculates position).
     virtual void ReloadSelf() = 0;

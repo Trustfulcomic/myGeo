@@ -1,5 +1,7 @@
 #include "geoSegment.h"
 
+#include "../drawingCanvas.h"
+
 /// @brief Constructor for GeoSegment using two endpoints
 /// @param parent DrawingCanvas on which the object is displayed
 /// @param name Name of the object
@@ -107,4 +109,8 @@ wxPoint2DDouble GeoSegment::GetTangentAtPoint(const wxPoint2DDouble &pt) {
 
 wxPoint2DDouble GeoSegment::GetMidpoint() {
     return (pointA->GetPos() + pointB->GetPos())/2;
+}
+
+GeoObject *GeoSegment::GetTransformed(GeoTransform *geoTransform) {
+    return new GeoSegment(parent, static_cast<DrawingCanvas*>(parent)->nameHandler.GetNextCurveName(), this, geoTransform);
 }

@@ -40,6 +40,8 @@ public:
 
     virtual void ReloadSelf() override;
 
+    GeoObject* GetTransformed(GeoTransform *geoTransform) override;
+
 private:
     /// The radius of the point when drawn
     int pointRadius;
