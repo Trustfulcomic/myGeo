@@ -226,5 +226,5 @@ void GeoPoint::ReloadSelf() {
 }
 
 GeoObject *GeoPoint::GetTransformed(GeoTransform *geoTransform) {
-    return new GeoPoint(parent, static_cast<DrawingCanvas*>(parent)->nameHandler.GetNextCurveName(), this, geoTransform);
+    return new GeoPoint(parent, static_cast<DrawingCanvas*>(parent)->nameHandler.GetNextPointName(), this, geoTransform);
 }

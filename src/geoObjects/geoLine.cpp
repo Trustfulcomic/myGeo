@@ -64,6 +64,7 @@ GeoLine::GeoLine(wxWindow *parent, const wxString &name, GeoLine *parentObj, Geo
     }
 
     this->definition = TRANSFORMED_LINE;
+    this->geoTransform = geoTransform;
 
     this->outlineColor = wxColor(0, 0, 0);
     this->outlineWidth = 2;

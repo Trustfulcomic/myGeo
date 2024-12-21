@@ -8,6 +8,7 @@ class GeoObject;
 class GeoTransform {
 public:
     GeoTransform(const double& param = 0);
+    virtual ~GeoTransform() {};
 
     /// @brief Applies the transformation on a point
     /// @param pt Point to which the transformation should be applied

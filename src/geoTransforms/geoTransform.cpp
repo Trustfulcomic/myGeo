@@ -11,7 +11,7 @@ wxPoint2DDouble PointReflection::TransformPoint(const wxPoint2DDouble &pt) {
 }
 
 wxPoint2DDouble PointReflection::TransformVect(const wxPoint2DDouble &vect) {
-    return TransformPoint(vect);
+    return -vect;
 }
 
 std::list<GeoObject*> PointReflection::GetDeps() {

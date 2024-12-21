@@ -47,12 +47,14 @@ GeoSegment::GeoSegment(wxWindow *parent, const wxString &name, GeoSegment *paren
 
     this->geoTransform = geoTransform;
 
+    this->definition = TRANSFORMED_SEG;
+
     ReloadSelf();
 }
 
 void GeoSegment::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {
-    wxPoint2DDouble trans_pointA = transform.TransformPoint(pointA->GetPos());
-    wxPoint2DDouble trans_pointB = transform.TransformPoint(pointB->GetPos());
+    wxPoint2DDouble trans_pointA = transform.TransformPoint(mainPoint);
+    wxPoint2DDouble trans_pointB = transform.TransformPoint(mainPoint + lineVect);
 
     if (highlited || selected) {
         gc->SetPen(wxPen(wxColour(200, 150, 150, 150), this->outlineWidth + 3));

@@ -7,3 +7,4 @@
 #include "perpBisectorTool.h"
 #include "midpointTool.h"
 #include "angleBisectorTool.h"
+#include "pointReflectTool.h"
