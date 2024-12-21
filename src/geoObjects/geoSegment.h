@@ -7,10 +7,17 @@
 #include "geoPoint.h"
 #include "geoLineBase.h"
 
+/// @brief Enum of all possible definitions of segment
+enum SegmentDefinition {
+    SEG_BY_TWO_POINTS,
+    TRANSFORMED_SEG
+};
+
 /// @brief Class for a segment
 class GeoSegment : public GeoLineBase {
 public:
     GeoSegment(wxWindow *parent, const wxString &name, GeoPoint *pointA, GeoPoint *pointB);
+    GeoSegment(wxWindow *parent, const wxString &name, GeoSegment *parentObj, GeoTransform *geoTransform);
 
     void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 
@@ -31,4 +38,7 @@ private:
     GeoPoint *pointA;
     /// Second enpoint of the segment
     GeoPoint *pointB;
+
+    /// Definition of the segment
+    SegmentDefinition definition;
 };

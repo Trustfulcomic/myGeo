@@ -1,6 +1,6 @@
 #include "geoSegment.h"
 
-/// @brief Basic constructor for GeoSegment
+/// @brief Constructor for GeoSegment using two endpoints
 /// @param parent DrawingCanvas on which the object is displayed
 /// @param name Name of the object
 /// @param pointA First endpoint of the segment
@@ -13,14 +13,39 @@ GeoSegment::GeoSegment(wxWindow *parent, const wxString &name, GeoPoint *pointA,
     pointA->AddChild(this);
     pointB->AddChild(this);
 
-    mainPoint = pointA->GetPos();
-    lineVect = pointB->GetPos() - pointA->GetPos();
-
     this->pointA = pointA;
     this->pointB = pointB;
 
     this->outlineColor = wxColor(0, 0, 0);
     this->outlineWidth = 2;
+
+    this->definition = SEG_BY_TWO_POINTS;
+
+    ReloadSelf();
+}
+
+/// @brief Constructor for GeoSegment using segment and geometrical transform
+/// @param parent DrawingCanvas on which the object is displayed
+/// @param name Name of the object
+/// @param parentObj The parent object to be transformed
+/// @param geoTransform The used transform
+GeoSegment::GeoSegment(wxWindow *parent, const wxString &name, GeoSegment *parentObj, GeoTransform *geoTransform)
+    : GeoLineBase(parent, name, SEGMENT) {
+
+    this->parentObjs.push_back(parentObj);
+    parentObj->AddChild(this);
+
+    for (GeoObject* obj : geoTransform->GetDeps()){
+        this->parentObjs.push_back(obj);
+        obj->AddChild(this);
+    }
+
+    this->outlineColor = wxColor(0, 0, 0);
+    this->outlineWidth = 2;
+
+    this->geoTransform = geoTransform;
+
+    ReloadSelf();
 }
 
 void GeoSegment::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {
@@ -37,8 +62,18 @@ void GeoSegment::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transfor
 }
 
 void GeoSegment::ReloadSelf() {
-    mainPoint = pointA->GetPos();
-    lineVect = pointB->GetPos() - pointA->GetPos();
+    switch (definition){
+        case SEG_BY_TWO_POINTS:
+            mainPoint = pointA->GetPos();
+            lineVect = pointB->GetPos() - pointA->GetPos();
+            break;
+
+        case TRANSFORMED_SEG:
+            mainPoint = geoTransform->TransformPoint(static_cast<GeoLineBase*>(parentObjs[0])->GetPoint());
+            lineVect = geoTransform->TransformVect(static_cast<GeoLineBase*>(parentObjs[0])->GetVect());
+            break;
+    }
+    
 }
 
 wxPoint2DDouble GeoSegment::GetPerpPoint(const wxPoint2DDouble &pt) {
