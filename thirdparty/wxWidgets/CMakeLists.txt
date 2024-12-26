@@ -1,15 +1,43 @@
 find_package(wxWidgets QUIET)
-if (wxWidgets_FOUND)
+
+if(wxWidgets_FOUND)
     message(STATUS "Found preinstalled wxWidgets libraries at ${wxWidgets_LIBRARIES}")
     add_library(wxWidgets_external INTERFACE)
 else()
     message(STATUS "Preinstalled wxWidgets not found.")
     message(STATUS "Will download and install wxWidgets in ${STAGED_INSTALL_PREFIX}")
-    include(FetchContent)
-    FetchContent_Declare(
-        wx
-        GIT_REPOSITORY https://github.com/wxWidgets/wxWidgets
-        GIT_TAG 7ad1bffa875f7a38db58b6069ea3ff0c49c211d2 # 3.1.7
+
+    include(ExternalProject)
+    ExternalProject_Add(wxWidgets_external
+        GIT_REPOSITORY
+        https://github.com/wxWidgets/wxWidgets.git
+        GIT_TAG
+        v3.2.6
+        UPDATE_COMMAND
+        ""
+        CMAKE_ARGS
+        -DCMAKE_INSTALL_PREFIX=${STAGED_INSTALL_PREFIX}
+        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+
+        -DwxBUILD_SHARED=OFF
+
+        TEST_AFTER_INSTALL
+        0
+        DOWNLOAD_NO_PROGRESS
+        1
+        LOG_CONFIGURE
+        1
+        LOG_BUILD
+        1
+        LOG_INSTALL
+        1
     )
-    FetchContent_MakeAvailable(wx)
+
+    set(wxWidgets_ROOT_DIR ${STAGED_INSTALL_PREFIX})
+    file(TO_NATIVE_PATH "${wxWidgets_ROOT_DIR}" wxWidgets_ROOT_DIR)
+    set(wxWidgets_ROOT_DIR ${wxWidgets_ROOT_DIR} CACHE INTERNAL "wxWidgets installation dir")
+
+    set(ENV_WX_CONFIG ${STAGED_INSTALL_PREFIX}/bin/wx-config)
+    file(TO_NATIVE_PATH "${ENV_WX_CONFIG}" ENV_WX_CONFIG)
+    set(ENV_WX_CONFIG ${ENV_WX_CONFIG} CACHE INTERNAL "wx-config dir")
 endif()

@@ -1,3 +1,3 @@
 include_directories(.)
-target_sources(myGeo PRIVATE    geoTransform.cpp
+target_sources(main PRIVATE     geoTransform.cpp
                                 geoTransformBase.cpp)

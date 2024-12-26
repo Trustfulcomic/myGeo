@@ -1,5 +1,5 @@
 include_directories(.)
-target_sources(myGeo PRIVATE    tool.cpp
+target_sources(main PRIVATE     tool.cpp
                                 pointTool.cpp
                                 handTool.cpp
                                 segBy2PTool.cpp
