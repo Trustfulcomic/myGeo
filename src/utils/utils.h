@@ -9,4 +9,9 @@ namespace util {
     wxPoint2DDouble NormVector(const wxPoint2DDouble &vec);
 
     double DetMatrix2x2(const wxPoint2DDouble &a, const wxPoint2DDouble &b); 
+
+    wxPoint2DDouble PointReflectPoint(const wxPoint2DDouble &S, const wxPoint2DDouble &A);
+    wxPoint2DDouble PointReflectVector(const wxPoint2DDouble &S, const wxPoint2DDouble &a);
+    wxPoint2DDouble LineReflectPoint(const wxPoint2DDouble &P, const wxPoint2DDouble &p, const wxPoint2DDouble &A);
+    wxPoint2DDouble LineReflectVector(const wxPoint2DDouble &P, const wxPoint2DDouble &p, const wxPoint2DDouble &a);
 }
