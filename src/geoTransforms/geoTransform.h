@@ -31,3 +31,16 @@ private:
     /// Line defining the transformation
     GeoLineBase* parent;
 };
+
+/// @brief Class for isogonal conjugate
+class IsoConjugate : public GeoTransform {
+public:
+    IsoConjugate(GeoPoint* A, GeoPoint* B, GeoPoint* C);
+
+    wxPoint2DDouble TransformPoint(const wxPoint2DDouble& pt) override;
+    wxPoint2DDouble TransformVect(const wxPoint2DDouble& vect) override;
+    std::list<GeoObject*> GetDeps() override;
+private:
+    /// Points of the traingle defining the transformation
+    GeoPoint *A, *B, *C;
+};
