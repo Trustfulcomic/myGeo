@@ -9,3 +9,4 @@
 #include "angleBisectorTool.h"
 #include "pointReflectTool.h"
 #include "lineReflectTool.h"
+#include "isoConjTool.h"

@@ -87,6 +87,7 @@ void MyFrame::SetupToolPanes(wxWindow *parent, wxSizer *sizer) {
     ADD_TOOL(AngleBisectorTool);
     ADD_TOOL(PointReflectTool);
     ADD_TOOL(LineReflectTool);
+    ADD_TOOL(IsoConjTool);
 }
 
 /// @brief Selects a tool.

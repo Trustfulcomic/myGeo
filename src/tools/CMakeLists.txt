@@ -10,4 +10,5 @@ target_sources(main PRIVATE     tool.cpp
                                 midpointTool.cpp
                                 angleBisectorTool.cpp
                                 pointReflectTool.cpp
-                                lineReflectTool.cpp)
+                                lineReflectTool.cpp
+                                isoConjTool.cpp)
