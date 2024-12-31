@@ -7,7 +7,7 @@
 /// @param name Name of the object
 /// @param pointA First endpoint of the segment
 /// @param pointB Second enpoint of the segment
-GeoSegment::GeoSegment(wxWindow *parent, const wxString &name, GeoPoint *pointA, GeoPoint *pointB)
+GeoSegment::GeoSegment(DrawingCanvas *parent, const wxString &name, GeoPoint *pointA, GeoPoint *pointB)
     : GeoLineBase(parent, name, SEGMENT){
     
     this->parentObjs.push_back(pointA);
@@ -31,7 +31,7 @@ GeoSegment::GeoSegment(wxWindow *parent, const wxString &name, GeoPoint *pointA,
 /// @param name Name of the object
 /// @param parentObj The parent object to be transformed
 /// @param geoTransform The used transform
-GeoSegment::GeoSegment(wxWindow *parent, const wxString &name, GeoSegment *parentObj, GeoTransform *geoTransform)
+GeoSegment::GeoSegment(DrawingCanvas *parent, const wxString &name, GeoSegment *parentObj, GeoTransform *geoTransform)
     : GeoLineBase(parent, name, SEGMENT) {
 
     this->parentObjs.push_back(parentObj);
@@ -114,7 +114,7 @@ wxPoint2DDouble GeoSegment::GetMidpoint() {
 }
 
 GeoObject *GeoSegment::GetTransformed(GeoTransform *geoTransform) {
-    return new GeoSegment(parent, static_cast<DrawingCanvas*>(parent)->nameHandler.GetNextCurveName(), this, geoTransform);
+    return new GeoSegment(parent, parent->nameHandler.GetNextCurveName(), this, geoTransform);
 }
 
 void GeoSegment::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler) {

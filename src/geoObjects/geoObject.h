@@ -8,11 +8,12 @@
 #include "../geoTransforms/geoTransformBase.h"
 
 class NameHandler;
+class DrawingCanvas;
 
 /// @brief Class for all geometrical objects
 class GeoObject {
 public:
-    GeoObject(wxWindow *parent, const wxString &name);
+    GeoObject(DrawingCanvas *parent, const wxString &name);
     /// @brief Default constructor for GeoObject
     GeoObject(){};
     virtual ~GeoObject();
@@ -66,7 +67,7 @@ public:
 
 protected:
     /// DrawingCanvas on which the object is drawn.
-    wxWindow *parent;
+    DrawingCanvas *parent;
 
     /// NameHandler used for this object
     NameHandler *nameHandler = nullptr;

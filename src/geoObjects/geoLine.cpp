@@ -9,7 +9,7 @@
 /// @param objA First parent of the object
 /// @param objB Second parent of the object
 /// @param def Definition of the line
-GeoLine::GeoLine(wxWindow *parent, const wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def)
+GeoLine::GeoLine(DrawingCanvas *parent, const wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def)
     : GeoLineBase(parent, name, LINE) {
 
     this->parentObjs.push_back(objA);
@@ -30,7 +30,7 @@ GeoLine::GeoLine(wxWindow *parent, const wxString &name, GeoObject *objA, GeoObj
 /// @param ptA First point
 /// @param ptB Second point (apex)
 /// @param ptC Third point
-GeoLine::GeoLine(wxWindow *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC)
+GeoLine::GeoLine(DrawingCanvas *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC)
     : GeoLineBase(parent, name, LINE){
 
     this->parentObjs.push_back(ptA);
@@ -53,7 +53,7 @@ GeoLine::GeoLine(wxWindow *parent, const wxString &name, GeoPoint *ptA, GeoPoint
 /// @param name Name of the object
 /// @param parentObj The parent object to be transformed
 /// @param geoTransform The used transformation
-GeoLine::GeoLine(wxWindow *parent, const wxString &name, GeoLine *parentObj, GeoTransform *geoTransform) 
+GeoLine::GeoLine(DrawingCanvas *parent, const wxString &name, GeoLine *parentObj, GeoTransform *geoTransform) 
     : GeoLineBase(parent, name, LINE) {
     this->parentObjs.push_back(parentObj);
     parentObj->AddChild(this);
@@ -77,7 +77,7 @@ void GeoLine::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) 
         return;
 
     wxPoint2DDouble trans_mainPoint = transform.TransformPoint(mainPoint);
-    wxPoint2DDouble trans_lineVect = lineVect * (static_cast<DrawingCanvas*>(parent))->GetScale();
+    wxPoint2DDouble trans_lineVect = lineVect * parent->GetScale();
 
     wxSize canvasSize = parent->GetSize();
 
@@ -201,7 +201,7 @@ wxPoint2DDouble GeoLine::GetMidpoint() {
 }
 
 GeoObject *GeoLine::GetTransformed(GeoTransform *geoTransform) {
-    return new GeoLine(parent, static_cast<DrawingCanvas*>(parent)->nameHandler.GetNextCurveName(), this, geoTransform);
+    return new GeoLine(parent, parent->nameHandler.GetNextCurveName(), this, geoTransform);
 }
 
 void GeoLine::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler *nameHandler) {

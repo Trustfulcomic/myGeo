@@ -20,9 +20,9 @@ enum LineDefinition {
 /// @brief Class for a line
 class GeoLine : public GeoLineBase {
 public:
-    GeoLine(wxWindow *parent, const wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
-    GeoLine(wxWindow *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC);
-    GeoLine(wxWindow *parent, const wxString &name, GeoLine *parentObj, GeoTransform *geoTransform);
+    GeoLine(DrawingCanvas *parent, const wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
+    GeoLine(DrawingCanvas *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC);
+    GeoLine(DrawingCanvas *parent, const wxString &name, GeoLine *parentObj, GeoTransform *geoTransform);
     /// @brief Default constructor for GeoLine
     GeoLine() : GeoLineBase(LINE) {};
 

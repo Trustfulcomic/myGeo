@@ -10,7 +10,7 @@
 /// @param name Name of the object
 /// @param pos Position of the point
 /// @param parentObj Optional curve to which the point is attached
-GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj)
+GeoPoint::GeoPoint(DrawingCanvas *parent, const wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj)
     : GeoObject(parent, name) {
     this->pointRadius = parent->FromDIP(4);
     this->outlineColor = *wxBLACK;
@@ -44,7 +44,7 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, const wxPoint2DDouble
 /// @param name Name of the object
 /// @param parentObj1 First curve on which the point is
 /// @param parentObj2 Second curve on which the point is
-GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj1, GeoCurve *parentObj2)
+GeoPoint::GeoPoint(DrawingCanvas *parent, const wxString &name, GeoCurve *parentObj1, GeoCurve *parentObj2)
     : GeoObject(parent, name) {
     this->pointRadius = parent->FromDIP(4);
     this->outlineColor = *wxBLACK;
@@ -68,7 +68,7 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj1,
 /// @param name Name of the object
 /// @param parentObj1 First endpoint of the segment
 /// @param parentObj2 Second endpoint of the segment
-GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj1, GeoPoint *parentObj2)
+GeoPoint::GeoPoint(DrawingCanvas *parent, const wxString &name, GeoPoint *parentObj1, GeoPoint *parentObj2)
     : GeoObject(parent, name) {
     this->pointRadius = parent->FromDIP(4);
     this->outlineColor = *wxBLACK;
@@ -91,7 +91,7 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj1,
 /// @param parent DrawingCanvas on which the point is
 /// @param name Name of the object
 /// @param parentObj The curve from which the midpoint is done
-GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj)
+GeoPoint::GeoPoint(DrawingCanvas *parent, const wxString &name, GeoCurve *parentObj)
     : GeoObject(parent, name) {
     this->pointRadius = parent->FromDIP(4);
     this->outlineColor = *wxBLACK;
@@ -113,7 +113,7 @@ GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj)
 /// @param name Name of the object
 /// @param parentObj The parent object to be transformed
 /// @param geoTransform The used transformation
-GeoPoint::GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj, GeoTransform *geoTransform)
+GeoPoint::GeoPoint(DrawingCanvas *parent, const wxString &name, GeoPoint *parentObj, GeoTransform *geoTransform)
     : GeoObject(parent, name) {
     this->pointRadius = parent->FromDIP(4);
     this->outlineColor = *wxBLACK;
@@ -226,7 +226,7 @@ void GeoPoint::ReloadSelf() {
 }
 
 GeoObject *GeoPoint::GetTransformed(GeoTransform *geoTransform) {
-    return new GeoPoint(parent, static_cast<DrawingCanvas*>(parent)->nameHandler.GetNextPointName(), this, geoTransform);
+    return new GeoPoint(parent, parent->nameHandler.GetNextPointName(), this, geoTransform);
 }
 
 void GeoPoint::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler) {

@@ -9,20 +9,19 @@
 /// @brief The constructor of GeoObject.
 /// @param parent DrawingCanvas on which the object will be drawn.
 /// @param name The name of the object.
-GeoObject::GeoObject(wxWindow *parent, const wxString &name) {
+GeoObject::GeoObject(DrawingCanvas *parent, const wxString &name) {
     this->parent = parent;
     this->name = name;
 
-    this->nameHandler = &(static_cast<DrawingCanvas*>(parent)->nameHandler);
-    if (name != "") static_cast<DrawingCanvas*>(parent)->nameHandler.RenameObject(this, name);
+    this->nameHandler = &(parent->nameHandler);
+    if (name != "") parent->nameHandler.RenameObject(this, name);
 }
 
 /// @brief Destroys the GeoObject properly.
 /// @details Removes itself from the DrawingCanvas ( \a parent ) and all of its parent GeoObjects. Starts DFS to destroy all dependent children. 
 GeoObject::~GeoObject() {
-    auto canvas = (DrawingCanvas*) parent;
-    canvas->RemoveObj(this);
-    canvas->nameHandler.RemoveObject(this);
+    parent->RemoveObj(this);
+    parent->nameHandler.RemoveObject(this);
 
     for (auto parentObj : parentObjs){
         parentObj->RemoveChild(this);

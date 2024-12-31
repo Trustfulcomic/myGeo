@@ -16,8 +16,8 @@ enum SegmentDefinition {
 /// @brief Class for a segment
 class GeoSegment : public GeoLineBase {
 public:
-    GeoSegment(wxWindow *parent, const wxString &name, GeoPoint *pointA, GeoPoint *pointB);
-    GeoSegment(wxWindow *parent, const wxString &name, GeoSegment *parentObj, GeoTransform *geoTransform);
+    GeoSegment(DrawingCanvas *parent, const wxString &name, GeoPoint *pointA, GeoPoint *pointB);
+    GeoSegment(DrawingCanvas *parent, const wxString &name, GeoSegment *parentObj, GeoTransform *geoTransform);
     /// @brief Default constructor for GeoSegment
     GeoSegment() : GeoLineBase(SEGMENT) {}
 

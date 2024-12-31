@@ -20,11 +20,11 @@ enum PointDefinition {
 /// @brief Class for a point
 class GeoPoint : public GeoObject {
 public:
-    GeoPoint(wxWindow *parent, const wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj = nullptr);
-    GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj1, GeoCurve *parentObj2);
-    GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj1, GeoPoint *parentObj2);
-    GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj);
-    GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj, GeoTransform *geoTransform);
+    GeoPoint(DrawingCanvas *parent, const wxString &name, const wxPoint2DDouble &pos, GeoCurve *parentObj = nullptr);
+    GeoPoint(DrawingCanvas *parent, const wxString &name, GeoCurve *parentObj1, GeoCurve *parentObj2);
+    GeoPoint(DrawingCanvas *parent, const wxString &name, GeoPoint *parentObj1, GeoPoint *parentObj2);
+    GeoPoint(DrawingCanvas *parent, const wxString &name, GeoCurve *parentObj);
+    GeoPoint(DrawingCanvas *parent, const wxString &name, GeoPoint *parentObj, GeoTransform *geoTransform);
     /// @brief Default constructor for GeoPoint
     GeoPoint(){};
 
