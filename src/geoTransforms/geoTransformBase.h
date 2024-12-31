@@ -3,6 +3,7 @@
 #include <list>
 
 class GeoObject;
+class NameHandler;
 
 /// @brief Base class for geometrical transformations
 class GeoTransform {
@@ -23,6 +24,11 @@ public:
     /// @brief Gets the dependencies of the transform
     /// @return List of the dependencies
     virtual std::list<GeoObject*> GetDeps() = 0;
+    
+    /// @brief Creates a copy of the GeoTransform
+    /// @param copiedPtrs Unordered map matching the old pointers to new pointers of already copied objects
+    /// @return The copied GeoTransform
+    virtual GeoTransform* CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs, NameHandler* nameHandler) = 0;
 protected:
     /// Parameter for the transform if necessary
     double param;

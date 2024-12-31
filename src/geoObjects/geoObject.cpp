@@ -21,7 +21,7 @@ GeoObject::GeoObject(DrawingCanvas *parent, const wxString &name) {
 /// @details Removes itself from the DrawingCanvas ( \a parent ) and all of its parent GeoObjects. Starts DFS to destroy all dependent children. 
 GeoObject::~GeoObject() {
     parent->RemoveObj(this);
-    parent->nameHandler.RemoveObject(this);
+    nameHandler->RemoveObject(this);
 
     for (auto parentObj : parentObjs){
         parentObj->RemoveChild(this);
@@ -99,6 +99,7 @@ void GeoObject::Rename(const wxString &name) {
 /// @param nameHandler NameHandler used for naming the copies
 void GeoObject::CreateCopyDeps(GeoObject *copy, std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs, NameHandler* nameHandler) {
     for (GeoObject* parentObj : this->parentObjs){
+        if (parentObj->temporary) continue;
         if (copiedPtrs.find(parentObj) == copiedPtrs.end()){
             parentObj->CreateCopy(copiedPtrs, nameHandler);
         }
@@ -106,9 +107,14 @@ void GeoObject::CreateCopyDeps(GeoObject *copy, std::unordered_map<GeoObject *, 
     }
 
     for (GeoObject* childObj : this->childObjs){
+        if (childObj->temporary) continue;
         if (copiedPtrs.find(childObj) == copiedPtrs.end()){
             childObj->CreateCopy(copiedPtrs, nameHandler);
         }
         copy->childObjs.push_back(copiedPtrs[childObj]);
+    }
+
+    if (geoTransform != nullptr){
+        copy->geoTransform = this->geoTransform->CopyTransform(copiedPtrs, nameHandler);
     }
 }

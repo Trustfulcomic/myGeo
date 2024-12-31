@@ -36,6 +36,7 @@ void PointTool::OnMouseDown(wxMouseEvent &event) {
     SortObjects(mouse_pt);
 
     creatingPoint = CreatePointAtPos(mouse_pt);
+    drawingCanvas->SaveState();
 }
 
 void PointTool::OnMouseMove(wxMouseEvent &event){

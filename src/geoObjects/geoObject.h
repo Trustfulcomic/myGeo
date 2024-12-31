@@ -9,6 +9,7 @@
 
 class NameHandler;
 class DrawingCanvas;
+struct DrawingCanvasState;
 
 /// @brief Class for all geometrical objects
 class GeoObject {
@@ -64,6 +65,12 @@ public:
     bool highlited = false;
     /// True if object id selected.
     bool selected = false;
+
+    /// Pointer to a state being deleted (and this object is part of)
+    DrawingCanvasState* stateDelete = nullptr;
+
+    /// True if the curve is temporary
+    bool temporary = false;
 
 protected:
     /// DrawingCanvas on which the object is drawn.

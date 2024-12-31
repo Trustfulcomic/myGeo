@@ -14,7 +14,7 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     wxSplitterWindow *splitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER);
     splitter->SetMinimumPaneSize(FromDIP(160));
 
-    canvas = new DrawingCanvas(splitter, wxID_ANY, wxDefaultPosition, this->FromDIP(wxSize(640,480)));
+    this->canvas = new DrawingCanvas(splitter, wxID_ANY, wxDefaultPosition, this->FromDIP(wxSize(640,480)));
     this->Bind(wxEVT_CHAR_HOOK, &MyFrame::OnChar, this);
     this->Bind(wxEVT_MOUSEWHEEL, &MyFrame::OnScroll, this);
     auto toolsPanel = BuildToolsPanel(splitter);
@@ -58,8 +58,24 @@ wxPanel *MyFrame::BuildToolsPanel(wxWindow *parent) {
 /// @brief Builds the menu bar.
 void MyFrame::BuildMenuBar() {
     wxMenuBar *menuBar = new wxMenuBar();
+
     wxMenu *fileMenu = new wxMenu();
     menuBar->Append(fileMenu, "File");
+
+    wxMenu *editMenu = new wxMenu();
+    editMenu->Append(wxID_UNDO);
+    editMenu->Append(wxID_REDO);
+    this->Bind(wxEVT_MENU, [&](wxCommandEvent &event){
+        if (event.GetId() == wxID_UNDO){
+            this->canvas->LoadPreviousState();
+            this->toolBind->ResetState();
+        } else if (event.GetId() == wxID_REDO){
+            this->canvas->LoadNextState();
+            this->toolBind->ResetState();
+        }
+    });
+    menuBar->Append(editMenu, "Edit");
+
     SetMenuBar(menuBar);
 }
 
@@ -146,8 +162,7 @@ void MyFrame::OnChar(wxKeyEvent &event) {
             canvas->transform.Translate(0.0, -FromDIP(10));
             break;
         case WXK_DELETE:
-            std::cout << "Delete" << std::endl;
-            std::list<GeoObject*> toDelete;
+            {std::list<GeoObject*> toDelete;
 
             for (auto geoObj : canvas->geoPoints) {
                 if (geoObj->selected)
@@ -158,12 +173,17 @@ void MyFrame::OnChar(wxKeyEvent &event) {
                     toDelete.push_back(geoObj);
             }
 
+            bool deletedSmth = false;
             for (auto toDelObj : toDelete){
                 delete toDelObj;
+                deletedSmth = true;
             }
 
             toolBind->ResetState();
-
+            if (deletedSmth) canvas->SaveState();
+            break;}
+        default:
+            event.Skip();
             break;
     }
 }

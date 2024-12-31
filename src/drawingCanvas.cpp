@@ -12,6 +12,7 @@ DrawingCanvas::DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos
     this->Bind(wxEVT_PAINT, &DrawingCanvas::OnPaint, this);
 
     mousePt = new GeoPoint(this, "", {0, 0});
+    SaveState();
 }
 
 /// @brief Transforms point using the \a transform matrix.
@@ -40,8 +41,68 @@ void DrawingCanvas::ApplyScale(double factor) {
 /// @brief Removes object from \a geoPoints and \a geoCurves
 /// @param obj The object to remove
 void DrawingCanvas::RemoveObj(GeoObject *obj) {
-    geoPoints.remove(static_cast<GeoPoint*>(obj));
-    geoCurves.remove(static_cast<GeoCurve*>(obj));
+    if (obj->stateDelete == nullptr){
+        geoPoints.remove(static_cast<GeoPoint*>(obj));
+        geoCurves.remove(static_cast<GeoCurve*>(obj));
+    } else {
+        obj->stateDelete->geoPoints.remove(static_cast<GeoPoint*>(obj));
+        obj->stateDelete->geoCurves.remove(static_cast<GeoCurve*>(obj));
+    }
+}
+
+void DrawingCanvas::SaveState() {
+    DrawingCanvasState state;
+    state.transform = transform;
+    state.scale = scale;
+    state.nameHandler = new NameHandler();
+
+    std::unordered_map<GeoObject*, GeoObject*> copiedPtrs;
+    for (GeoPoint* obj : geoPoints) {
+        if (copiedPtrs.find(obj) == copiedPtrs.end()){
+            obj->CreateCopy(copiedPtrs, state.nameHandler);
+        }
+        state.geoPoints.push_back(static_cast<GeoPoint*>(copiedPtrs[obj]));
+    }
+    
+    for (GeoCurve* obj : geoCurves) {
+        if (copiedPtrs.find(obj) == copiedPtrs.end()){
+            obj->CreateCopy(copiedPtrs, state.nameHandler);
+        }
+        state.geoCurves.push_back(static_cast<GeoCurve*>(copiedPtrs[obj]));
+    }
+
+    while (stateIdx + 1 < states.size()){
+        DrawingCanvasState toDel = states.back(); states.pop_back();
+        for (GeoObject* obj : toDel.geoPoints) obj->stateDelete = &toDel;
+        for (GeoObject* obj : toDel.geoCurves) obj->stateDelete = &toDel;
+
+        while (!toDel.geoPoints.empty()) {
+            GeoObject* obj = toDel.geoPoints.front();
+            delete obj;
+        }
+        while (!toDel.geoCurves.empty()) {
+            GeoObject* obj = toDel.geoCurves.front();
+            delete obj;
+        }
+    }
+
+    nameHandler = *state.nameHandler;
+    states.push_back(state);
+    stateIdx = states.size() - 1;
+}
+
+void DrawingCanvas::LoadPreviousState() {
+    if (stateIdx == 0) return;
+    stateIdx--;
+
+    LoadState();
+}
+
+void DrawingCanvas::LoadNextState() {
+    if (stateIdx + 1 == states.size()) return;
+    stateIdx++;
+
+    LoadState();
 }
 
 /// @brief Handels the paint event
@@ -65,6 +126,30 @@ void DrawingCanvas::OnPaint(wxPaintEvent &event) {
         delete gc;
     }
     Refresh();
+}
+
+void DrawingCanvas::LoadState() {
+    transform = states[stateIdx].transform;
+    scale = states[stateIdx].scale;
+    nameHandler = NameHandler();
+
+    geoPoints.clear();
+    geoCurves.clear();
+
+    std::unordered_map<GeoObject*, GeoObject*> copiedPtrs;
+    for (GeoPoint* obj : states[stateIdx].geoPoints) {
+        if (copiedPtrs.find(obj) == copiedPtrs.end()){
+            obj->CreateCopy(copiedPtrs, &nameHandler);
+        }
+        geoPoints.push_back(static_cast<GeoPoint*>(copiedPtrs[obj]));
+    }
+    
+    for (GeoCurve* obj : states[stateIdx].geoCurves) {
+        if (copiedPtrs.find(obj) == copiedPtrs.end()){
+            obj->CreateCopy(copiedPtrs, &nameHandler);
+        }
+        geoCurves.push_back(static_cast<GeoCurve*>(copiedPtrs[obj]));
+    }
 }
 
 /// @brief Deselects all objects

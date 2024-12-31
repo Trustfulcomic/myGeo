@@ -213,7 +213,6 @@ void GeoLine::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs,
     copy->definition = this->definition;
     copy->outlineColor = this->outlineColor;
     copy->outlineWidth = this->outlineWidth;
-    copy->geoTransform = this->geoTransform;
     copy->isPoint = this->isPoint;
 
     copy->nameHandler = nameHandler;

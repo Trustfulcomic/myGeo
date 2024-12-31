@@ -49,11 +49,14 @@ void MidpointTool::OnMouseDown(wxMouseEvent &event) {
             firstPoint->selected = true;
         } else {
             drawingCanvas->geoPoints.push_back(new GeoPoint(drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), firstPoint, static_cast<GeoPoint*>(closestObj)));
+            drawingCanvas->SaveState();
             ResetState();
         }
     } else if (firstPoint == nullptr){
         if (static_cast<GeoCurve*>(closestObj)->GetType() != LINE) {
             drawingCanvas->geoPoints.push_back(new GeoPoint(drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), static_cast<GeoCurve*>(closestObj)));
+            drawingCanvas->SaveState();
+            ResetState();
         }
     }
 }

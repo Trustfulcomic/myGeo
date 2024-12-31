@@ -51,11 +51,13 @@ void LineBy2PTool::OnMouseDown(wxMouseEvent &event) {
         firstPoint->selected = true;
 
         tempLine = new GeoLine(drawingCanvas, nullName, drawingCanvas->mousePt, firstPoint, LINE_BY_TWO_POINTS);
+        tempLine->temporary = true;
         drawingCanvas->tempGeoCurve = tempLine;
     } else {
         if (closestPoint != firstPoint){
             drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstPoint, closestPoint, LINE_BY_TWO_POINTS));
             ResetState();
+            drawingCanvas->SaveState();
         }   
     }
 }

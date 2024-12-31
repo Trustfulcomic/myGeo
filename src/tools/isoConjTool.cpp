@@ -57,6 +57,7 @@ void IsoConjTool::OnMouseDown(wxMouseEvent &event) {
         C->selected = true;
     } else {
         drawingCanvas->geoPoints.push_back(new GeoPoint(drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), closestPoint, new IsoConjugate(A, B, C)));
+        drawingCanvas->SaveState();
         ResetState();
     }
 }

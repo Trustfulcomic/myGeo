@@ -1,5 +1,6 @@
 #include "geoTransform.h"
 #include "../utils/utils.h"
+#include "../nameHandler.h"
 
 /// @brief Basic constructor for point reflection
 /// @param parent Point defining the transformation
@@ -19,6 +20,13 @@ std::list<GeoObject*> PointReflection::GetDeps() {
     return {parent};
 }
 
+GeoTransform *PointReflection::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs, NameHandler* nameHandler) {
+    if (copiedPtrs.find(parent) == copiedPtrs.end()){
+        parent->CreateCopy(copiedPtrs, nameHandler);
+    }
+    return new PointReflection(static_cast<GeoPoint*>(copiedPtrs[parent]));
+}
+
 /// @brief Basic constructor for line reflection
 /// @param parent Line defining the transformation
 LineReflection::LineReflection(GeoLineBase *parent) : GeoTransform() {
@@ -35,6 +43,13 @@ wxPoint2DDouble LineReflection::TransformVect(const wxPoint2DDouble &vect) {
 
 std::list<GeoObject*> LineReflection::GetDeps() {
     return {parent};
+}
+
+GeoTransform *LineReflection::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs, NameHandler *nameHandler) {
+    if (copiedPtrs.find(parent) == copiedPtrs.end()){
+        parent->CreateCopy(copiedPtrs, nameHandler);
+    }
+    return new LineReflection(static_cast<GeoLineBase*>(copiedPtrs[parent]));
 }
 
 /// @brief Basic constructor for isogonal conjugate transform
@@ -67,4 +82,19 @@ wxPoint2DDouble IsoConjugate::TransformVect(const wxPoint2DDouble &vect) {
 
 std::list<GeoObject *> IsoConjugate::GetDeps() {
     return {A, B, C};
+}
+
+GeoTransform *IsoConjugate::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs, NameHandler *nameHandler) {
+    if (copiedPtrs.find(A) == copiedPtrs.end()){
+        A->CreateCopy(copiedPtrs, nameHandler);
+    }
+    if (copiedPtrs.find(B) == copiedPtrs.end()){
+        B->CreateCopy(copiedPtrs, nameHandler);
+    }
+    if (copiedPtrs.find(C) == copiedPtrs.end()){
+        C->CreateCopy(copiedPtrs, nameHandler);
+    }
+    return new IsoConjugate(static_cast<GeoPoint*>(copiedPtrs[A]),
+                            static_cast<GeoPoint*>(copiedPtrs[B]),
+                            static_cast<GeoPoint*>(copiedPtrs[C]));
 }

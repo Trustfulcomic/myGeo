@@ -54,6 +54,7 @@ void PointReflectTool::OnMouseDown(wxMouseEvent &event) {
         } else {
             drawingCanvas->geoCurves.push_back(static_cast<GeoCurve*>(transformedObj));
         }
+        drawingCanvas->SaveState();
         ResetState();
     } else {
         PointReflection* geoTransform = new PointReflection(CreatePointAtPos(mouse_pt));
@@ -63,6 +64,7 @@ void PointReflectTool::OnMouseDown(wxMouseEvent &event) {
         } else {
             drawingCanvas->geoCurves.push_back(static_cast<GeoCurve*>(transformedObj));
         }
+        drawingCanvas->SaveState();
         ResetState();
     }
 }

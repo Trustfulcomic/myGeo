@@ -59,16 +59,19 @@ void AngleBisectorTool::OnMouseDown(wxMouseEvent &event) {
             secondObj = closestObj;
             secondObj->selected = true;
             tempLine = new GeoLine(drawingCanvas, nullName, static_cast<GeoPoint*>(firstObj), static_cast<GeoPoint*>(secondObj), drawingCanvas->mousePt);
+            tempLine->temporary = true;
             drawingCanvas->tempGeoCurve = tempLine;
         }
 
         if (!firstObj->IsPoint() && (!closestObj->IsPoint() && static_cast<GeoCurve*>(closestObj)->IsAsLine())){
             drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstObj, closestObj, ANGLE_BISECTOR));
             drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstObj, closestObj, ANGLE_BISECTOR_PERP));
+            drawingCanvas->SaveState();
             ResetState();
         }
     } else if (closestObj->IsPoint()){
         drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), static_cast<GeoPoint*>(firstObj), static_cast<GeoPoint*>(secondObj), static_cast<GeoPoint*>(closestObj)));
+        drawingCanvas->SaveState();
         ResetState();
     }
 }

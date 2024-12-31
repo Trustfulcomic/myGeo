@@ -31,4 +31,7 @@ private:
     bool isDraggingCanvas = false;
     /// Point from which the the canvas dragging started
     wxPoint2DDouble canvasDragPoint = {0.0, 0.0};
+
+    /// Something happened?
+    bool smthHappened = false;
 };  

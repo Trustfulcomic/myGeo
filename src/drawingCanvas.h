@@ -4,11 +4,20 @@
 #include <wx/dcbuffer.h>
 
 #include <list>
-#include <iostream>
+#include <deque>
 
 #include "geoObjects/geoPoint.h"
 #include "geoObjects/geoCurve.h"
 #include "nameHandler.h"
+
+/// @brief Struct for storing the state of the canvas
+struct DrawingCanvasState {
+    std::list<GeoPoint*> geoPoints = {};
+    std::list<GeoCurve*> geoCurves = {};
+    wxAffineMatrix2D transform;
+    NameHandler* nameHandler;
+    double scale = 1;
+};
 
 class DrawingCanvas : public wxWindow {
 public:
@@ -39,10 +48,26 @@ public:
 
     void RemoveObj(GeoObject* obj);
 
+    /// Saves the current state and points the \a stateIdx to it
+    void SaveState();
+    /// Loads the previous state
+    void LoadPreviousState();
+    /// Loads the next state
+    void LoadNextState();
+
     /// Name handler for all objects on the canvas
     NameHandler nameHandler = NameHandler();
 private:
     void OnPaint(wxPaintEvent& event);
     /// Current scale of the canvas
     double scale = 1;
+
+    /// Loads the state being pointed at by \a stateIdx
+    void LoadState();
+
+    /// Deque of all previous states of the drawing canvas
+    std::deque<DrawingCanvasState> states;
+    /// Index of the currently loaded state;
+    int stateIdx = 0;
+
 }; 

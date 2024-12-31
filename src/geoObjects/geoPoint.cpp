@@ -233,13 +233,14 @@ void GeoPoint::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs
     GeoPoint* copy = new GeoPoint();
 
     copy->parent = this->parent;
+    copy->isPoint = this->isPoint;
     copy->pointRadius = this->pointRadius;
     copy->outlineColor = this->outlineColor;
+    copy->fillColor = this->fillColor;
     copy->pos = this->pos;
     copy->draggable = this->draggable;
     copy->definition = this->definition;
     copy->parameter = this->parameter;
-    copy->geoTransform = this->geoTransform;
 
     copy->nameHandler = nameHandler;
     copy->Rename(this->GetName());

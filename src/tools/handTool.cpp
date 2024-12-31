@@ -7,12 +7,13 @@ HandTool::HandTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id
 }
 
 /// @brief Resets the state of the tool
-/// @details Sets \a isDragging, \a draggingObj, \a selectedObj and \a isDraggingCanvas to false/nullptr. Rloads objects afterward.
+/// @details Sets \a isDragging, \a draggingObj, \a selectedObj, \a smthHappened and \a isDraggingCanvas to false/nullptr. Rloads objects afterward.
 void HandTool::ResetState() {
     isDragging = false;
     draggingObj = nullptr;
     selectedObj = nullptr;
     isDraggingCanvas = false;
+    smthHappened = false;
 
     ReloadObjects({0.0, 0.0});
 }
@@ -69,6 +70,7 @@ void HandTool::OnMouseMove(wxMouseEvent &event) {
         drawingCanvas->transform.Translate((event.GetPosition().x - canvasDragPoint.m_x)/drawingCanvas->GetScale(), (event.GetPosition().y - canvasDragPoint.m_y)/drawingCanvas->GetScale());
         canvasDragPoint = event.GetPosition();
     }
+    if (isDragging || isDraggingCanvas) smthHappened = true;
 }
 
 void HandTool::OnMouseUp(wxMouseEvent &event) {
@@ -76,6 +78,9 @@ void HandTool::OnMouseUp(wxMouseEvent &event) {
     draggingObj = nullptr;
 
     isDraggingCanvas = false;
+
+    if (smthHappened) drawingCanvas->SaveState();
+    smthHappened = false;
 }
 
 void HandTool::OnMouseLeave(wxMouseEvent &event) {

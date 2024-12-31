@@ -121,14 +121,11 @@ void GeoSegment::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPt
     GeoSegment* copy = new GeoSegment();
 
     copy->parent = this->parent;
-    copy->pointA = this->pointA;
-    copy->pointB = this->pointB;
     copy->mainPoint = this->mainPoint;
     copy->lineVect = this->lineVect;
     copy->definition = this->definition;
     copy->outlineColor = this->outlineColor;
     copy->outlineWidth = this->outlineWidth;
-    copy->geoTransform = this->geoTransform;
     copy->isPoint = this->isPoint;
 
     copy->nameHandler = nameHandler;
@@ -137,4 +134,7 @@ void GeoSegment::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPt
     copiedPtrs[this] = copy;
 
     CreateCopyDeps(copy, copiedPtrs, nameHandler);
+
+    copy->pointA = static_cast<GeoPoint*>(copiedPtrs[this->pointA]);
+    copy->pointB = static_cast<GeoPoint*>(copiedPtrs[this->pointB]);
 }
