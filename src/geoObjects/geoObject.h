@@ -85,10 +85,6 @@ protected:
     /// Geometrical transofrmation if used in definition
     GeoTransform* geoTransform = nullptr;
 
-    /// @brief Copies the parents and children of \p copy if they do not yet exist in \p copiedPtrs
-    /// @param copy The object being copied
-    /// @param copiedPtrs Unordered map matching the old pointers to new pointers of already copied objects
-    /// @param nameHandler NameHandler used for naming the copies
     void CreateCopyDeps(GeoObject* copy, std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler);
 
 private:

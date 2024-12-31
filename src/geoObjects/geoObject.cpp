@@ -93,10 +93,11 @@ void GeoObject::Rename(const wxString &name) {
     nameHandler->RenameObject(this, name);
 }
 
-/// @brief Creates an identical copy recursively
+/// @brief Copies the parents and children of \p copy if they do not yet exist in \p copiedPtrs
 /// @details Copies the object itself and then copies its parents and children if they are not yet copied. All the copies can be accessed by traversing \p copiedPtrs afterwards.
+/// @param copy The object being copied
 /// @param copiedPtrs Unordered map matching the old pointers to new pointers of already copied objects
-/// @param nameHandler NameHandler used when creating the copies
+/// @param nameHandler NameHandler used for naming the copies
 void GeoObject::CreateCopyDeps(GeoObject *copy, std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs, NameHandler* nameHandler) {
     for (GeoObject* parentObj : this->parentObjs){
         if (copiedPtrs.find(parentObj) == copiedPtrs.end()){

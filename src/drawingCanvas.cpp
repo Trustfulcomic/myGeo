@@ -78,3 +78,21 @@ void DrawingCanvas::DeselectAll(){
         geoObj->selected = false;
     }
 }
+
+/// @brief Deletes all objects (except mouse point)
+void DrawingCanvas::DeleteAll() {
+    while (!geoPoints.empty()){
+        GeoObject* obj = geoPoints.front();
+        geoPoints.pop_front();
+        delete obj;
+    }
+    while (!geoCurves.empty()){
+        GeoObject* obj = geoCurves.front();
+        geoCurves.pop_front();
+        delete obj;
+    }
+    if (tempGeoCurve != nullptr){
+        delete tempGeoCurve;
+        tempGeoCurve = nullptr;
+    }
+}

@@ -16,6 +16,7 @@ public:
     virtual ~DrawingCanvas(){}
 
     void DeselectAll();
+    void DeleteAll();
     
     /// List of all GeoPoints
     std::list<GeoPoint*> geoPoints = {};
