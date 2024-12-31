@@ -14,6 +14,8 @@ enum GeoCurveType {
 class GeoCurve : public GeoObject {
 public:
     GeoCurve(wxWindow *parent, const wxString &name, GeoCurveType type);
+    /// @brief "Default" constructor for GeoCurve
+    GeoCurve(GeoCurveType type){ this->type = type; }
 
     /// Returns the type of the curve
     GeoCurveType GetType() {return type;}

@@ -203,3 +203,23 @@ wxPoint2DDouble GeoLine::GetMidpoint() {
 GeoObject *GeoLine::GetTransformed(GeoTransform *geoTransform) {
     return new GeoLine(parent, static_cast<DrawingCanvas*>(parent)->nameHandler.GetNextCurveName(), this, geoTransform);
 }
+
+void GeoLine::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler *nameHandler) {
+    GeoLine* copy = new GeoLine();
+
+    copy->parent = this->parent;
+    copy->mainPoint = this->mainPoint;
+    copy->lineVect = this->lineVect;
+    copy->definition = this->definition;
+    copy->outlineColor = this->outlineColor;
+    copy->outlineWidth = this->outlineWidth;
+    copy->geoTransform = this->geoTransform;
+    copy->isPoint = this->isPoint;
+
+    copy->nameHandler = nameHandler;
+    copy->Rename(this->GetName());
+
+    copiedPtrs[this] = copy;
+
+    CreateCopyDeps(copy, copiedPtrs, nameHandler);
+}

@@ -116,3 +116,25 @@ wxPoint2DDouble GeoSegment::GetMidpoint() {
 GeoObject *GeoSegment::GetTransformed(GeoTransform *geoTransform) {
     return new GeoSegment(parent, static_cast<DrawingCanvas*>(parent)->nameHandler.GetNextCurveName(), this, geoTransform);
 }
+
+void GeoSegment::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler) {
+    GeoSegment* copy = new GeoSegment();
+
+    copy->parent = this->parent;
+    copy->pointA = this->pointA;
+    copy->pointB = this->pointB;
+    copy->mainPoint = this->mainPoint;
+    copy->lineVect = this->lineVect;
+    copy->definition = this->definition;
+    copy->outlineColor = this->outlineColor;
+    copy->outlineWidth = this->outlineWidth;
+    copy->geoTransform = this->geoTransform;
+    copy->isPoint = this->isPoint;
+
+    copy->nameHandler = nameHandler;
+    copy->Rename(this->GetName());
+
+    copiedPtrs[this] = copy;
+
+    CreateCopyDeps(copy, copiedPtrs, nameHandler);
+}

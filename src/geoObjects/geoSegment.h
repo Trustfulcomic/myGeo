@@ -18,6 +18,8 @@ class GeoSegment : public GeoLineBase {
 public:
     GeoSegment(wxWindow *parent, const wxString &name, GeoPoint *pointA, GeoPoint *pointB);
     GeoSegment(wxWindow *parent, const wxString &name, GeoSegment *parentObj, GeoTransform *geoTransform);
+    /// @brief Default constructor for GeoSegment
+    GeoSegment() : GeoLineBase(SEGMENT) {}
 
     void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 
@@ -35,11 +37,13 @@ public:
 
     GeoObject* GetTransformed(GeoTransform *geoTransform) override;
 
+    void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler) override;
+
 private:
     /// First endpoint of the segment
-    GeoPoint *pointA;
+    GeoPoint *pointA = nullptr;
     /// Second enpoint of the segment
-    GeoPoint *pointB;
+    GeoPoint *pointB = nullptr;
 
     /// Definition of the segment
     SegmentDefinition definition;

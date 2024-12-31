@@ -2,14 +2,19 @@
 #include <wx/wx.h>
 #include <vector>
 #include <list>
+#include <unordered_map>
 
 #include "../utils/utils.h"
 #include "../geoTransforms/geoTransformBase.h"
+
+class NameHandler;
 
 /// @brief Class for all geometrical objects
 class GeoObject {
 public:
     GeoObject(wxWindow *parent, const wxString &name);
+    /// @brief Default constructor for GeoObject
+    GeoObject(){};
     virtual ~GeoObject();
 
     /// @brief  Draws itself on a wxGraphicsContext.
@@ -43,6 +48,17 @@ public:
     /// Reloads itself (recalculates position).
     virtual void ReloadSelf() = 0;
 
+    virtual void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler) = 0; 
+
+    /// @brief Returns the name of the object
+    /// @return The name of the object
+    wxString GetName(){ return name; }
+
+    /// @brief Renames the object
+    /// @param name The name to which the object should be renamed
+    /// @note \a nameHandler should be set for this to work
+    void Rename(const wxString& name);
+
     /// True if object is highlighted.
     bool highlited = false;
     /// True if object id selected.
@@ -51,6 +67,9 @@ public:
 protected:
     /// DrawingCanvas on which the object is drawn.
     wxWindow *parent;
+
+    /// NameHandler used for this object
+    NameHandler *nameHandler = nullptr;
 
     /// Vector of all objects this object depends on.
     std::vector<GeoObject*> parentObjs{};
@@ -65,6 +84,12 @@ protected:
 
     /// Geometrical transofrmation if used in definition
     GeoTransform* geoTransform = nullptr;
+
+    /// @brief Copies the parents and children of \p copy if they do not yet exist in \p copiedPtrs
+    /// @param copy The object being copied
+    /// @param copiedPtrs Unordered map matching the old pointers to new pointers of already copied objects
+    /// @param nameHandler NameHandler used for naming the copies
+    void CreateCopyDeps(GeoObject* copy, std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler);
 
 private:
     /// Name of the object.

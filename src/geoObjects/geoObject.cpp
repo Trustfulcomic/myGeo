@@ -4,6 +4,7 @@
 
 #include "geoObject.h"
 #include "../drawingCanvas.h"
+#include "../nameHandler.h"
 
 /// @brief The constructor of GeoObject.
 /// @param parent DrawingCanvas on which the object will be drawn.
@@ -12,6 +13,7 @@ GeoObject::GeoObject(wxWindow *parent, const wxString &name) {
     this->parent = parent;
     this->name = name;
 
+    this->nameHandler = &(static_cast<DrawingCanvas*>(parent)->nameHandler);
     if (name != "") static_cast<DrawingCanvas*>(parent)->nameHandler.RenameObject(this, name);
 }
 
@@ -83,5 +85,30 @@ void GeoObject::ReloadAllChildren() {
                 objQ.push(childObj);
             }
         }
+    }
+}
+
+void GeoObject::Rename(const wxString &name) {
+    if (nameHandler == nullptr) return;
+    nameHandler->RenameObject(this, name);
+}
+
+/// @brief Creates an identical copy recursively
+/// @details Copies the object itself and then copies its parents and children if they are not yet copied. All the copies can be accessed by traversing \p copiedPtrs afterwards.
+/// @param copiedPtrs Unordered map matching the old pointers to new pointers of already copied objects
+/// @param nameHandler NameHandler used when creating the copies
+void GeoObject::CreateCopyDeps(GeoObject *copy, std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs, NameHandler* nameHandler) {
+    for (GeoObject* parentObj : this->parentObjs){
+        if (copiedPtrs.find(parentObj) == copiedPtrs.end()){
+            parentObj->CreateCopy(copiedPtrs, nameHandler);
+        }
+        copy->parentObjs.push_back(copiedPtrs[parentObj]);
+    }
+
+    for (GeoObject* childObj : this->childObjs){
+        if (copiedPtrs.find(childObj) == copiedPtrs.end()){
+            childObj->CreateCopy(copiedPtrs, nameHandler);
+        }
+        copy->childObjs.push_back(copiedPtrs[childObj]);
     }
 }

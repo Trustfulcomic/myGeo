@@ -25,6 +25,8 @@ public:
     GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj1, GeoPoint *parentObj2);
     GeoPoint(wxWindow *parent, const wxString &name, GeoCurve *parentObj);
     GeoPoint(wxWindow *parent, const wxString &name, GeoPoint *parentObj, GeoTransform *geoTransform);
+    /// @brief Default constructor for GeoPoint
+    GeoPoint(){};
 
     virtual void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 
@@ -41,6 +43,8 @@ public:
     virtual void ReloadSelf() override;
 
     GeoObject* GetTransformed(GeoTransform *geoTransform) override;
+
+    void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler) override;
 
 private:
     /// The radius of the point when drawn

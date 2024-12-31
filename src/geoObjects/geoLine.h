@@ -23,6 +23,8 @@ public:
     GeoLine(wxWindow *parent, const wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
     GeoLine(wxWindow *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC);
     GeoLine(wxWindow *parent, const wxString &name, GeoLine *parentObj, GeoTransform *geoTransform);
+    /// @brief Default constructor for GeoLine
+    GeoLine() : GeoLineBase(LINE) {};
 
     void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 
@@ -38,6 +40,8 @@ public:
     wxPoint2DDouble GetMidpoint() override;
 
     GeoObject* GetTransformed(GeoTransform *geoTransform) override;
+
+    void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler) override;
 
 private:
     /// @brief Definition of the line
