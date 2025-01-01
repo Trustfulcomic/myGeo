@@ -229,7 +229,7 @@ GeoObject *GeoPoint::GetTransformed(GeoTransform *geoTransform) {
     return new GeoPoint(parent, parent->nameHandler.GetNextPointName(), this, geoTransform);
 }
 
-void GeoPoint::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler) {
+void GeoPoint::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs) {
     GeoPoint* copy = new GeoPoint();
 
     copy->parent = this->parent;
@@ -242,10 +242,9 @@ void GeoPoint::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs
     copy->definition = this->definition;
     copy->parameter = this->parameter;
 
-    copy->nameHandler = nameHandler;
     copy->Rename(this->GetName());
 
     copiedPtrs[this] = copy;
 
-    CreateCopyDeps(copy, copiedPtrs, nameHandler);
+    CreateCopyDeps(copy, copiedPtrs);
 }

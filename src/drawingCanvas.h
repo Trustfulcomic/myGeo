@@ -15,7 +15,6 @@ struct DrawingCanvasState {
     std::list<GeoPoint*> geoPoints = {};
     std::list<GeoCurve*> geoCurves = {};
     wxAffineMatrix2D transform;
-    NameHandler* nameHandler;
     double scale = 1;
 };
 

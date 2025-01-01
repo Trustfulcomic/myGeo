@@ -44,7 +44,7 @@ public:
 
     GeoObject* GetTransformed(GeoTransform *geoTransform) override;
 
-    void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler) override;
+    void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs) override;
 
 private:
     /// The radius of the point when drawn

@@ -54,19 +54,18 @@ void DrawingCanvas::SaveState() {
     DrawingCanvasState state;
     state.transform = transform;
     state.scale = scale;
-    state.nameHandler = new NameHandler();
 
     std::unordered_map<GeoObject*, GeoObject*> copiedPtrs;
     for (GeoPoint* obj : geoPoints) {
         if (copiedPtrs.find(obj) == copiedPtrs.end()){
-            obj->CreateCopy(copiedPtrs, state.nameHandler);
+            obj->CreateCopy(copiedPtrs);
         }
         state.geoPoints.push_back(static_cast<GeoPoint*>(copiedPtrs[obj]));
     }
     
     for (GeoCurve* obj : geoCurves) {
         if (copiedPtrs.find(obj) == copiedPtrs.end()){
-            obj->CreateCopy(copiedPtrs, state.nameHandler);
+            obj->CreateCopy(copiedPtrs);
         }
         state.geoCurves.push_back(static_cast<GeoCurve*>(copiedPtrs[obj]));
     }
@@ -86,7 +85,6 @@ void DrawingCanvas::SaveState() {
         }
     }
 
-    nameHandler = *state.nameHandler;
     states.push_back(state);
     stateIdx = states.size() - 1;
 }
@@ -139,15 +137,19 @@ void DrawingCanvas::LoadState() {
     std::unordered_map<GeoObject*, GeoObject*> copiedPtrs;
     for (GeoPoint* obj : states[stateIdx].geoPoints) {
         if (copiedPtrs.find(obj) == copiedPtrs.end()){
-            obj->CreateCopy(copiedPtrs, &nameHandler);
+            obj->CreateCopy(copiedPtrs);
         }
+        copiedPtrs[obj]->nameHandler = &nameHandler;
+        copiedPtrs[obj]->Rename(copiedPtrs[obj]->GetName());
         geoPoints.push_back(static_cast<GeoPoint*>(copiedPtrs[obj]));
     }
     
     for (GeoCurve* obj : states[stateIdx].geoCurves) {
         if (copiedPtrs.find(obj) == copiedPtrs.end()){
-            obj->CreateCopy(copiedPtrs, &nameHandler);
+            obj->CreateCopy(copiedPtrs);
         }
+        copiedPtrs[obj]->nameHandler = &nameHandler;
+        copiedPtrs[obj]->Rename(copiedPtrs[obj]->GetName());
         geoCurves.push_back(static_cast<GeoCurve*>(copiedPtrs[obj]));
     }
 }

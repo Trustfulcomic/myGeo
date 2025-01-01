@@ -20,9 +20,9 @@ std::list<GeoObject*> PointReflection::GetDeps() {
     return {parent};
 }
 
-GeoTransform *PointReflection::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs, NameHandler* nameHandler) {
+GeoTransform *PointReflection::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) {
     if (copiedPtrs.find(parent) == copiedPtrs.end()){
-        parent->CreateCopy(copiedPtrs, nameHandler);
+        parent->CreateCopy(copiedPtrs);
     }
     return new PointReflection(static_cast<GeoPoint*>(copiedPtrs[parent]));
 }
@@ -45,9 +45,9 @@ std::list<GeoObject*> LineReflection::GetDeps() {
     return {parent};
 }
 
-GeoTransform *LineReflection::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs, NameHandler *nameHandler) {
+GeoTransform *LineReflection::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) {
     if (copiedPtrs.find(parent) == copiedPtrs.end()){
-        parent->CreateCopy(copiedPtrs, nameHandler);
+        parent->CreateCopy(copiedPtrs);
     }
     return new LineReflection(static_cast<GeoLineBase*>(copiedPtrs[parent]));
 }
@@ -84,15 +84,15 @@ std::list<GeoObject *> IsoConjugate::GetDeps() {
     return {A, B, C};
 }
 
-GeoTransform *IsoConjugate::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs, NameHandler *nameHandler) {
+GeoTransform *IsoConjugate::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) {
     if (copiedPtrs.find(A) == copiedPtrs.end()){
-        A->CreateCopy(copiedPtrs, nameHandler);
+        A->CreateCopy(copiedPtrs);
     }
     if (copiedPtrs.find(B) == copiedPtrs.end()){
-        B->CreateCopy(copiedPtrs, nameHandler);
+        B->CreateCopy(copiedPtrs);
     }
     if (copiedPtrs.find(C) == copiedPtrs.end()){
-        C->CreateCopy(copiedPtrs, nameHandler);
+        C->CreateCopy(copiedPtrs);
     }
     return new IsoConjugate(static_cast<GeoPoint*>(copiedPtrs[A]),
                             static_cast<GeoPoint*>(copiedPtrs[B]),

@@ -21,7 +21,7 @@ GeoObject::GeoObject(DrawingCanvas *parent, const wxString &name) {
 /// @details Removes itself from the DrawingCanvas ( \a parent ) and all of its parent GeoObjects. Starts DFS to destroy all dependent children. 
 GeoObject::~GeoObject() {
     parent->RemoveObj(this);
-    nameHandler->RemoveObject(this);
+    if (nameHandler != nullptr) nameHandler->RemoveObject(this);
 
     for (auto parentObj : parentObjs){
         parentObj->RemoveChild(this);
@@ -88,8 +88,11 @@ void GeoObject::ReloadAllChildren() {
 }
 
 void GeoObject::Rename(const wxString &name) {
-    if (nameHandler == nullptr) return;
-    nameHandler->RenameObject(this, name);
+    if (nameHandler == nullptr) {
+        this->name = name;
+    } else {
+        nameHandler->RenameObject(this, name);
+    }
 }
 
 /// @brief Copies the parents and children of \p copy if they do not yet exist in \p copiedPtrs
@@ -97,11 +100,11 @@ void GeoObject::Rename(const wxString &name) {
 /// @param copy The object being copied
 /// @param copiedPtrs Unordered map matching the old pointers to new pointers of already copied objects
 /// @param nameHandler NameHandler used for naming the copies
-void GeoObject::CreateCopyDeps(GeoObject *copy, std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs, NameHandler* nameHandler) {
+void GeoObject::CreateCopyDeps(GeoObject *copy, std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) {
     for (GeoObject* parentObj : this->parentObjs){
         if (parentObj->temporary) continue;
         if (copiedPtrs.find(parentObj) == copiedPtrs.end()){
-            parentObj->CreateCopy(copiedPtrs, nameHandler);
+            parentObj->CreateCopy(copiedPtrs);
         }
         copy->parentObjs.push_back(copiedPtrs[parentObj]);
     }
@@ -109,12 +112,12 @@ void GeoObject::CreateCopyDeps(GeoObject *copy, std::unordered_map<GeoObject *, 
     for (GeoObject* childObj : this->childObjs){
         if (childObj->temporary) continue;
         if (copiedPtrs.find(childObj) == copiedPtrs.end()){
-            childObj->CreateCopy(copiedPtrs, nameHandler);
+            childObj->CreateCopy(copiedPtrs);
         }
         copy->childObjs.push_back(copiedPtrs[childObj]);
     }
 
     if (geoTransform != nullptr){
-        copy->geoTransform = this->geoTransform->CopyTransform(copiedPtrs, nameHandler);
+        copy->geoTransform = this->geoTransform->CopyTransform(copiedPtrs);
     }
 }

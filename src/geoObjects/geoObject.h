@@ -7,7 +7,6 @@
 #include "../utils/utils.h"
 #include "../geoTransforms/geoTransformBase.h"
 
-class NameHandler;
 class DrawingCanvas;
 struct DrawingCanvasState;
 
@@ -50,7 +49,7 @@ public:
     /// Reloads itself (recalculates position).
     virtual void ReloadSelf() = 0;
 
-    virtual void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler) = 0; 
+    virtual void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs) = 0; 
 
     /// @brief Returns the name of the object
     /// @return The name of the object
@@ -72,12 +71,12 @@ public:
     /// True if the curve is temporary
     bool temporary = false;
 
+    /// NameHandler used for this object
+    NameHandler *nameHandler = nullptr;
+
 protected:
     /// DrawingCanvas on which the object is drawn.
     DrawingCanvas *parent;
-
-    /// NameHandler used for this object
-    NameHandler *nameHandler = nullptr;
 
     /// Vector of all objects this object depends on.
     std::vector<GeoObject*> parentObjs{};
@@ -93,7 +92,7 @@ protected:
     /// Geometrical transofrmation if used in definition
     GeoTransform* geoTransform = nullptr;
 
-    void CreateCopyDeps(GeoObject* copy, std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler);
+    void CreateCopyDeps(GeoObject* copy, std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs);
 
 private:
     /// Name of the object.

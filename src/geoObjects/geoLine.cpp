@@ -204,7 +204,7 @@ GeoObject *GeoLine::GetTransformed(GeoTransform *geoTransform) {
     return new GeoLine(parent, parent->nameHandler.GetNextCurveName(), this, geoTransform);
 }
 
-void GeoLine::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler *nameHandler) {
+void GeoLine::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs) {
     GeoLine* copy = new GeoLine();
 
     copy->parent = this->parent;
@@ -215,10 +215,9 @@ void GeoLine::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs,
     copy->outlineWidth = this->outlineWidth;
     copy->isPoint = this->isPoint;
 
-    copy->nameHandler = nameHandler;
     copy->Rename(this->GetName());
 
     copiedPtrs[this] = copy;
 
-    CreateCopyDeps(copy, copiedPtrs, nameHandler);
+    CreateCopyDeps(copy, copiedPtrs);
 }

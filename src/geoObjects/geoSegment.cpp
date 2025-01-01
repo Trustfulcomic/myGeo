@@ -117,7 +117,7 @@ GeoObject *GeoSegment::GetTransformed(GeoTransform *geoTransform) {
     return new GeoSegment(parent, parent->nameHandler.GetNextCurveName(), this, geoTransform);
 }
 
-void GeoSegment::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs, NameHandler* nameHandler) {
+void GeoSegment::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs) {
     GeoSegment* copy = new GeoSegment();
 
     copy->parent = this->parent;
@@ -128,12 +128,11 @@ void GeoSegment::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPt
     copy->outlineWidth = this->outlineWidth;
     copy->isPoint = this->isPoint;
 
-    copy->nameHandler = nameHandler;
     copy->Rename(this->GetName());
 
     copiedPtrs[this] = copy;
 
-    CreateCopyDeps(copy, copiedPtrs, nameHandler);
+    CreateCopyDeps(copy, copiedPtrs);
 
     copy->pointA = static_cast<GeoPoint*>(copiedPtrs[this->pointA]);
     copy->pointB = static_cast<GeoPoint*>(copiedPtrs[this->pointB]);
