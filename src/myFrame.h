@@ -5,20 +5,18 @@
 
 #include "drawingCanvas.h"
 #include "tools/tools.h"
+#include "sidePanel.h"
 
 class MyFrame : public wxFrame {
 public:
     MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size);
 
 private:
-    wxPanel* BuildToolsPanel(wxWindow *parent);
     void BuildMenuBar();
-    
-    void SetupToolPanes(wxWindow *parent, wxSizer *sizer);
-    void SelectToolPane(Tool *tool);
 
-    /// Vector of all available tools.
-    std::vector<Tool*> tools;
+    /// Side panel
+    SidePanel *sidePanel;
+
     /// ToolBind used to bind tools to canvas.
     ToolBind *toolBind;
 

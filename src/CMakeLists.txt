@@ -19,7 +19,8 @@ add_executable(main main.cpp)
 
 target_sources(main PRIVATE     myFrame.cpp
                                 drawingCanvas.cpp
-                                nameHandler.cpp)
+                                nameHandler.cpp
+                                sidePanel.cpp)
 add_subdirectory(geoTransforms)
 add_subdirectory(tools)
 add_subdirectory(utils)
