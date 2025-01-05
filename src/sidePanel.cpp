@@ -8,6 +8,7 @@
 /// @param toolBind ToolBind used for the tools
 SidePanel::SidePanel(wxWindow *parent, DrawingCanvas* drawingCanvas, ToolBind* toolBind) : wxPanel(parent, wxID_ANY) {
     this->drawingCanvas = drawingCanvas;
+    this->drawingCanvas->SetSidePanel(this);
     this->toolBind = toolBind;
 
     this->SetBackgroundColour(wxColour("#f4f3f3"));
@@ -31,7 +32,7 @@ SidePanel::SidePanel(wxWindow *parent, DrawingCanvas* drawingCanvas, ToolBind* t
     toolPanel->SetScrollRate(0, FromDIP(10));
     toolPanel->SetBackgroundColour(wxColour("#f4f3f3"));
 
-    listPanel = new wxListCtrl(this, wxID_ANY);
+    listPanel = new VirtListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     listPanel->Hide();
 
     SetupTools();
@@ -95,7 +96,10 @@ void SidePanel::SetupTools() {
 
 /// @brief Sets up the \a listPanel
 void SidePanel::SetupList() {
-    // TODO
+    listPanel->ClearObjects();
+    listPanel->AddObjects<GeoPoint>(drawingCanvas->geoPoints);
+    listPanel->AddObjects<GeoCurve>(drawingCanvas->geoCurves);
+    listPanel->RefreshAfterUpdate();
 }
 
 /// @brief Selects a certain tool
@@ -111,4 +115,54 @@ void SidePanel::SelectToolPane(Tool *tool) {
 
     tool->ReloadObjects({0.0, 0.0});
     drawingCanvas->DeselectAll();
+}
+
+/// @brief Constructor for Virtual List Control
+/// @param parent The parent window
+/// @param id ID of the list control
+/// @param pos Position of the list
+/// @param size Size of the list
+VirtListCtrl::VirtListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size) 
+    : wxListCtrl(parent, id, pos, size, wxLC_REPORT | wxLC_VIRTUAL) {
+
+    this->AppendColumn(wxString::FromUTF8("Jméno"));
+    this->AppendColumn(wxString::FromUTF8("Definice"));
+    this->AppendColumn(wxString::FromUTF8("Parametr"));
+}
+
+/// @brief Adds objects to the list
+/// @tparam T Type of the objects to add
+/// @param objs List of the objects to add
+template <class T> void VirtListCtrl::AddObjects(std::list<T*> &objs) {
+    for (GeoObject* obj : objs) {
+        items.push_back(obj->GetListItem());
+    }
+}
+
+/// @brief Clears all objects in the list
+void VirtListCtrl::ClearObjects() {
+    items.clear();
+}
+
+/// @brief Refreshes the list after updated items
+void VirtListCtrl::RefreshAfterUpdate() {
+    SetItemCount(items.size());
+    this->Refresh();
+}
+
+/// @brief Returns the text to be displayed in a specified cell
+/// @param index Index of the item
+/// @param column Column of the cell
+/// @return Text to be displyed in the cell
+wxString VirtListCtrl::OnGetItemText(long index, long column) const {
+    switch (column) {
+        case 0:
+            return items[index].name;
+        case 1:
+            return items[index].definition;
+        case 2:
+            return wxString::Format("%.3f", items[index].parameter);
+        default:
+            return "";
+    }
 }

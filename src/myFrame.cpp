@@ -13,7 +13,7 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     wxSplitterWindow *splitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER);
     splitter->SetMinimumPaneSize(FromDIP(160));
 
-    this->canvas = new DrawingCanvas(splitter, wxID_ANY, wxDefaultPosition, this->FromDIP(wxSize(640,480)));
+    this->canvas = new DrawingCanvas(splitter, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     this->Bind(wxEVT_CHAR_HOOK, &MyFrame::OnChar, this);
     this->Bind(wxEVT_MOUSEWHEEL, &MyFrame::OnScroll, this);
 

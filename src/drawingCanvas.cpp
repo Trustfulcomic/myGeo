@@ -1,5 +1,7 @@
 #include "drawingCanvas.h"
 
+#include "sidePanel.h"
+
 /// @brief The constructor of DrawingCanvas
 /// @param parent The parent wxWindow
 /// @param id ID of the wxWindow
@@ -87,6 +89,8 @@ void DrawingCanvas::SaveState() {
 
     states.push_back(state);
     stateIdx = states.size() - 1;
+
+    if (sidePanel != nullptr) sidePanel->UpdateList();
 }
 
 void DrawingCanvas::LoadPreviousState() {
@@ -152,6 +156,8 @@ void DrawingCanvas::LoadState() {
         copiedPtrs[obj]->Rename(copiedPtrs[obj]->GetName());
         geoCurves.push_back(static_cast<GeoCurve*>(copiedPtrs[obj]));
     }
+
+    if (sidePanel != nullptr) sidePanel->UpdateList();
 }
 
 /// @brief Deselects all objects

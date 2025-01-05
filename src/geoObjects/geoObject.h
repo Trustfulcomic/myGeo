@@ -9,6 +9,7 @@
 
 class DrawingCanvas;
 struct DrawingCanvasState;
+struct ListItem;
 
 /// @brief Class for all geometrical objects
 class GeoObject {
@@ -73,6 +74,9 @@ public:
 
     /// NameHandler used for this object
     NameHandler *nameHandler = nullptr;
+
+    /// Returns the ListItem to be shown in the object list
+    virtual ListItem GetListItem();
 
 protected:
     /// DrawingCanvas on which the object is drawn.

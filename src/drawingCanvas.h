@@ -10,6 +10,8 @@
 #include "geoObjects/geoCurve.h"
 #include "nameHandler.h"
 
+class SidePanel;
+
 /// @brief Struct for storing the state of the canvas
 struct DrawingCanvasState {
     std::list<GeoPoint*> geoPoints = {};
@@ -54,6 +56,10 @@ public:
     /// Loads the next state
     void LoadNextState();
 
+    /// @brief Sets the \a sidePanel
+    /// @param sidePanel The SidePanel to set
+    void SetSidePanel(SidePanel* sidePanel) { this->sidePanel = sidePanel; }
+
     /// Name handler for all objects on the canvas
     NameHandler nameHandler = NameHandler();
 private:
@@ -69,4 +75,6 @@ private:
     /// Index of the currently loaded state;
     int stateIdx = 0;
 
+    /// The side panel controlling this drawing canvas
+    SidePanel* sidePanel = nullptr;
 }; 

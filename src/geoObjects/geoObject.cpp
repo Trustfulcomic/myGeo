@@ -5,6 +5,7 @@
 #include "geoObject.h"
 #include "../drawingCanvas.h"
 #include "../nameHandler.h"
+#include "../sidePanel.h"
 
 /// @brief The constructor of GeoObject.
 /// @param parent DrawingCanvas on which the object will be drawn.
@@ -93,6 +94,10 @@ void GeoObject::Rename(const wxString &name) {
     } else {
         nameHandler->RenameObject(this, name);
     }
+}
+
+ListItem GeoObject::GetListItem() {
+    return {name, "", 0.0};
 }
 
 /// @brief Copies the parents and children of \p copy if they do not yet exist in \p copiedPtrs
