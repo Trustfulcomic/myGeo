@@ -8,6 +8,7 @@
 struct ListItem {
     wxString name, definition;
     double parameter;
+    GeoObject* obj;
 };
 
 /// Class for the Virtual List Control
@@ -17,6 +18,7 @@ public:
 
     template <class T> void AddObjects(std::list<T*>& objs);
     void ClearObjects();
+    void ReloadHighlight();
 
     void RefreshAfterUpdate();
 

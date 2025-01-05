@@ -98,6 +98,7 @@ void MyFrame::OnChar(wxKeyEvent &event) {
             break;
         case WXK_DELETE:
             {std::list<GeoObject*> toDelete;
+            std::unordered_set<GeoObject*> deleted;
 
             for (auto geoObj : canvas->geoPoints) {
                 if (geoObj->selected)
@@ -110,6 +111,12 @@ void MyFrame::OnChar(wxKeyEvent &event) {
 
             bool deletedSmth = false;
             for (auto toDelObj : toDelete){
+                if (deleted.find(toDelObj) != deleted.end()) continue;
+
+                for (GeoObject* obj : toDelObj->GetDescendants()){
+                    deleted.insert(obj);
+                }
+
                 delete toDelObj;
                 deletedSmth = true;
             }

@@ -3,6 +3,7 @@
 #include <vector>
 #include <list>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "../utils/utils.h"
 #include "../geoTransforms/geoTransformBase.h"
@@ -77,6 +78,9 @@ public:
 
     /// Returns the ListItem to be shown in the object list
     virtual ListItem GetListItem();
+
+    /// @brief Returns all descendants of the object 
+    std::unordered_set<GeoObject*> GetDescendants();
 
 protected:
     /// DrawingCanvas on which the object is drawn.

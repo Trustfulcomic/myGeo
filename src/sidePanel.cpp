@@ -33,6 +33,15 @@ SidePanel::SidePanel(wxWindow *parent, DrawingCanvas* drawingCanvas, ToolBind* t
     toolPanel->SetBackgroundColour(wxColour("#f4f3f3"));
 
     listPanel = new VirtListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    listPanel->Bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent& event){
+        this->listPanel->ReloadHighlight();
+    });
+    listPanel->Bind(wxEVT_LIST_ITEM_DESELECTED, [this](wxListEvent& event){
+        this->listPanel->ReloadHighlight();
+    });
+    listPanel->Bind(wxEVT_LIST_ITEM_FOCUSED, [this](wxListEvent& event){
+        this->listPanel->ReloadHighlight();
+    });
     listPanel->Hide();
 
     SetupTools();
@@ -148,6 +157,20 @@ void VirtListCtrl::ClearObjects() {
 void VirtListCtrl::RefreshAfterUpdate() {
     SetItemCount(items.size());
     this->Refresh();
+}
+
+void VirtListCtrl::ReloadHighlight() {
+    for (ListItem& item : items){
+        item.obj->selected = false;
+    }
+
+    int no = 0;
+    long itemIndex = -1;
+    while ((itemIndex = this->GetNextItem(itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) != wxNOT_FOUND) {
+        if (itemIndex >= items.size()) break; // Idk why, but after object deletion the itemIndex goes out of bounds :/
+        items[itemIndex].obj->selected = true;
+        no++;
+    }
 }
 
 /// @brief Returns the text to be displayed in a specified cell

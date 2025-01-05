@@ -97,7 +97,26 @@ void GeoObject::Rename(const wxString &name) {
 }
 
 ListItem GeoObject::GetListItem() {
-    return {name, "", 0.0};
+    return {name, "", 0.0, this};
+}
+
+std::unordered_set<GeoObject*> GeoObject::GetDescendants() {
+    std::unordered_set<GeoObject*> res;
+    std::queue<GeoObject*> q; q.push(this);
+
+    while(!q.empty()){
+        GeoObject* obj = q.front();
+        q.pop();
+
+        for (GeoObject* childObj : obj->childObjs){
+            if (res.find(childObj) == res.end()){
+                res.insert(childObj);
+                q.push(childObj);
+            }
+        }
+    }
+
+    return res;
 }
 
 /// @brief Copies the parents and children of \p copy if they do not yet exist in \p copiedPtrs
