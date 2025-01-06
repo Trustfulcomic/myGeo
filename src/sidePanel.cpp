@@ -32,15 +32,12 @@ SidePanel::SidePanel(wxWindow *parent, DrawingCanvas* drawingCanvas, ToolBind* t
     toolPanel->SetScrollRate(0, FromDIP(10));
     toolPanel->SetBackgroundColour(wxColour("#f4f3f3"));
 
-    listPanel = new VirtListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    listPanel = new MyListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
     listPanel->Bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent& event){
-        this->listPanel->ReloadHighlight();
+        this->listPanel->SelectedItem(event);
     });
     listPanel->Bind(wxEVT_LIST_ITEM_DESELECTED, [this](wxListEvent& event){
-        this->listPanel->ReloadHighlight();
-    });
-    listPanel->Bind(wxEVT_LIST_ITEM_FOCUSED, [this](wxListEvent& event){
-        this->listPanel->ReloadHighlight();
+        this->listPanel->DeselectedItem(event);
     });
     listPanel->Hide();
 
@@ -108,7 +105,6 @@ void SidePanel::SetupList() {
     listPanel->ClearObjects();
     listPanel->AddObjects<GeoPoint>(drawingCanvas->geoPoints);
     listPanel->AddObjects<GeoCurve>(drawingCanvas->geoCurves);
-    listPanel->RefreshAfterUpdate();
 }
 
 /// @brief Selects a certain tool
@@ -131,8 +127,8 @@ void SidePanel::SelectToolPane(Tool *tool) {
 /// @param id ID of the list control
 /// @param pos Position of the list
 /// @param size Size of the list
-VirtListCtrl::VirtListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size) 
-    : wxListCtrl(parent, id, pos, size, wxLC_REPORT | wxLC_VIRTUAL) {
+MyListCtrl::MyListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size) 
+    : wxListCtrl(parent, id, pos, size, wxLC_REPORT) {
 
     this->AppendColumn(wxString::FromUTF8("Jméno"));
     this->AppendColumn(wxString::FromUTF8("Definice"));
@@ -142,50 +138,33 @@ VirtListCtrl::VirtListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint 
 /// @brief Adds objects to the list
 /// @tparam T Type of the objects to add
 /// @param objs List of the objects to add
-template <class T> void VirtListCtrl::AddObjects(std::list<T*> &objs) {
+template <class T> void MyListCtrl::AddObjects(std::list<T*> &objs) {
     for (GeoObject* obj : objs) {
-        items.push_back(obj->GetListItem());
+        int count = this->GetItemCount();
+
+        ListItem myItem = obj->GetListItem();
+        this->InsertItem(count, myItem.name);
+        this->SetItem(count, 1, myItem.definition);
+        this->SetItem(count, 2, wxString::Format("%.3f", myItem.parameter));
+
+        this->nameToObj[myItem.name] = myItem.obj;
     }
 }
 
 /// @brief Clears all objects in the list
-void VirtListCtrl::ClearObjects() {
-    items.clear();
+void MyListCtrl::ClearObjects() {
+    this->DeleteAllItems();
+    this->nameToObj.clear();
 }
 
-/// @brief Refreshes the list after updated items
-void VirtListCtrl::RefreshAfterUpdate() {
-    SetItemCount(items.size());
-    this->Refresh();
+/// @brief Handles item selection
+/// @param event Event to handle
+void MyListCtrl::SelectedItem(wxListEvent &event) {
+    nameToObj[event.GetItem().GetText()]->selected = true;
 }
 
-void VirtListCtrl::ReloadHighlight() {
-    for (ListItem& item : items){
-        item.obj->selected = false;
-    }
-
-    int no = 0;
-    long itemIndex = -1;
-    while ((itemIndex = this->GetNextItem(itemIndex, wxLIST_NEXT_ALL, wxLIST_STATE_SELECTED)) != wxNOT_FOUND) {
-        if (itemIndex >= items.size()) break; // Idk why, but after object deletion the itemIndex goes out of bounds :/
-        items[itemIndex].obj->selected = true;
-        no++;
-    }
-}
-
-/// @brief Returns the text to be displayed in a specified cell
-/// @param index Index of the item
-/// @param column Column of the cell
-/// @return Text to be displyed in the cell
-wxString VirtListCtrl::OnGetItemText(long index, long column) const {
-    switch (column) {
-        case 0:
-            return items[index].name;
-        case 1:
-            return items[index].definition;
-        case 2:
-            return wxString::Format("%.3f", items[index].parameter);
-        default:
-            return "";
-    }
+/// @brief Handles item deselection
+/// @param event Event to handle
+void MyListCtrl::DeselectedItem(wxListEvent &event) {
+    nameToObj[event.GetItem().GetText()]->selected = false;
 }

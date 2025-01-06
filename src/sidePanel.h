@@ -11,22 +11,21 @@ struct ListItem {
     GeoObject* obj;
 };
 
-/// Class for the Virtual List Control
-class VirtListCtrl : public wxListCtrl {
+/// Class for my List Control
+class MyListCtrl : public wxListCtrl {
 public:
-    VirtListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size);
+    MyListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size);
 
     template <class T> void AddObjects(std::list<T*>& objs);
     void ClearObjects();
-    void ReloadHighlight();
 
-    void RefreshAfterUpdate();
-
-    virtual wxString OnGetItemText(long index, long column) const override;
-
+    void SelectedItem(wxListEvent& event);
+    void DeselectedItem(wxListEvent& event);
+    
 private:
-    /// Vector of all displayed items
-    std::vector<ListItem> items;
+    /// Maps the object name (item label) to object pointer
+    std::unordered_map<wxString, GeoObject*> nameToObj;
+
 };
 
 /// @brief Class for the side panel
@@ -56,7 +55,7 @@ private:
     /// Panel for the tools
     wxScrolled<wxPanel> *toolPanel;
     /// Window for the object list
-    VirtListCtrl *listPanel;
+    MyListCtrl *listPanel;
 
     void SetupTools();
     void SetupList();
