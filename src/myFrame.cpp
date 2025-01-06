@@ -10,7 +10,7 @@
 MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     : wxFrame(nullptr, wxID_ANY, title, pos, size){
 
-    wxSplitterWindow *splitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER);
+    wxSplitterWindow *splitter = new wxSplitterWindow(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_NOBORDER | wxSP_LIVE_UPDATE);
     splitter->SetMinimumPaneSize(FromDIP(160));
 
     this->canvas = new DrawingCanvas(splitter, wxID_ANY, wxDefaultPosition, wxDefaultSize);
@@ -23,7 +23,7 @@ MyFrame::MyFrame(const wxString &title, const wxPoint &pos, const wxSize &size)
     splitter->SplitVertically(sidePanel, canvas);
     splitter->SetSashPosition(FromDIP(160));
     sashPosition = splitter->GetSashPosition();
-    splitter->Bind(wxEVT_SPLITTER_SASH_POS_CHANGED, &MyFrame::SashMove, this);
+    // splitter->Bind(wxEVT_SPLITTER_SASH_POS_CHANGED, &MyFrame::SashMove, this);
 
     this->SetSize(FromDIP(800), FromDIP(550));
     this->SetMinSize({FromDIP(400), FromDIP(200)});
