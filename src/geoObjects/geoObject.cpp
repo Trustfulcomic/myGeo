@@ -96,10 +96,6 @@ void GeoObject::Rename(const wxString &name) {
     }
 }
 
-ListItem GeoObject::GetListItem() {
-    return {name, "", 0.0, this};
-}
-
 std::unordered_set<GeoObject*> GeoObject::GetDescendants() {
     std::unordered_set<GeoObject*> res;
     std::queue<GeoObject*> q; q.push(this);

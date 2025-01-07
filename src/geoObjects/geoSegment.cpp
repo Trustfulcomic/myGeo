@@ -1,6 +1,7 @@
 #include "geoSegment.h"
 
 #include "../drawingCanvas.h"
+#include "../sidePanel.h"
 
 /// @brief Constructor for GeoSegment using two endpoints
 /// @param parent DrawingCanvas on which the object is displayed
@@ -136,4 +137,15 @@ void GeoSegment::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPt
 
     copy->pointA = static_cast<GeoPoint*>(copiedPtrs[this->pointA]);
     copy->pointB = static_cast<GeoPoint*>(copiedPtrs[this->pointB]);
+}
+
+ListItem GeoSegment::GetListItem() {
+    switch (definition) {
+        case SEG_BY_TWO_POINTS:
+            return {GetName(), wxString::Format("Segment(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+        case TRANSFORMED_SEG:
+            return {GetName(), geoTransform->GetListText(parentObjs[0]), 0, this};
+    }
+
+    return {GetName(), "He?", 0, this};
 }

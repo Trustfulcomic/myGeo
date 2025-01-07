@@ -39,6 +39,8 @@ public:
 
     void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs) override;
 
+    virtual ListItem GetListItem() override;
+
 private:
     /// First endpoint of the segment
     GeoPoint *pointA = nullptr;

@@ -29,6 +29,10 @@ public:
     /// @param copiedPtrs Unordered map matching the old pointers to new pointers of already copied objects
     /// @return The copied GeoTransform
     virtual GeoTransform* CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) = 0;
+
+    /// @brief Gets the text displayed in object list
+    /// @return The text
+    virtual wxString GetListText(GeoObject* obj) = 0;
 protected:
     /// Parameter for the transform if necessary
     double param;

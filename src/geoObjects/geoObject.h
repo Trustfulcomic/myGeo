@@ -77,7 +77,7 @@ public:
     NameHandler *nameHandler = nullptr;
 
     /// Returns the ListItem to be shown in the object list
-    virtual ListItem GetListItem();
+    virtual ListItem GetListItem() = 0;
 
     /// @brief Returns all descendants of the object 
     std::unordered_set<GeoObject*> GetDescendants();

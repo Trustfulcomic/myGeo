@@ -2,6 +2,7 @@
 
 #include "../drawingCanvas.h"
 #include "../utils/utils.h"
+#include "../sidePanel.h"
 
 /// @brief Basic constructor for line using two objects
 /// @param parent DrawingCanvas on which the object is
@@ -220,4 +221,33 @@ void GeoLine::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs)
     copiedPtrs[this] = copy;
 
     CreateCopyDeps(copy, copiedPtrs);
+}
+
+ListItem GeoLine::GetListItem() {
+    switch (definition) {
+        case LINE_BY_TWO_POINTS:
+            return {GetName(), wxString::Format("Line(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+        case LINE_BY_POINT_AND_CURVE_PERP:
+            return {GetName(), wxString::Format("PerpLine(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+        case LINE_BY_POINT_AND_CURVE_PARAL:
+            return {GetName(), wxString::Format("ParalLine(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+        case LINE_PERPENDICULAR_BISECTOR:
+            return {GetName(), wxString::Format("Bisector(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+        case ANGLE_BISECTOR:
+            if (parentObjs.size() == 2){
+                return {GetName(), wxString::Format("Bisector(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+            } else {
+                return {GetName(), wxString::Format("Bisector(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), 0, this};
+            }
+        case ANGLE_BISECTOR_PERP:
+            if (parentObjs.size() == 2){
+                return {GetName(), wxString::Format("Bisector(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 1, this};
+            } else {
+                return {GetName(), wxString::Format("Bisector(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), 1, this};
+            }
+        case TRANSFORMED_LINE:
+            return {GetName(), geoTransform->GetListText(parentObjs[0]), 0, this};
+    }
+
+    return {GetName(), "He?", 0, this};
 }

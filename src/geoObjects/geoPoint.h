@@ -46,6 +46,8 @@ public:
 
     void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs) override;
 
+    virtual ListItem GetListItem() override;
+
 private:
     /// The radius of the point when drawn
     int pointRadius;

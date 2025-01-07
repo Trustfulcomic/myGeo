@@ -43,6 +43,8 @@ public:
 
     void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs) override;
 
+    virtual ListItem GetListItem() override;
+
 private:
     /// @brief Definition of the line
     LineDefinition definition;

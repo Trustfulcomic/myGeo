@@ -27,6 +27,10 @@ GeoTransform *PointReflection::CopyTransform(std::unordered_map<GeoObject *, Geo
     return new PointReflection(static_cast<GeoPoint*>(copiedPtrs[parent]));
 }
 
+wxString PointReflection::GetListText(GeoObject *obj) {
+    return wxString::Format("PtReflect(%s,%s)", obj->GetName(), parent->GetName());
+}
+
 /// @brief Basic constructor for line reflection
 /// @param parent Line defining the transformation
 LineReflection::LineReflection(GeoLineBase *parent) : GeoTransform() {
@@ -50,6 +54,10 @@ GeoTransform *LineReflection::CopyTransform(std::unordered_map<GeoObject *, GeoO
         parent->CreateCopy(copiedPtrs);
     }
     return new LineReflection(static_cast<GeoLineBase*>(copiedPtrs[parent]));
+}
+
+wxString LineReflection::GetListText(GeoObject *obj) {
+    return wxString::Format("LineReflect(%s,%s)", obj->GetName(), parent->GetName());
 }
 
 /// @brief Basic constructor for isogonal conjugate transform
@@ -97,4 +105,8 @@ GeoTransform *IsoConjugate::CopyTransform(std::unordered_map<GeoObject *, GeoObj
     return new IsoConjugate(static_cast<GeoPoint*>(copiedPtrs[A]),
                             static_cast<GeoPoint*>(copiedPtrs[B]),
                             static_cast<GeoPoint*>(copiedPtrs[C]));
+}
+
+wxString IsoConjugate::GetListText(GeoObject *obj) {
+    return wxString::Format("IsoConjugate(%s,%s,%s,%s)", obj->GetName(), A->GetName(), B->GetName(), C->GetName());
 }

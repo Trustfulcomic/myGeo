@@ -4,6 +4,7 @@
 #include "geoSegment.h"
 
 #include "../drawingCanvas.h"
+#include "../sidePanel.h"
 
 /// @brief Constructor for a free point or a point attached to a curve
 /// @param parent DrawingCanvas on which the point is
@@ -247,4 +248,25 @@ void GeoPoint::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs
     copiedPtrs[this] = copy;
 
     CreateCopyDeps(copy, copiedPtrs);
+}
+
+ListItem GeoPoint::GetListItem() {
+    switch (definition) {
+        case FREE_POINT:
+            return {GetName(), wxString::Format("(%.3f, %.3f)", pos.m_x, pos.m_y), parameter, this};
+        case POINT_ON_CURVE:
+            return {GetName(), wxString::Format("OnCurve(%s)", parentObjs[0]->GetName()), parameter, this};
+        case POINT_ON_INTERSECT:
+            return {GetName(), wxString::Format("OnIntersect(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
+        case MIDPOINT:
+            if (parentObjs.size() == 2){
+                return {GetName(), wxString::Format("Midpoint(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
+            } else {
+                return {GetName(), wxString::Format("Midpoint(%s)", parentObjs[0]->GetName()), parameter, this};
+            }
+        case TRANSFORMED_POINT:
+            return {GetName(), geoTransform->GetListText(parentObjs[0]), parameter, this};
+    }
+
+    return {GetName(), "He?", parameter, this};
 }

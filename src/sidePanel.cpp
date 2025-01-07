@@ -181,7 +181,6 @@ void MyListCtrl::SelectObject(GeoObject *obj) {
 /// @brief Deselects an object
 /// @param obj The object to deselect
 void MyListCtrl::DeselectObject(GeoObject *obj) {
-    std::cout << "B" << std::endl;
     if (objToIdx.find(obj) == objToIdx.end()) return;
     this->SetItemState(objToIdx[obj], 0, wxLIST_STATE_SELECTED);
 }
