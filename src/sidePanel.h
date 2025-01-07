@@ -14,17 +14,25 @@ struct ListItem {
 /// Class for my List Control
 class MyListCtrl : public wxListCtrl {
 public:
-    MyListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size);
+    MyListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size, DrawingCanvas *drawingCanvas);
 
     template <class T> void AddObjects(std::list<T*>& objs);
     void ClearObjects();
 
-    void SelectedItem(wxListEvent& event);
-    void DeselectedItem(wxListEvent& event);
+    void SelectedItemEvt(wxListEvent& event);
+    void DeselectedItemEvt(wxListEvent& event);
+
+    void SelectObject(GeoObject* obj);
+    void DeselectObject(GeoObject* obj);
+    void DeselectAllObjects();
     
 private:
     /// Maps the object name (item label) to object pointer
     std::unordered_map<wxString, GeoObject*> nameToObj;
+    /// Maps the object pointer to item index
+    std::unordered_map<GeoObject*, long> objToIdx;
+
+    DrawingCanvas *drawingCanvas;
 
 };
 
@@ -37,6 +45,11 @@ public:
     void SelectToolPane(Tool *tool);
 
     void UpdateList() { SetupList(); }
+
+    /// Panel for the tools
+    wxScrolled<wxPanel> *toolPanel;
+    /// Window for the object list
+    MyListCtrl *listPanel;
 
 private:
     /// True if tools are displayed. False if list of objects is displayed.
@@ -51,11 +64,6 @@ private:
 
     /// Sizer used in the panel
     wxBoxSizer *mainSizer;
-
-    /// Panel for the tools
-    wxScrolled<wxPanel> *toolPanel;
-    /// Window for the object list
-    MyListCtrl *listPanel;
 
     void SetupTools();
     void SetupList();

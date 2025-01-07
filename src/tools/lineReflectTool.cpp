@@ -16,6 +16,7 @@ void LineReflectTool::ResetState() {
         toReflect = nullptr;
     }
 
+    drawingCanvas->DeselectAllObjects();
     ReloadObjects({0.0, 0.0});
 }
 
@@ -45,7 +46,7 @@ void LineReflectTool::OnMouseDown(wxMouseEvent &event) {
 
     if (toReflect == nullptr){
         toReflect = closestObj;
-        toReflect->selected = true;
+        drawingCanvas->SelectObject(toReflect);
     } else if (closestObj != nullptr && !closestObj->IsPoint() && static_cast<GeoCurve*>(closestObj)->IsAsLine()){
         LineReflection* geoTransform = new LineReflection(static_cast<GeoLineBase*>(closestObj));
         GeoObject* transformedObj = toReflect->GetTransformed(geoTransform);

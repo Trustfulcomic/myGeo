@@ -22,6 +22,7 @@ void SegBy2PTool::ResetState() {
         tempSegment = nullptr;
     }
 
+    drawingCanvas->DeselectAllObjects();
     ReloadObjects({0.0, 0.0});
 }
 
@@ -48,7 +49,7 @@ void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
 
     if (tempSegment == nullptr){
         firstPoint = closestPoint;
-        firstPoint->selected = true;
+        drawingCanvas->SelectObject(firstPoint);
 
         tempSegment = new GeoSegment(drawingCanvas, nullName, drawingCanvas->mousePt, firstPoint);
         tempSegment->temporary = true;

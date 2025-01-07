@@ -107,6 +107,31 @@ void DrawingCanvas::LoadNextState() {
     LoadState();
 }
 
+void DrawingCanvas::SelectObject(GeoObject *obj) {
+    obj->selected = true;
+    selectedObjs.insert(obj);
+    sidePanel->listPanel->SelectObject(obj);
+}
+
+void DrawingCanvas::DeselectObject(GeoObject *obj) {
+    obj->selected = false;
+    if (selectedObjs.find(obj) == selectedObjs.end()) return;
+    selectedObjs.erase(selectedObjs.find(obj));
+    sidePanel->listPanel->DeselectObject(obj);
+}
+
+void DrawingCanvas::DeselectAllObjects() {
+    sidePanel->listPanel->DeselectAllObjects();
+    for (GeoObject* obj : selectedObjs) {
+        obj->selected = false;
+    }
+    selectedObjs.clear();
+}
+
+std::unordered_set<GeoObject *> DrawingCanvas::GetSelectedObjs() {
+    return selectedObjs;
+}
+
 /// @brief Handels the paint event
 /// @param event The event to handle
 void DrawingCanvas::OnPaint(wxPaintEvent &event) {
@@ -157,19 +182,8 @@ void DrawingCanvas::LoadState() {
         geoCurves.push_back(static_cast<GeoCurve*>(copiedPtrs[obj]));
     }
 
+    selectedObjs.clear();
     if (sidePanel != nullptr) sidePanel->UpdateList();
-}
-
-/// @brief Deselects all objects
-void DrawingCanvas::DeselectAll(){
-    for (auto geoObj : geoPoints){
-        geoObj->highlited = false;
-        geoObj->selected = false;
-    }
-    for (auto geoObj : geoCurves){
-        geoObj->highlited = false;
-        geoObj->selected = false;
-    }
 }
 
 /// @brief Deletes all objects (except mouse point)

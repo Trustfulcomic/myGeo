@@ -16,6 +16,7 @@ void PointReflectTool::ResetState() {
         toReflect = nullptr;
     }
 
+    drawingCanvas->DeselectAllObjects();
     ReloadObjects({0.0, 0.0});
 }
 
@@ -45,7 +46,7 @@ void PointReflectTool::OnMouseDown(wxMouseEvent &event) {
 
     if (toReflect == nullptr){
         toReflect = closestObj;
-        toReflect->selected = true;
+        drawingCanvas->SelectObject(toReflect);
     } else if (closestObj->IsPoint()){
         PointReflection* geoTransform = new PointReflection(static_cast<GeoPoint*>(closestObj));
         GeoObject* transformedObj = toReflect->GetTransformed(geoTransform);

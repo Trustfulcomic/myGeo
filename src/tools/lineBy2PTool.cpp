@@ -22,6 +22,7 @@ void LineBy2PTool::ResetState() {
         drawingCanvas->tempGeoCurve = nullptr;
     }
 
+    drawingCanvas->DeselectAllObjects();
     ReloadObjects({0.0, 0.0});
 }
 
@@ -48,7 +49,7 @@ void LineBy2PTool::OnMouseDown(wxMouseEvent &event) {
 
     if (tempLine == nullptr){
         firstPoint = closestPoint;
-        firstPoint->selected = true;
+        drawingCanvas->SelectObject(firstPoint);
 
         tempLine = new GeoLine(drawingCanvas, nullName, drawingCanvas->mousePt, firstPoint, LINE_BY_TWO_POINTS);
         tempLine->temporary = true;

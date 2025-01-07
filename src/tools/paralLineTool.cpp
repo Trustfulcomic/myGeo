@@ -24,6 +24,7 @@ void ParalLineTool::ResetState() {
     }
     moving_point = false;
 
+    drawingCanvas->DeselectAllObjects();
     ReloadObjects({0.0, 0.0});
 }
 
@@ -67,13 +68,13 @@ void ParalLineTool::OnMouseDown(wxMouseEvent &event) {
         if (closestObj->IsPoint()){
             moving_point = true;
             point = static_cast<GeoPoint*>(closestObj);
-            point->selected = true;
+            drawingCanvas->SelectObject(point);
         } else {
             drawingCanvas->tempGeoCurve = new GeoLine(drawingCanvas, nullName, drawingCanvas->mousePt, closestObj, LINE_BY_POINT_AND_CURVE_PARAL);
             tempLine = static_cast<GeoLine*>(drawingCanvas->tempGeoCurve);
             tempLine->temporary = true;
             curve = static_cast<GeoCurve*>(closestObj);
-            curve->selected = true;
+            drawingCanvas->SelectObject(curve);
         }
     }
 }

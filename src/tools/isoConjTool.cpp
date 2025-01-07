@@ -23,6 +23,7 @@ void IsoConjTool::ResetState() {
         C = nullptr;
     }
 
+    drawingCanvas->DeselectAllObjects();
     ReloadObjects({0.0, 0.0});
 }
 
@@ -48,13 +49,13 @@ void IsoConjTool::OnMouseDown(wxMouseEvent &event) {
     GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
     if (A == nullptr){
         A = closestPoint;
-        A->selected = true;
+        drawingCanvas->SelectObject(A);
     } else if (B == nullptr && closestPoint != A){
         B = closestPoint;
-        B->selected = true;
+        drawingCanvas->SelectObject(B);
     } else if (C == nullptr && closestPoint != A && closestPoint != B){
         C = closestPoint;
-        C->selected = true;
+        drawingCanvas->SelectObject(C);
     } else {
         drawingCanvas->geoPoints.push_back(new GeoPoint(drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), closestPoint, new IsoConjugate(A, B, C)));
         drawingCanvas->SaveState();

@@ -25,7 +25,6 @@ public:
     DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size);
     virtual ~DrawingCanvas(){}
 
-    void DeselectAll();
     void DeleteAll();
     
     /// List of all GeoPoints
@@ -60,6 +59,18 @@ public:
     /// @param sidePanel The SidePanel to set
     void SetSidePanel(SidePanel* sidePanel) { this->sidePanel = sidePanel; }
 
+    /// @brief Selects an object
+    /// @param obj The object to select
+    void SelectObject(GeoObject* obj);
+    /// @brief Deselects an object
+    /// @param obj The object to deselect
+    void DeselectObject(GeoObject* obj);
+    /// @brief Deselects all objects
+    void DeselectAllObjects();
+    /// @brief Gets selected objects
+    /// @return Set of the selected objects
+    std::unordered_set<GeoObject*> GetSelectedObjs();
+
     /// Name handler for all objects on the canvas
     NameHandler nameHandler = NameHandler();
 private:
@@ -77,4 +88,7 @@ private:
 
     /// The side panel controlling this drawing canvas
     SidePanel* sidePanel = nullptr;
+
+    /// Set of all selected objects
+    std::unordered_set<GeoObject*> selectedObjs;
 }; 

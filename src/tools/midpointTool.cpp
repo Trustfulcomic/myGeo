@@ -16,6 +16,7 @@ void MidpointTool::ResetState() {
         firstPoint = nullptr;
     }
 
+    drawingCanvas->DeselectAllObjects();
     ReloadObjects({0.0, 0.0});
 }
 
@@ -46,7 +47,7 @@ void MidpointTool::OnMouseDown(wxMouseEvent &event) {
     if (closestObj->IsPoint()){
         if (firstPoint == nullptr){
             firstPoint = static_cast<GeoPoint*>(closestObj);
-            firstPoint->selected = true;
+            drawingCanvas->SelectObject(firstPoint);
         } else {
             drawingCanvas->geoPoints.push_back(new GeoPoint(drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), firstPoint, static_cast<GeoPoint*>(closestObj)));
             drawingCanvas->SaveState();

@@ -15,6 +15,7 @@ void HandTool::ResetState() {
     isDraggingCanvas = false;
     smthHappened = false;
 
+    drawingCanvas->DeselectAllObjects();
     ReloadObjects({0.0, 0.0});
 }
 
@@ -35,8 +36,11 @@ void HandTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
 
 void HandTool::OnMouseDown(wxMouseEvent &event) {
     if (selectedObj != nullptr){
-        selectedObj->selected = false;
         selectedObj = nullptr;
+    }
+
+    if (!wxGetKeyState(WXK_CONTROL)){
+        drawingCanvas->DeselectAllObjects();
     }
 
     wxPoint2DDouble mouse_pt = drawingCanvas->TransformPoint(event.GetPosition());
@@ -49,7 +53,7 @@ void HandTool::OnMouseDown(wxMouseEvent &event) {
             draggingObj = static_cast<GeoPoint*>(nearestObj);
         }
         selectedObj = nearestObj;
-        selectedObj->selected = true;
+        drawingCanvas->SelectObject(selectedObj);
     } else {
         isDraggingCanvas = true;
         canvasDragPoint = event.GetPosition();
@@ -71,6 +75,8 @@ void HandTool::OnMouseMove(wxMouseEvent &event) {
         canvasDragPoint = event.GetPosition();
     }
     if (isDragging || isDraggingCanvas) smthHappened = true;
+
+    if (selectedObj != nullptr) drawingCanvas->SelectObject(selectedObj);
 }
 
 void HandTool::OnMouseUp(wxMouseEvent &event) {

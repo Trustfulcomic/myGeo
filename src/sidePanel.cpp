@@ -32,12 +32,12 @@ SidePanel::SidePanel(wxWindow *parent, DrawingCanvas* drawingCanvas, ToolBind* t
     toolPanel->SetScrollRate(0, FromDIP(10));
     toolPanel->SetBackgroundColour(wxColour("#f4f3f3"));
 
-    listPanel = new MyListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize);
+    listPanel = new MyListCtrl(this, wxID_ANY, wxDefaultPosition, wxDefaultSize, drawingCanvas);
     listPanel->Bind(wxEVT_LIST_ITEM_SELECTED, [this](wxListEvent& event){
-        this->listPanel->SelectedItem(event);
+        this->listPanel->SelectedItemEvt(event);
     });
     listPanel->Bind(wxEVT_LIST_ITEM_DESELECTED, [this](wxListEvent& event){
-        this->listPanel->DeselectedItem(event);
+        this->listPanel->DeselectedItemEvt(event);
     });
     listPanel->Hide();
 
@@ -119,7 +119,7 @@ void SidePanel::SelectToolPane(Tool *tool) {
     toolBind->ChangeTool(tool);
 
     tool->ReloadObjects({0.0, 0.0});
-    drawingCanvas->DeselectAll();
+    drawingCanvas->DeselectAllObjects();
 }
 
 /// @brief Constructor for Virtual List Control
@@ -127,8 +127,9 @@ void SidePanel::SelectToolPane(Tool *tool) {
 /// @param id ID of the list control
 /// @param pos Position of the list
 /// @param size Size of the list
-MyListCtrl::MyListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size) 
+MyListCtrl::MyListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size, DrawingCanvas* drawingCanvas) 
     : wxListCtrl(parent, id, pos, size, wxLC_REPORT) {
+    this->drawingCanvas = drawingCanvas;
 
     this->AppendColumn(wxString::FromUTF8("Jméno"));
     this->AppendColumn(wxString::FromUTF8("Definice"));
@@ -148,6 +149,7 @@ template <class T> void MyListCtrl::AddObjects(std::list<T*> &objs) {
         this->SetItem(count, 2, wxString::Format("%.3f", myItem.parameter));
 
         this->nameToObj[myItem.name] = myItem.obj;
+        this->objToIdx[obj] = count;
     }
 }
 
@@ -155,16 +157,38 @@ template <class T> void MyListCtrl::AddObjects(std::list<T*> &objs) {
 void MyListCtrl::ClearObjects() {
     this->DeleteAllItems();
     this->nameToObj.clear();
+    this->objToIdx.clear();
 }
 
 /// @brief Handles item selection
 /// @param event Event to handle
-void MyListCtrl::SelectedItem(wxListEvent &event) {
-    nameToObj[event.GetItem().GetText()]->selected = true;
+void MyListCtrl::SelectedItemEvt(wxListEvent &event) {
+    this->drawingCanvas->SelectObject(nameToObj[event.GetItem().GetText()]);
 }
 
 /// @brief Handles item deselection
 /// @param event Event to handle
-void MyListCtrl::DeselectedItem(wxListEvent &event) {
-    nameToObj[event.GetItem().GetText()]->selected = false;
+void MyListCtrl::DeselectedItemEvt(wxListEvent &event) {
+    this->drawingCanvas->DeselectObject(nameToObj[event.GetItem().GetText()]);
+}
+
+/// @brief Selects an object
+/// @param obj The object to select
+void MyListCtrl::SelectObject(GeoObject *obj) {
+    this->SetItemState(objToIdx[obj], wxLIST_STATE_SELECTED, wxLIST_STATE_SELECTED);
+}
+
+/// @brief Deselects an object
+/// @param obj The object to deselect
+void MyListCtrl::DeselectObject(GeoObject *obj) {
+    std::cout << "B" << std::endl;
+    if (objToIdx.find(obj) == objToIdx.end()) return;
+    this->SetItemState(objToIdx[obj], 0, wxLIST_STATE_SELECTED);
+}
+
+/// @brief Deselects all objects
+void MyListCtrl::DeselectAllObjects() {
+    for (GeoObject* obj : drawingCanvas->GetSelectedObjs()){
+        this->SetItemState(objToIdx[obj], 0, wxLIST_STATE_SELECTED);
+    }
 }

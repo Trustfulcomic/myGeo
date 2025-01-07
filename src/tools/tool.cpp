@@ -155,16 +155,19 @@ GeoPoint *Tool::CreatePointAtPos(const wxPoint2DDouble &pt) {
     if (nearestObj == nullptr){
         drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), pt));
         createdPoint = drawingCanvas->geoPoints.back();
+        drawingCanvas->SaveState();
         ReloadObjects(pt);
     } else if (nearestObj->IsPoint()){
         createdPoint = static_cast<GeoPoint*>(nearestObj);
     } else if (clickableObjs.size() == 1){
         drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), pt, static_cast<GeoCurve*>(nearestObj)));
         createdPoint = drawingCanvas->geoPoints.back();
+        drawingCanvas->SaveState();
         ReloadObjects(pt);
     } else {
         drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), static_cast<GeoCurve*>(clickableObjs[0]), static_cast<GeoCurve*>(clickableObjs[1])));
         createdPoint = drawingCanvas->geoPoints.back();
+        drawingCanvas->SaveState();
         ReloadObjects(pt);
     }
 
