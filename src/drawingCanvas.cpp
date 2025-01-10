@@ -111,6 +111,7 @@ void DrawingCanvas::SelectObject(GeoObject *obj) {
     obj->selected = true;
     selectedObjs.insert(obj);
     sidePanel->listPanel->SelectObject(obj);
+    Refresh();
 }
 
 void DrawingCanvas::DeselectObject(GeoObject *obj) {
@@ -118,6 +119,7 @@ void DrawingCanvas::DeselectObject(GeoObject *obj) {
     if (selectedObjs.find(obj) == selectedObjs.end()) return;
     selectedObjs.erase(selectedObjs.find(obj));
     sidePanel->listPanel->DeselectObject(obj);
+    Refresh();
 }
 
 void DrawingCanvas::DeselectAllObjects() {
@@ -126,6 +128,7 @@ void DrawingCanvas::DeselectAllObjects() {
         obj->selected = false;
     }
     selectedObjs.clear();
+    Refresh();
 }
 
 std::unordered_set<GeoObject *> DrawingCanvas::GetSelectedObjs() {
@@ -134,7 +137,7 @@ std::unordered_set<GeoObject *> DrawingCanvas::GetSelectedObjs() {
 
 /// @brief Handels the paint event
 /// @param event The event to handle
-void DrawingCanvas::OnPaint(wxPaintEvent &event) {
+void DrawingCanvas::OnPaint(wxPaintEvent &event) { 
     wxAutoBufferedPaintDC dc(this);
     dc.SetBackground(*wxWHITE_BRUSH);
     dc.Clear();
@@ -152,7 +155,6 @@ void DrawingCanvas::OnPaint(wxPaintEvent &event) {
         }
         delete gc;
     }
-    Refresh();
 }
 
 void DrawingCanvas::LoadState() {
@@ -184,6 +186,7 @@ void DrawingCanvas::LoadState() {
 
     selectedObjs.clear();
     if (sidePanel != nullptr) sidePanel->UpdateList();
+    Refresh();
 }
 
 /// @brief Deletes all objects (except mouse point)
