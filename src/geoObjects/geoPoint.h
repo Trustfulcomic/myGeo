@@ -59,6 +59,4 @@ private:
 
     /// Type of the point definition
     PointDefinition definition;
-    /// Parameter when point is attached to a curve
-    double parameter;
 };

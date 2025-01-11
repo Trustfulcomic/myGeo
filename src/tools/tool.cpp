@@ -259,5 +259,6 @@ void ToolBind::OnMouseEnter(wxMouseEvent &event) {
 /// @brief Resets the state of \a currentTool by calling Tool::ResetState().
 void ToolBind::ResetState() {
     if (currentTool) currentTool->ResetState();
+    canvas->DeselectAllObjects();
     canvas->Refresh();
 }

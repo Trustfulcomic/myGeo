@@ -82,6 +82,9 @@ public:
     /// @brief Returns all descendants of the object 
     std::unordered_set<GeoObject*> GetDescendants();
 
+    /// Parameter when point is attached to a curve
+    double parameter = 0;
+
 protected:
     /// DrawingCanvas on which the object is drawn.
     DrawingCanvas *parent;

@@ -127,6 +127,13 @@ void SidePanel::SelectToolPane(Tool *tool) {
     drawingCanvas->DeselectAllObjects();
 }
 
+void SidePanel::UpdateList() {
+    SetupList();
+    for (GeoObject* obj : drawingCanvas->GetSelectedObjs()){
+        listPanel->SelectObject(obj);
+    }
+}
+
 /// @brief Constructor for Virtual List Control
 /// @param parent The parent window
 /// @param id ID of the list control
@@ -182,7 +189,7 @@ void MyListCtrl::DeselectedItemEvt(wxListEvent &event) {
 void MyListCtrl::ActivatedItemEvt(wxListEvent &event) {
     ObjectDialog objectDialog(nameToObj[event.GetItem().GetText()], this, wxID_ANY, "Objekt", wxDefaultPosition, wxDefaultSize, wxRESIZE_BORDER);
 	if (objectDialog.ShowModal() == wxID_OK) {
-		if (objectDialog.ApplyChanges()){
+		if (objectDialog.ApplyChanges(drawingCanvas)){
             drawingCanvas->SaveState();
         }
     }

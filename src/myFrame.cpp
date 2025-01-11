@@ -71,6 +71,7 @@ void MyFrame::OnScroll(wxMouseEvent &event) {
 
     wxPoint2DDouble newMousePt = canvas->TransformPoint(event.GetPosition());
     canvas->transform.Translate(newMousePt.m_x - originalMousePt.m_x, newMousePt.m_y - originalMousePt.m_y);
+    canvas->Refresh();
 }
 
 /// @brief Handels a sash move of the sidepanel.

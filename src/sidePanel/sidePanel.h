@@ -45,7 +45,7 @@ public:
     void ChangeLayout();
     void SelectToolPane(Tool *tool);
 
-    void UpdateList() { SetupList(); }
+    void UpdateList();
 
     /// Panel for the tools
     wxScrolled<wxPanel> *toolPanel;

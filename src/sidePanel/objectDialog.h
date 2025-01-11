@@ -3,13 +3,14 @@
 #include<wx/spinctrl.h>
 
 #include "../geoObjects/geoObject.h"
+#include "../drawingCanvas.h"
 
 /// @brief Class for the dialog to modify objects from object list
 class ObjectDialog: public wxDialog {
 public:
 	ObjectDialog (GeoObject* obj, wxWindow * parent, wxWindowID id, const wxString & title, const wxPoint& pos, const wxSize& size, long style);
 
-    bool ApplyChanges();
+    bool ApplyChanges(DrawingCanvas* drawingCanvas);
 
 private:
     /// @brief wxTextCtrl for the object name

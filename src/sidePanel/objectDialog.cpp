@@ -1,5 +1,6 @@
 #include "objectDialog.h"
 
+#include <stdexcept>
 #include <wx/colourdata.h>
 #include <wx/colordlg.h>
 
@@ -75,6 +76,48 @@ ObjectDialog::ObjectDialog(GeoObject* obj, wxWindow *parent, wxWindowID id, cons
     SetMinSize(GetSize());
 }
 
-bool ObjectDialog::ApplyChanges() {
-    return false;
+bool ObjectDialog::ApplyChanges(DrawingCanvas* drawingCanvas) {
+    bool smthChanged = false;
+    ListItem original = obj->GetListItem();
+
+    if (nameBox->GetValue().compare(original.name) != 0){
+        smthChanged = true;
+        drawingCanvas->nameHandler.RenameObject(obj, nameBox->GetValue());
+    }
+
+    if (definitionBox->GetValue().compare(original.definition) != 0){
+        // TODO
+    }
+
+    if (parameterBox->GetValue().compare(wxString::Format("%.5f", original.parameter)) != 0){
+        double new_param = original.parameter;
+        try {
+            new_param = std::stod(std::string(parameterBox->GetValue().mb_str()));
+        } catch (std::exception& e) {
+            std::cout << "Excpetion " << e.what() << std::endl;
+        }
+
+        if (new_param != original.parameter){
+            smthChanged = true;
+            obj->parameter = new_param;
+            obj->ReloadAllChildren();
+        }
+    } 
+
+    if (outlineWidth->GetValue() != obj->outlineWidth){
+        smthChanged = true;
+        obj->outlineWidth = outlineWidth->GetValue();
+    }
+
+    if (outlineColor != obj->outlineColor){
+        smthChanged = true;
+        obj->outlineColor = outlineColor;
+    }
+
+    if (fillColor != obj->fillColor){
+        smthChanged = true;
+        obj->fillColor = fillColor;
+    }
+
+    return smthChanged;
 }
