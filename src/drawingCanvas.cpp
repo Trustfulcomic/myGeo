@@ -1,6 +1,6 @@
 #include "drawingCanvas.h"
 
-#include "sidePanel.h"
+#include "sidePanel/sidePanel.h"
 
 /// @brief The constructor of DrawingCanvas
 /// @param parent The parent wxWindow

@@ -19,12 +19,12 @@ add_executable(main main.cpp)
 
 target_sources(main PRIVATE     myFrame.cpp
                                 drawingCanvas.cpp
-                                nameHandler.cpp
-                                sidePanel.cpp)
+                                nameHandler.cpp)
 add_subdirectory(geoTransforms)
 add_subdirectory(tools)
 add_subdirectory(utils)
 add_subdirectory(geoObjects)
+add_subdirectory(sidePanel)
 
 include(${wxWidgets_USE_FILE})
 

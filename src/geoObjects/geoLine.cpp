@@ -2,7 +2,7 @@
 
 #include "../drawingCanvas.h"
 #include "../utils/utils.h"
-#include "../sidePanel.h"
+#include "../sidePanel/sidePanel.h"
 
 /// @brief Basic constructor for line using two objects
 /// @param parent DrawingCanvas on which the object is

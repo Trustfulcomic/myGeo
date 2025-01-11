@@ -2,6 +2,8 @@
 
 #include <wx/wrapsizer.h>
 
+#include "objectDialog.h"
+
 /// @brief Constructor for side panel
 /// @param parent The parent wxWindow
 /// @param drawingCanvas DrawingCanvas being affected by the side panel
@@ -38,6 +40,9 @@ SidePanel::SidePanel(wxWindow *parent, DrawingCanvas* drawingCanvas, ToolBind* t
     });
     listPanel->Bind(wxEVT_LIST_ITEM_DESELECTED, [this](wxListEvent& event){
         this->listPanel->DeselectedItemEvt(event);
+    });
+    listPanel->Bind(wxEVT_LIST_ITEM_ACTIVATED, [this](wxListEvent& event){
+        this->listPanel->ActivatedItemEvt(event);
     });
     listPanel->Hide();
 
@@ -172,6 +177,17 @@ void MyListCtrl::DeselectedItemEvt(wxListEvent &event) {
     this->drawingCanvas->DeselectObject(nameToObj[event.GetItem().GetText()]);
 }
 
+/// @brief Handles item activation (opens dialog)
+/// @param event Event to handle
+void MyListCtrl::ActivatedItemEvt(wxListEvent &event) {
+    ObjectDialog objectDialog(nameToObj[event.GetItem().GetText()], this, wxID_ANY, "Objekt", wxDefaultPosition, wxDefaultSize, wxRESIZE_BORDER);
+	if (objectDialog.ShowModal() == wxID_OK) {
+		if (objectDialog.ApplyChanges()){
+            drawingCanvas->SaveState();
+        }
+    }
+}
+
 /// @brief Selects an object
 /// @param obj The object to select
 void MyListCtrl::SelectObject(GeoObject *obj) {
@@ -191,3 +207,4 @@ void MyListCtrl::DeselectAllObjects() {
         this->SetItemState(objToIdx[obj], 0, wxLIST_STATE_SELECTED);
     }
 }
+

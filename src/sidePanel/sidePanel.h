@@ -2,8 +2,8 @@
 #include <wx/wx.h>
 #include <wx/listctrl.h>
 
-#include "drawingCanvas.h"
-#include "tools/tools.h"
+#include "../drawingCanvas.h"
+#include "../tools/tools.h"
 
 struct ListItem {
     wxString name, definition;
@@ -21,6 +21,7 @@ public:
 
     void SelectedItemEvt(wxListEvent& event);
     void DeselectedItemEvt(wxListEvent& event);
+    void ActivatedItemEvt(wxListEvent& event);
 
     void SelectObject(GeoObject* obj);
     void DeselectObject(GeoObject* obj);

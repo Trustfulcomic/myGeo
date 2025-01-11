@@ -1,7 +1,7 @@
 #include "geoSegment.h"
 
 #include "../drawingCanvas.h"
-#include "../sidePanel.h"
+#include "../sidePanel/sidePanel.h"
 
 /// @brief Constructor for GeoSegment using two endpoints
 /// @param parent DrawingCanvas on which the object is displayed

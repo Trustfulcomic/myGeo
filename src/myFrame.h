@@ -5,7 +5,7 @@
 
 #include "drawingCanvas.h"
 #include "tools/tools.h"
-#include "sidePanel.h"
+#include "sidePanel/sidePanel.h"
 
 class MyFrame : public wxFrame {
 public:

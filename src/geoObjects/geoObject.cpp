@@ -5,7 +5,7 @@
 #include "geoObject.h"
 #include "../drawingCanvas.h"
 #include "../nameHandler.h"
-#include "../sidePanel.h"
+#include "../sidePanel/sidePanel.h"
 
 /// @brief The constructor of GeoObject.
 /// @param parent DrawingCanvas on which the object will be drawn.

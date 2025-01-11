@@ -4,7 +4,7 @@
 #include "geoSegment.h"
 
 #include "../drawingCanvas.h"
-#include "../sidePanel.h"
+#include "../sidePanel/sidePanel.h"
 
 /// @brief Constructor for a free point or a point attached to a curve
 /// @param parent DrawingCanvas on which the point is
