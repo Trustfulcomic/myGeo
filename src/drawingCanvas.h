@@ -11,6 +11,7 @@
 #include "nameHandler.h"
 
 class SidePanel;
+class ToolBind;
 
 /// @brief Struct for storing the state of the canvas
 struct DrawingCanvasState {
@@ -71,6 +72,19 @@ public:
     /// @return Set of the selected objects
     std::unordered_set<GeoObject*> GetSelectedObjs();
 
+    /// @brief Changes pointer to an object
+    /// @param originalObj Pointer to the original object
+    /// @param targetObj Poiter to the new object
+    /// @return True if \p originalObj existed
+    bool ChangeObject(GeoObject* originalObj, GeoObject* targetObj);
+
+    /// @brief Resets the state of the currently selected tool bound to this canvas
+    void ResetTools();
+
+    /// @brief Sets the toolBind used for this canvas if it is not set yet
+    /// @param toolBind The ToolBind used
+    void SetToolBind(ToolBind* toolBind);
+
     /// Name handler for all objects on the canvas
     NameHandler nameHandler = NameHandler();
 private:
@@ -91,4 +105,7 @@ private:
 
     /// Set of all selected objects
     std::unordered_set<GeoObject*> selectedObjs;
+
+    /// ToolBind that is used to bind tools to this canvas
+    ToolBind* toolBind = nullptr;
 }; 

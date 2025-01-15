@@ -5,6 +5,8 @@
 #include "../drawingCanvas.h"
 #include "../tools/tools.h"
 
+#include "objectDialog.h"
+
 struct ListItem {
     wxString name, definition;
     double parameter;

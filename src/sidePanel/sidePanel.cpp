@@ -2,8 +2,6 @@
 
 #include <wx/wrapsizer.h>
 
-#include "objectDialog.h"
-
 /// @brief Constructor for side panel
 /// @param parent The parent wxWindow
 /// @param drawingCanvas DrawingCanvas being affected by the side panel

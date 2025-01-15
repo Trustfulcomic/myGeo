@@ -1,6 +1,7 @@
 #include "drawingCanvas.h"
 
 #include "sidePanel/sidePanel.h"
+#include "tools/tool.h"
 
 /// @brief The constructor of DrawingCanvas
 /// @param parent The parent wxWindow
@@ -135,6 +136,22 @@ std::unordered_set<GeoObject *> DrawingCanvas::GetSelectedObjs() {
     return selectedObjs;
 }
 
+bool DrawingCanvas::ChangeObject(GeoObject *originalObj, GeoObject *targetObj) {
+    for (GeoPoint*& obj : geoPoints){
+        if (obj == originalObj) {
+            obj = static_cast<GeoPoint*>(targetObj);
+            return true;
+        }
+    }
+    for (GeoCurve*& obj : geoCurves){
+        if (obj == originalObj) {
+            obj = static_cast<GeoCurve*>(targetObj);
+            return true;
+        }
+    }
+    return false;
+}
+
 /// @brief Handels the paint event
 /// @param event The event to handle
 void DrawingCanvas::OnPaint(wxPaintEvent &event) { 
@@ -205,4 +222,12 @@ void DrawingCanvas::DeleteAll() {
         delete tempGeoCurve;
         tempGeoCurve = nullptr;
     }
+}
+
+void DrawingCanvas::ResetTools(){
+    toolBind->ResetState();
+}
+
+void DrawingCanvas::SetToolBind(ToolBind* toolBind){
+    if (this->toolBind == nullptr) this->toolBind = toolBind;
 }

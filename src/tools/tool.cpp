@@ -201,6 +201,7 @@ ToolBind::ToolBind(DrawingCanvas *canvas) {
 /// @param canvas Canvas that will be effected by the tools.
 void ToolBind::BindToCanvas(DrawingCanvas *canvas) {
     this->canvas = canvas;
+    canvas->SetToolBind(this);
 
     canvas->Bind(wxEVT_LEFT_DOWN, &ToolBind::OnMouseDown, this);
     canvas->Bind(wxEVT_MOTION, &ToolBind::OnMouseMove, this);

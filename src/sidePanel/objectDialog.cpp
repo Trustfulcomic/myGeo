@@ -5,6 +5,7 @@
 #include <wx/colordlg.h>
 
 #include "sidePanel.h"
+#include "../definitionParser.h"
 
 /// @brief Constrctor for the ObjectDialog
 /// @param obj Object to modify using this dialog
@@ -76,6 +77,9 @@ ObjectDialog::ObjectDialog(GeoObject* obj, wxWindow *parent, wxWindowID id, cons
     SetMinSize(GetSize());
 }
 
+/// @brief Applies the changes made in the dialog
+/// @param drawingCanvas DrawingCanvas on which the object is
+/// @return Returns true if something in the object has changed
 bool ObjectDialog::ApplyChanges(DrawingCanvas* drawingCanvas) {
     bool smthChanged = false;
     ListItem original = obj->GetListItem();
@@ -86,7 +90,15 @@ bool ObjectDialog::ApplyChanges(DrawingCanvas* drawingCanvas) {
     }
 
     if (definitionBox->GetValue().compare(original.definition) != 0){
-        // TODO
+        GeoObject* returnedObj = DefinitionParser::RedefineObject(obj, definitionBox->GetValue());
+        if (returnedObj != nullptr){
+            this->obj = returnedObj;
+            original = obj->GetListItem();
+            obj->GetCanvas()->ResetTools();
+            smthChanged = true;
+        } else {
+            wxMessageBox(wxString::FromUTF8("Neplatná definice objektu"), "Fňuk", wxOK);
+        }
     }
 
     if (parameterBox->GetValue().compare(wxString::Format("%.5f", original.parameter)) != 0){
@@ -94,13 +106,12 @@ bool ObjectDialog::ApplyChanges(DrawingCanvas* drawingCanvas) {
         try {
             new_param = std::stod(std::string(parameterBox->GetValue().mb_str()));
         } catch (std::exception& e) {
-            std::cout << "Excpetion " << e.what() << std::endl;
+            std::cout << "Exception " << e.what() << std::endl;
         }
 
         if (new_param != original.parameter){
             smthChanged = true;
             obj->parameter = new_param;
-            obj->ReloadAllChildren();
         }
     } 
 
@@ -117,6 +128,10 @@ bool ObjectDialog::ApplyChanges(DrawingCanvas* drawingCanvas) {
     if (fillColor != obj->fillColor){
         smthChanged = true;
         obj->fillColor = fillColor;
+    }
+
+    if (smthChanged) {
+        obj->ReloadAllChildren();
     }
 
     return smthChanged;

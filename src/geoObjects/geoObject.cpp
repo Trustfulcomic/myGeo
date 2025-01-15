@@ -115,6 +115,32 @@ std::unordered_set<GeoObject*> GeoObject::GetDescendants() {
     return res;
 }
 
+bool GeoObject::ChangeParent(GeoObject *originalObj, GeoObject *targetObj) {
+    for (GeoObject*& obj : parentObjs) {
+        if (obj == originalObj) {
+            obj = targetObj;
+            return true;
+        }
+    }
+    return false;
+}
+
+bool GeoObject::ChangeChild(GeoObject *originalObj, GeoObject *targetObj) {
+    for (GeoObject*& obj : childObjs) {
+        if (obj == originalObj) {
+            obj = targetObj;
+            return true;
+        }
+    }
+    return false;
+}
+
+void GeoObject::CopyStyleTo(GeoObject *targetObj) {
+    targetObj->outlineColor = this->outlineColor;
+    targetObj->fillColor = this->fillColor;
+    targetObj->outlineColor = this->outlineColor;
+}
+
 /// @brief Copies the parents and children of \p copy if they do not yet exist in \p copiedPtrs
 /// @details Copies the object itself and then copies its parents and children if they are not yet copied. All the copies can be accessed by traversing \p copiedPtrs afterwards.
 /// @param copy The object being copied

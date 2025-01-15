@@ -37,6 +37,7 @@ public:
 
     void AddChild(GeoObject* obj);
     void RemoveChild(GeoObject* obj) {childObjs.remove(obj);}
+    void RemoveAllChildren() {childObjs.clear();}
 
     /// @brief Returns the distance of the GeoObject from \p pt .
     /// @param pt Point from which the distance is calculated.
@@ -84,6 +85,30 @@ public:
 
     /// Parameter when point is attached to a curve
     double parameter = 0;
+
+    /// @brief Gets the canvas on which the object is
+    /// @return Pointer to the canvas
+    DrawingCanvas* GetCanvas() { return parent; }
+
+    /// @brief Changes a parent object
+    /// @param originalObj Pointer to the original object
+    /// @param targetObj Pointer to the new object
+    /// @return True if successful
+    bool ChangeParent(GeoObject* originalObj, GeoObject* targetObj);
+    /// @brief Changes a child object
+    /// @param originalObj Pointer to the original object
+    /// @param targetObj Pointer to the new object
+    /// @return True if successful
+    bool ChangeChild(GeoObject* originalObj, GeoObject* targetObj);
+
+    /// @brief Returns the parent objects 
+    std::vector<GeoObject*> GetParents() {return parentObjs;}
+    /// @brief Retruns the child objects
+    std::list<GeoObject*> GetChildren() {return childObjs;}
+
+    /// @brief Copies the style of the object to \p targetObj
+    /// @param targetObj The target object to copy the style to
+    void CopyStyleTo(GeoObject* targetObj);
 
 protected:
     /// DrawingCanvas on which the object is drawn.
