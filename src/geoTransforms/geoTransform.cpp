@@ -28,7 +28,11 @@ GeoTransform *PointReflection::CopyTransform(std::unordered_map<GeoObject *, Geo
 }
 
 wxString PointReflection::GetListText(GeoObject *obj) {
-    return wxString::Format("PtReflect(%s,%s)", obj->GetName(), parent->GetName());
+    return wxString::Format(PointReflection::DefString() + "(%s,%s)", obj->GetName(), parent->GetName());
+}
+
+wxString PointReflection::DefString() {
+    return "PtReflect";
 }
 
 /// @brief Basic constructor for line reflection
@@ -57,7 +61,11 @@ GeoTransform *LineReflection::CopyTransform(std::unordered_map<GeoObject *, GeoO
 }
 
 wxString LineReflection::GetListText(GeoObject *obj) {
-    return wxString::Format("LineReflect(%s,%s)", obj->GetName(), parent->GetName());
+    return wxString::Format(LineReflection::DefString() + "(%s,%s)", obj->GetName(), parent->GetName());
+}
+
+wxString LineReflection::DefString() {
+    return "LineReflect";
 }
 
 /// @brief Basic constructor for isogonal conjugate transform
@@ -108,5 +116,9 @@ GeoTransform *IsoConjugate::CopyTransform(std::unordered_map<GeoObject *, GeoObj
 }
 
 wxString IsoConjugate::GetListText(GeoObject *obj) {
-    return wxString::Format("IsoConjugate(%s,%s,%s,%s)", obj->GetName(), A->GetName(), B->GetName(), C->GetName());
+    return wxString::Format(IsoConjugate::DefString() + "(%s,%s,%s,%s)", obj->GetName(), A->GetName(), B->GetName(), C->GetName());
+}
+
+wxString IsoConjugate::DefString() {
+    return "IsoConjugate";
 }

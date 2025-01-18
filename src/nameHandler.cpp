@@ -60,3 +60,8 @@ void NameHandler::ChangeObject(GeoObject *originalObj, GeoObject *targetObj) {
 bool NameHandler::DoesExist(const wxString &objName) {
     return !(nameToObject.find(objName) == nameToObject.end());
 }
+
+GeoObject *NameHandler::GetObject(const wxString &name) {
+    if (!DoesExist(name)) return nullptr;
+    return nameToObject[name];
+}

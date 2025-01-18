@@ -37,6 +37,11 @@ public:
     /// @return True if the object exists
     bool DoesExist(const wxString& objName);
 
+    /// @brief Get object by name
+    /// @param name The name of the object
+    /// @return Pointer to the object
+    GeoObject* GetObject(const wxString& name);
+
 private:
     /// @brief Map from names to objects.
     std::unordered_map<wxString, GeoObject*> nameToObject;

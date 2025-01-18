@@ -41,6 +41,8 @@ public:
 
     virtual ListItem GetListItem() override;
 
+    static wxString DefToString(SegmentDefinition definition);
+
 private:
     /// First endpoint of the segment
     GeoPoint *pointA = nullptr;

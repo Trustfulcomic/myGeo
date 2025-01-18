@@ -31,7 +31,7 @@ GeoLine::GeoLine(DrawingCanvas *parent, const wxString &name, GeoObject *objA, G
 /// @param ptA First point
 /// @param ptB Second point (apex)
 /// @param ptC Third point
-GeoLine::GeoLine(DrawingCanvas *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC)
+GeoLine::GeoLine(DrawingCanvas *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC, bool perpendicular)
     : GeoLineBase(parent, name, LINE){
 
     this->parentObjs.push_back(ptA);
@@ -41,7 +41,11 @@ GeoLine::GeoLine(DrawingCanvas *parent, const wxString &name, GeoPoint *ptA, Geo
     ptB->AddChild(this);
     ptC->AddChild(this);
 
-    this->definition = ANGLE_BISECTOR;
+    if (perpendicular) {
+        this->definition = ANGLE_BISECTOR_PERP;
+    } else {
+        this->definition = ANGLE_BISECTOR;
+    }
 
     this->outlineColor = wxColor(0, 0, 0);
     this->outlineWidth = 2;
@@ -226,28 +230,50 @@ void GeoLine::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs)
 ListItem GeoLine::GetListItem() {
     switch (definition) {
         case LINE_BY_TWO_POINTS:
-            return {GetName(), wxString::Format("Line(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
         case LINE_BY_POINT_AND_CURVE_PERP:
-            return {GetName(), wxString::Format("PerpLine(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
         case LINE_BY_POINT_AND_CURVE_PARAL:
-            return {GetName(), wxString::Format("ParalLine(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
         case LINE_PERPENDICULAR_BISECTOR:
-            return {GetName(), wxString::Format("Bisector(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
         case ANGLE_BISECTOR:
             if (parentObjs.size() == 2){
-                return {GetName(), wxString::Format("Bisector(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
             } else {
-                return {GetName(), wxString::Format("Bisector(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), 0, this};
+                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), 0, this};
             }
         case ANGLE_BISECTOR_PERP:
             if (parentObjs.size() == 2){
-                return {GetName(), wxString::Format("Bisector(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 1, this};
+                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
             } else {
-                return {GetName(), wxString::Format("Bisector(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), 1, this};
+                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), 0, this};
             }
         case TRANSFORMED_LINE:
             return {GetName(), geoTransform->GetListText(parentObjs[0]), 0, this};
     }
 
     return {GetName(), "He?", 0, this};
+}
+
+/// @brief Converts definition (except transforms) to string
+/// @param definition The definition to convert
+/// @return The string unique to the defintion
+wxString GeoLine::DefToString(LineDefinition definition) {
+    switch (definition) {
+        case LINE_BY_TWO_POINTS:
+            return "Line";
+        case LINE_BY_POINT_AND_CURVE_PERP:
+            return "PerpLine";
+        case LINE_BY_POINT_AND_CURVE_PARAL:
+            return "ParalLine";
+        case LINE_PERPENDICULAR_BISECTOR:
+            return "PerpBisector";
+        case ANGLE_BISECTOR:
+            return "AngleBisector";
+        case ANGLE_BISECTOR_PERP:
+            return "AngleBisectorP";
+        default:
+            return "";
+    }
 }

@@ -142,10 +142,22 @@ void GeoSegment::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPt
 ListItem GeoSegment::GetListItem() {
     switch (definition) {
         case SEG_BY_TWO_POINTS:
-            return {GetName(), wxString::Format("Segment(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+            return {GetName(), wxString::Format(GeoSegment::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
         case TRANSFORMED_SEG:
             return {GetName(), geoTransform->GetListText(parentObjs[0]), 0, this};
     }
 
     return {GetName(), "He?", 0, this};
+}
+
+/// @brief Converts definition (except transforms) to string
+/// @param definition The definition to convert
+/// @return The string unique to the defintion
+wxString GeoSegment::DefToString(SegmentDefinition definition) {
+    switch (definition) {
+        case SEG_BY_TWO_POINTS:
+            return "Segment";
+        default:
+            return "";
+    }
 }

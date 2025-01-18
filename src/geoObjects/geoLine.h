@@ -21,7 +21,7 @@ enum LineDefinition {
 class GeoLine : public GeoLineBase {
 public:
     GeoLine(DrawingCanvas *parent, const wxString &name, GeoObject *objA, GeoObject *objB, LineDefinition def);
-    GeoLine(DrawingCanvas *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC);
+    GeoLine(DrawingCanvas *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC, bool perpendicular = false);
     GeoLine(DrawingCanvas *parent, const wxString &name, GeoLine *parentObj, GeoTransform *geoTransform);
     /// @brief Default constructor for GeoLine
     GeoLine() : GeoLineBase(LINE) {};
@@ -44,6 +44,8 @@ public:
     void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs) override;
 
     virtual ListItem GetListItem() override;
+
+    static wxString DefToString(LineDefinition definition);
 
 private:
     /// @brief Definition of the line

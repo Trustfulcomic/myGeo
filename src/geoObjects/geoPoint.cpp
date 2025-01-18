@@ -253,20 +253,36 @@ void GeoPoint::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs
 ListItem GeoPoint::GetListItem() {
     switch (definition) {
         case FREE_POINT:
-            return {GetName(), wxString::Format("(%.3f, %.3f)", pos.m_x, pos.m_y), parameter, this};
+            return {GetName(), wxString::Format(GeoPoint::DefToString(FREE_POINT) + "(%.3f, %.3f)", pos.m_x, pos.m_y), parameter, this};
         case POINT_ON_CURVE:
-            return {GetName(), wxString::Format("OnCurve(%s)", parentObjs[0]->GetName()), parameter, this};
+            return {GetName(), wxString::Format(GeoPoint::DefToString(POINT_ON_CURVE) + "(%s)", parentObjs[0]->GetName()), parameter, this};
         case POINT_ON_INTERSECT:
-            return {GetName(), wxString::Format("OnIntersect(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
+            return {GetName(), wxString::Format(GeoPoint::DefToString(POINT_ON_INTERSECT) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
         case MIDPOINT:
             if (parentObjs.size() == 2){
-                return {GetName(), wxString::Format("Midpoint(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
+                return {GetName(), wxString::Format(GeoPoint::DefToString(MIDPOINT) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
             } else {
-                return {GetName(), wxString::Format("Midpoint(%s)", parentObjs[0]->GetName()), parameter, this};
+                return {GetName(), wxString::Format(GeoPoint::DefToString(MIDPOINT) + "(%s)", parentObjs[0]->GetName()), parameter, this};
             }
         case TRANSFORMED_POINT:
             return {GetName(), geoTransform->GetListText(parentObjs[0]), parameter, this};
     }
 
     return {GetName(), "He?", parameter, this};
+}
+
+/// @brief Converts definition (except transforms) to string
+/// @param definition The definition to convert
+/// @return The string unique to the defintion
+wxString GeoPoint::DefToString(PointDefinition definition) {
+    switch (definition) {
+        case POINT_ON_CURVE:
+            return "OnCurve";
+        case POINT_ON_INTERSECT:
+            return "OnIntersect";
+        case MIDPOINT:
+            return "Midpoint";
+        default:
+            return "";
+    }
 }

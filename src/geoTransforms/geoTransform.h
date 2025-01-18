@@ -17,6 +17,7 @@ public:
     GeoTransform* CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) override;
 
     wxString GetListText(GeoObject* obj) override;
+    static wxString DefString();
 private:
     /// Point defining the transformation
     GeoPoint* parent;
@@ -33,6 +34,7 @@ public:
     GeoTransform* CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) override;
 
     wxString GetListText(GeoObject* obj) override;
+    static wxString DefString();
 private:
     /// Line defining the transformation
     GeoLineBase* parent;
@@ -49,6 +51,7 @@ public:
     GeoTransform* CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) override;
 
     wxString GetListText(GeoObject* obj) override;
+    static wxString DefString();
 private:
     /// Points of the traingle defining the transformation
     GeoPoint *A, *B, *C;
