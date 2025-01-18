@@ -3,6 +3,8 @@
 #include "sidePanel/sidePanel.h"
 #include "tools/tool.h"
 
+#include <fstream>
+
 /// @brief The constructor of DrawingCanvas
 /// @param parent The parent wxWindow
 /// @param id ID of the wxWindow
@@ -233,7 +235,7 @@ void DrawingCanvas::SetToolBind(ToolBind* toolBind){
 }
 
 void DrawingCanvas::ShowSaveAsDialog() {
-    wxFileDialog saveAsFileDialog(this, wxString::FromUTF8("Uložit jako"), "", "", "PNG files (*.png)|*.png", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    wxFileDialog saveAsFileDialog(this, wxString::FromUTF8("Uložit jako"), "", "", "PNG files (*.png)|*.png;*.*", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
     if (saveAsFileDialog.ShowModal() == wxID_CANCEL) return;
 
@@ -259,4 +261,23 @@ void DrawingCanvas::ShowSaveAsDialog() {
     }
 
     bitmap.SaveFile(saveAsFileDialog.GetPath(), wxBITMAP_TYPE_PNG);
+}
+
+void DrawingCanvas::ShowSaveDialog() {
+    wxFileDialog saveFileDialog(this, wxString::FromUTF8("Uložit"), "", "", "CSV files (*.csv)|*.csv;*.*", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+    if (saveFileDialog.ShowModal() == wxID_CANCEL) return;
+
+    std::ofstream file(saveFileDialog.GetPath());
+    if (file.is_open()) {
+        for (auto geoObj : geoPoints){
+            ListItem li = geoObj->GetListItem();
+            file << li.name << ";" << li.definition << ";" << li.parameter << ";" << li.obj->outlineColor.GetRGB() << ";" << li.obj->fillColor.GetRGB() << ";" << li.obj->outlineWidth << ";\n";
+        }
+        for (auto geoObj : geoCurves){
+            ListItem li = geoObj->GetListItem();
+            file << li.name << ";" << li.definition << ";" << li.parameter << ";" << li.obj->outlineColor.GetRGB() << ";" << li.obj->fillColor.GetRGB() << ";" << li.obj->outlineWidth << ";\n";
+        }
+        file.close();
+    }
 }

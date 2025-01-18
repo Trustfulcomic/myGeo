@@ -8,6 +8,7 @@ GeoCurve::GeoCurve(DrawingCanvas *parent, const wxString &name, GeoCurveType typ
     : GeoObject(parent, name){
     
     this->type = type;
+    this->fillColor = *wxBLACK;
 }
 
 /// @brief Returns the distance of a point from the curve
