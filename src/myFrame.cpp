@@ -37,11 +37,14 @@ void MyFrame::BuildMenuBar() {
     wxMenuBar *menuBar = new wxMenuBar();
 
     wxMenu *fileMenu = new wxMenu();
+    fileMenu->Append(wxID_SAVEAS);
     menuBar->Append(fileMenu, "File");
 
     wxMenu *editMenu = new wxMenu();
     editMenu->Append(wxID_UNDO);
     editMenu->Append(wxID_REDO);
+    menuBar->Append(editMenu, "Edit");
+
     this->Bind(wxEVT_MENU, [&](wxCommandEvent &event){
         if (event.GetId() == wxID_UNDO){
             this->canvas->LoadPreviousState();
@@ -49,9 +52,10 @@ void MyFrame::BuildMenuBar() {
         } else if (event.GetId() == wxID_REDO){
             this->canvas->LoadNextState();
             this->toolBind->ResetState();
+        } else if (event.GetId() == wxID_SAVEAS){
+            this->canvas->ShowSaveAsDialog();
         }
     });
-    menuBar->Append(editMenu, "Edit");
 
     SetMenuBar(menuBar);
 }

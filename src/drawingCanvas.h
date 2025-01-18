@@ -85,6 +85,9 @@ public:
     /// @param toolBind The ToolBind used
     void SetToolBind(ToolBind* toolBind);
 
+    /// @brief Shows the "save as" dialog
+    void ShowSaveAsDialog();
+
     /// Name handler for all objects on the canvas
     NameHandler nameHandler = NameHandler();
 private:

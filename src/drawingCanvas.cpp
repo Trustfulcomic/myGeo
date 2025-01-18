@@ -231,3 +231,32 @@ void DrawingCanvas::ResetTools(){
 void DrawingCanvas::SetToolBind(ToolBind* toolBind){
     if (this->toolBind == nullptr) this->toolBind = toolBind;
 }
+
+void DrawingCanvas::ShowSaveAsDialog() {
+    wxFileDialog saveAsFileDialog(this, wxString::FromUTF8("Uložit jako"), "", "", "PNG files (*.png)|*.png", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+
+    if (saveAsFileDialog.ShowModal() == wxID_CANCEL) return;
+
+    wxBitmap bitmap(this->GetSize());
+    wxMemoryDC memDC;
+
+    memDC.SelectObject(bitmap);
+    memDC.SetBackground(*wxWHITE_BRUSH);
+    memDC.Clear();
+
+    wxGraphicsContext* gc = wxGraphicsContext::Create(memDC);
+    if (gc) {
+        for (auto geoObj : geoCurves){
+            geoObj->DrawOnContext(gc, transform);
+        }
+        for (auto geoObj : geoPoints){
+            geoObj->DrawOnContext(gc, transform);
+        }
+        if (tempGeoCurve != nullptr){
+            tempGeoCurve->DrawOnContext(gc, transform);
+        }
+        delete gc;
+    }
+
+    bitmap.SaveFile(saveAsFileDialog.GetPath(), wxBITMAP_TYPE_PNG);
+}
