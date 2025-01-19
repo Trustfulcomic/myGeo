@@ -87,8 +87,10 @@ public:
 
     /// @brief Shows the "save as" dialog
     void ShowSaveAsDialog();
-    /// @brief Show the "save" dialog
+    /// @brief Shows the "save" dialog
     void ShowSaveDialog();
+    /// @brief Shows the "open" dialog
+    void ShowOpenDialog();
 
     /// Name handler for all objects on the canvas
     NameHandler nameHandler = NameHandler();

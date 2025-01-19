@@ -33,4 +33,17 @@ namespace DefinitionParser {
     /// @param objs Vector of the objects
     /// @return True if the types match
     bool CheckObjectTypes(const std::vector<int>& types, const std::vector<GeoObject*>& objs);
+
+    /// Struct for the parsed csv line
+    struct ObjectCSVLine{
+        wxString name;
+        wxString definition;
+        double parameter;
+        wxColor outlineColor;
+        wxColor fillCOlor;
+        int outlineWidth;
+        bool good;
+    };
+
+    ObjectCSVLine ParseCSVLine(const std::string& str);
 };

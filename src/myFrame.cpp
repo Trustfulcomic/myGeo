@@ -39,6 +39,7 @@ void MyFrame::BuildMenuBar() {
     wxMenu *fileMenu = new wxMenu();
     fileMenu->Append(wxID_SAVEAS);
     fileMenu->Append(wxID_SAVE);
+    fileMenu->Append(wxID_OPEN);
     menuBar->Append(fileMenu, "File");
 
     wxMenu *editMenu = new wxMenu();
@@ -57,6 +58,8 @@ void MyFrame::BuildMenuBar() {
             this->canvas->ShowSaveAsDialog();
         } else if (event.GetId() == wxID_SAVE){
             this->canvas->ShowSaveDialog();
+        } else if (event.GetId() == wxID_OPEN){
+            this->canvas->ShowOpenDialog();
         }
     });
 

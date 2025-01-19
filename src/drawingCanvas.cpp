@@ -2,8 +2,10 @@
 
 #include "sidePanel/sidePanel.h"
 #include "tools/tool.h"
+#include "definitionParser.h"
 
 #include <fstream>
+#include <queue>
 
 /// @brief The constructor of DrawingCanvas
 /// @param parent The parent wxWindow
@@ -235,7 +237,7 @@ void DrawingCanvas::SetToolBind(ToolBind* toolBind){
 }
 
 void DrawingCanvas::ShowSaveAsDialog() {
-    wxFileDialog saveAsFileDialog(this, wxString::FromUTF8("Uložit jako"), "", "", "PNG files (*.png)|*.png;*.*", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    wxFileDialog saveAsFileDialog(this, wxString::FromUTF8("Save as"), "", "", "PNG files (*.png)|*.png;*.*", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
     if (saveAsFileDialog.ShowModal() == wxID_CANCEL) return;
 
@@ -264,7 +266,7 @@ void DrawingCanvas::ShowSaveAsDialog() {
 }
 
 void DrawingCanvas::ShowSaveDialog() {
-    wxFileDialog saveFileDialog(this, wxString::FromUTF8("Uložit"), "", "", "CSV files (*.csv)|*.csv;*.*", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
+    wxFileDialog saveFileDialog(this, wxString::FromUTF8("Save"), "", "", "CSV files (*.csv)|*.csv;*.*", wxFD_SAVE | wxFD_OVERWRITE_PROMPT);
 
     if (saveFileDialog.ShowModal() == wxID_CANCEL) return;
 
@@ -279,5 +281,130 @@ void DrawingCanvas::ShowSaveDialog() {
             file << li.name << ";" << li.definition << ";" << li.parameter << ";" << li.obj->outlineColor.GetRGB() << ";" << li.obj->fillColor.GetRGB() << ";" << li.obj->outlineWidth << ";\n";
         }
         file.close();
+    }
+}
+
+void DrawingCanvas::ShowOpenDialog() {
+    wxFileDialog openFileDialog(this, wxString::FromUTF8("Open"), "", "", "CSV files (*.csv)|*.csv;*.*", wxFD_OPEN | wxFD_FILE_MUST_EXIST);
+
+    if (openFileDialog.ShowModal() == wxID_CANCEL) return;
+
+    std::vector<DefinitionParser::ObjectCSVLine> csvLines;
+
+    std::string line = "";
+    std::ifstream file(openFileDialog.GetPath());
+    if (file.is_open()) {
+        while(std::getline(file, line)) {
+            csvLines.push_back(DefinitionParser::ParseCSVLine(line));
+            if (!csvLines.back().good) return;
+        }
+        file.close();
+    }
+
+    std::vector<DefinitionParser::ParsedString> parsedDefs;
+    for (auto& csvLine : csvLines) {
+        parsedDefs.push_back(DefinitionParser::ParseString(csvLine.definition));
+        if (!parsedDefs.back().good) return;
+    }
+
+    std::unordered_map<wxString, DefinitionParser::ObjectCSVLine> nameToCSV;
+
+    std::unordered_map<wxString, std::vector<wxString>> dag;
+    std::unordered_map<wxString, int> dag_parentNums;
+    for (auto& csvLine : csvLines) {
+        if (dag.find(csvLine.name) != dag.end()) {
+            return;
+        };
+        dag[csvLine.name];
+        nameToCSV[csvLine.name] = csvLine;
+    }
+
+    for (int i = 0; i<csvLines.size(); i++) {
+        for (wxString& par : parsedDefs[i].args) {
+            dag[par].push_back(csvLines[i].name);
+        }
+        dag_parentNums[csvLines[i].name] = parsedDefs[i].args.size();
+    }
+
+    std::queue<wxString> q;
+    for (int i = 0; i<csvLines.size(); i++){
+        if (parsedDefs[i].def == "") {
+            q.push(csvLines[i].name);
+        }
+    }
+
+    std::list<GeoPoint*> backupGeoPoints = geoPoints;
+    std::list<GeoCurve*> backupGeoCurves = geoCurves;
+    NameHandler backupNameHandler = nameHandler;
+
+    geoPoints.clear();
+    geoCurves.clear();
+    nameHandler = NameHandler();
+
+    bool success = true;
+
+    while (!q.empty()) {
+        wxString curName = q.front(); q.pop();
+
+        for (wxString& child : dag[curName]) {
+            dag_parentNums[child]--;
+            if (dag_parentNums[child] == 0) q.push(child);
+        }
+
+        GeoObject* newObj = DefinitionParser::CreateObject(nameToCSV[curName].definition, this);
+        if (newObj == nullptr) {
+            success = false;
+            break;
+        }
+        if (newObj->IsPoint()) {
+            geoPoints.push_back(static_cast<GeoPoint*>(newObj));
+        } else {
+            geoCurves.push_back(static_cast<GeoCurve*>(newObj));
+        }
+
+        newObj->nameHandler = &nameHandler;
+        newObj->Rename(curName);
+        newObj->parameter = nameToCSV[curName].parameter;
+        newObj->outlineColor = nameToCSV[curName].outlineColor;
+        newObj->fillColor = nameToCSV[curName].fillCOlor;
+        newObj->outlineWidth = nameToCSV[curName].outlineWidth;
+    }
+
+    if (!success) {
+        for (GeoPoint* obj : geoPoints) {
+            obj->nameHandler = nullptr;
+            delete obj;
+        }
+        for (GeoCurve* obj : geoCurves) {
+            obj->nameHandler = nullptr;
+            delete obj;
+        }
+
+        geoPoints = backupGeoPoints;
+        geoCurves = backupGeoCurves;
+        nameHandler = backupNameHandler;
+    } else {
+        std::list<GeoObject*> toDelete;
+        std::unordered_set<GeoObject*> deleted;
+
+        for (auto geoObj : backupGeoPoints) {
+            toDelete.push_back(geoObj);
+            geoObj->nameHandler = nullptr;
+        }
+        for (auto geoObj : backupGeoCurves) {
+            toDelete.push_back(geoObj);
+            geoObj->nameHandler = nullptr;
+        }
+
+        for (auto toDelObj : toDelete){
+            if (deleted.find(toDelObj) != deleted.end()) continue;
+            for (GeoObject* obj : toDelObj->GetDescendants()){
+                deleted.insert(obj);
+            }
+            delete toDelObj;
+        }
+        
+        toolBind->ResetState();
+        SaveState();
     }
 }

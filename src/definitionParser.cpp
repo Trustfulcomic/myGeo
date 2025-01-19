@@ -8,6 +8,8 @@
 #include "geoTransforms/geoTransform.h"
 
 #include <vector>
+#include <sstream>
+#include <stdexcept>
 
 GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas* canvas) {
     DefinitionParser::ParsedString parsedStr = DefinitionParser::ParseString(defStr);
@@ -191,4 +193,50 @@ bool DefinitionParser::CheckObjectTypes(const std::vector<int> &types, const std
     }
 
     return true;
+}
+
+DefinitionParser::ObjectCSVLine DefinitionParser::ParseCSVLine(const std::string &str) {
+    DefinitionParser::ObjectCSVLine res;
+    res.good = true;
+
+    std::string part;
+    std::stringstream ss(str);
+
+    res.good &= !!std::getline(ss, part, ';');
+    res.name = wxString::FromUTF8(part);
+
+    res.good &= !!std::getline(ss, part, ';');
+    res.definition = wxString::FromUTF8(part);
+
+    res.good &= !!std::getline(ss, part, ';');
+    try {
+        res.parameter = std::stod(part);
+    } catch (std::exception& e){
+        std::cout << e.what() << std::endl;
+        res.good = false;
+    }
+
+    res.good &= !!std::getline(ss, part, ';');
+    try {
+        res.outlineColor = wxColor(std::stoi(part));
+    } catch (std::exception& e){
+        std::cout << e.what() << std::endl;
+    }
+
+    res.good &= !!std::getline(ss, part, ';');
+    try {
+        res.fillCOlor = wxColor(std::stoi(part));
+    } catch (std::exception& e){
+        std::cout << e.what() << std::endl;
+    }
+
+    res.good &= !!std::getline(ss, part, ';');
+    try {
+        res.outlineWidth = std::stoi(part);
+    } catch (std::exception& e){
+        std::cout << e.what() << std::endl;
+        res.good = false;
+    }
+
+    return res;
 }
