@@ -105,6 +105,11 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
                 IsoConjugate* isoConj = new IsoConjugate(static_cast<GeoPoint*>(argObjs[1]), static_cast<GeoPoint*>(argObjs[2]), static_cast<GeoPoint*>(argObjs[3]));
                 return argObjs[0]->GetTransformed(isoConj);
             }
+        } else if (parsedStr.def.compare(Homothety::DefString()) == 0) {
+            if (CheckObjectTypes({-4,-1}, argObjs)) {
+                Homothety* homothety = new Homothety(static_cast<GeoPoint*>(argObjs[1]), 1);
+                return argObjs[0]->GetTransformed(homothety);
+            }
         }
         
         return nullptr;

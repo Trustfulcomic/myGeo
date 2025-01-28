@@ -178,6 +178,7 @@ void GeoLine::ReloadSelf() {
             break;
         
         case TRANSFORMED_LINE:
+            geoTransform->SetParam(parameter);
             mainPoint = geoTransform->TransformPoint(static_cast<GeoLineBase*>(parentObjs[0])->GetPoint());
             lineVect = geoTransform->TransformVect(static_cast<GeoLineBase*>(parentObjs[0])->GetVect());
             break;

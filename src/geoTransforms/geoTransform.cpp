@@ -122,3 +122,39 @@ wxString IsoConjugate::GetListText(GeoObject *obj) {
 wxString IsoConjugate::DefString() {
     return "IsoConjugate";
 }
+
+/// @brief Basic constructor for homothety
+/// @param center Center of the homthety
+/// @param param Factor by which to scale
+Homothety::Homothety(GeoPoint *center, double param) {
+    this->center = center;
+    this->param = param;
+}
+
+wxPoint2DDouble Homothety::TransformPoint(const wxPoint2DDouble &pt) {
+    wxPoint2DDouble vect = (pt - center->GetPos()) * param;
+    return center->GetPos() + vect;
+}
+
+wxPoint2DDouble Homothety::TransformVect(const wxPoint2DDouble &vect) {
+    return vect*param;
+}
+
+std::list<GeoObject *> Homothety::GetDeps() {
+    return {center};
+}
+
+GeoTransform *Homothety::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) {
+    if (copiedPtrs.find(center) == copiedPtrs.end()){
+        center->CreateCopy(copiedPtrs);
+    }
+    return new Homothety(static_cast<GeoPoint*>(copiedPtrs[center]), param);
+}
+
+wxString Homothety::GetListText(GeoObject *obj) {
+    return wxString::Format(Homothety::DefString() + "(%s,%s)", obj->GetName(), center->GetName());
+}
+
+wxString Homothety::DefString(){
+    return "Homothety";
+}

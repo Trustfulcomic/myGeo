@@ -56,3 +56,20 @@ private:
     /// Points of the traingle defining the transformation
     GeoPoint *A, *B, *C;
 };
+
+/// @brief Class for homothety
+class Homothety : public GeoTransform {
+public:
+    Homothety(GeoPoint* center, double param);
+
+    wxPoint2DDouble TransformPoint(const wxPoint2DDouble& pt) override;
+    wxPoint2DDouble TransformVect(const wxPoint2DDouble& vect) override;
+    std::list<GeoObject*> GetDeps() override;
+    GeoTransform* CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) override;
+
+    wxString GetListText(GeoObject* obj) override;
+    static wxString DefString();
+private:
+    /// The point defining the center of the homothety
+    GeoPoint* center;
+};

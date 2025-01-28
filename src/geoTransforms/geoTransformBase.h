@@ -33,6 +33,8 @@ public:
     /// @brief Gets the text displayed in object list
     /// @return The text
     virtual wxString GetListText(GeoObject* obj) = 0;
+
+    void SetParam(const double& param);
 protected:
     /// Parameter for the transform if necessary
     double param;

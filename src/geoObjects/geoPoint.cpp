@@ -221,6 +221,7 @@ void GeoPoint::ReloadSelf() {
             break;
 
         case TRANSFORMED_POINT:
+            geoTransform->SetParam(parameter);
             pos = geoTransform->TransformPoint(static_cast<GeoPoint*>(parentObjs[0])->GetPos());
             break;
     }

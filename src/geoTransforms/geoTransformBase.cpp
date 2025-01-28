@@ -5,3 +5,7 @@
 GeoTransform::GeoTransform(const double& param) {
     this->param = param;
 }
+
+void GeoTransform::SetParam(const double &param) {
+    this->param = param;
+}
