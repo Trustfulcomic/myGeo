@@ -11,4 +11,5 @@ target_sources(main PRIVATE     tool.cpp
                                 angleBisectorTool.cpp
                                 pointReflectTool.cpp
                                 lineReflectTool.cpp
-                                isoConjTool.cpp)
+                                isoConjTool.cpp
+                                homothetyTool.cpp)

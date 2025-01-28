@@ -70,6 +70,7 @@ GeoLine::GeoLine(DrawingCanvas *parent, const wxString &name, GeoLine *parentObj
 
     this->definition = TRANSFORMED_LINE;
     this->geoTransform = geoTransform;
+    this->parameter = geoTransform->GetParam();
 
     this->outlineColor = wxColor(0, 0, 0);
     this->outlineWidth = 2;
@@ -231,27 +232,27 @@ void GeoLine::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs)
 ListItem GeoLine::GetListItem() {
     switch (definition) {
         case LINE_BY_TWO_POINTS:
-            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
         case LINE_BY_POINT_AND_CURVE_PERP:
-            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
         case LINE_BY_POINT_AND_CURVE_PARAL:
-            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
         case LINE_PERPENDICULAR_BISECTOR:
-            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
         case ANGLE_BISECTOR:
             if (parentObjs.size() == 2){
-                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
             } else {
-                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), 0, this};
+                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), parameter, this};
             }
         case ANGLE_BISECTOR_PERP:
             if (parentObjs.size() == 2){
-                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), 0, this};
+                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
             } else {
-                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), 0, this};
+                return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), parameter, this};
             }
         case TRANSFORMED_LINE:
-            return {GetName(), geoTransform->GetListText(parentObjs[0]), 0, this};
+            return {GetName(), geoTransform->GetListText(parentObjs[0]), parameter, this};
     }
 
     return {GetName(), "He?", 0, this};

@@ -10,3 +10,4 @@
 #include "pointReflectTool.h"
 #include "lineReflectTool.h"
 #include "isoConjTool.h"
+#include "homothetyTool.h"

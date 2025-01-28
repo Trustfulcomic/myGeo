@@ -35,6 +35,7 @@ public:
     virtual wxString GetListText(GeoObject* obj) = 0;
 
     void SetParam(const double& param);
+    double GetParam(){ return param; };
 protected:
     /// Parameter for the transform if necessary
     double param;

@@ -97,6 +97,7 @@ void SidePanel::SetupTools() {
     ADD_TOOL(PointReflectTool);
     ADD_TOOL(LineReflectTool);
     ADD_TOOL(IsoConjTool);
+    ADD_TOOL(HomothetyTool);
     toolPanelSizer->Add(toolPanesSizer, 0, wxALL, FromDIP(5));
 
     toolPanel->SetSizer(toolPanelSizer);

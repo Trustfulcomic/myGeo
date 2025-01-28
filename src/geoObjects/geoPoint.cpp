@@ -133,6 +133,7 @@ GeoPoint::GeoPoint(DrawingCanvas *parent, const wxString &name, GeoPoint *parent
 
     this->geoTransform = geoTransform;
     this->definition = TRANSFORMED_POINT;
+    this->parameter = geoTransform->GetParam();
 
     ReloadSelf();
 }
