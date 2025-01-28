@@ -1,4 +1,7 @@
+#pragma once
 #include <wx/wx.h>
+
+#include "complexNum.h"
 
 namespace util {
     wxPoint2DDouble ProjectAtoLineBC(const wxPoint2DDouble &A, const wxPoint2DDouble &B, const wxPoint2DDouble &C);
@@ -14,4 +17,6 @@ namespace util {
     wxPoint2DDouble PointReflectVector(const wxPoint2DDouble &S, const wxPoint2DDouble &a);
     wxPoint2DDouble LineReflectPoint(const wxPoint2DDouble &P, const wxPoint2DDouble &p, const wxPoint2DDouble &A);
     wxPoint2DDouble LineReflectVector(const wxPoint2DDouble &P, const wxPoint2DDouble &p, const wxPoint2DDouble &a);
+
+    struct Poly;
 }
