@@ -2,6 +2,8 @@
 #include <wx/wx.h>
 
 #include "complexNum.h"
+#include "polynomial.h"
+#include <vector>
 
 namespace util {
     wxPoint2DDouble ProjectAtoLineBC(const wxPoint2DDouble &A, const wxPoint2DDouble &B, const wxPoint2DDouble &C);
@@ -18,5 +20,6 @@ namespace util {
     wxPoint2DDouble LineReflectPoint(const wxPoint2DDouble &P, const wxPoint2DDouble &p, const wxPoint2DDouble &A);
     wxPoint2DDouble LineReflectVector(const wxPoint2DDouble &P, const wxPoint2DDouble &p, const wxPoint2DDouble &a);
 
-    struct Poly;
+    std::vector<wxPoint2DDouble> IntersectLineConic(const wxPoint2DDouble &A, const wxPoint2DDouble &a, const std::vector<double> &B);
+    std::vector<wxPoint2DDouble> IntersectConics(const std::vector<double> &A, const std::vector<double> &B);
 }

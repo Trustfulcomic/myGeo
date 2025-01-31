@@ -17,6 +17,18 @@ namespace util {
         ComplexNum operator/(const ComplexNum& a) const {
             return {(re*a.re+im*a.im)/(a.re*a.re + a.im*a.im), (-re*a.im+im*a.re)/(a.re*a.re + a.im*a.im)};
         }
+        ComplexNum operator*(const double& a) const {
+            return {a*re, a*im};
+        }
+        ComplexNum operator/(const double& a) const {
+            return {re/a, im/a};
+        }
+        ComplexNum operator-(const double& a) const {
+            return {re-a, im};
+        }
+        ComplexNum operator+(const double& a) const {
+            return {re+a, im};
+        }
 
         /// @brief  Returns the complex conjugate
         ComplexNum Conjugate() const {
@@ -48,9 +60,23 @@ namespace util {
             re = cos(arg) * cur_size;
             im = sin(arg) * cur_size;
         }
+
+        /// @brief Checks if the number is real (up to epsilon)
+        bool IsReal() const {
+            if (fabs(im) < 10 * std::numeric_limits<double>::epsilon()) {
+                return true;
+            } else {
+                return false;
+            }
+        }
     };
 
     /// @brief Calculates the principal square (nth) root of a number
+    /// @param x The number from which to calculate the root
+    /// @param n Degree of the root (default 2)
+    ComplexNum princSqrt(const ComplexNum &x, const size_t &n = 2);
+
+    /// @brief Calculates any square (nth) root of a number
     /// @param x The number from which to calculate the root
     /// @param n Degree of the root (default 2)
     ComplexNum cmplxSqrt(const ComplexNum &x, const size_t &n = 2);
