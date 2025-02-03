@@ -11,6 +11,9 @@ namespace util {
         ComplexNum operator-(const ComplexNum& a) const {
             return {re-a.re, im-a.im};
         }
+        ComplexNum operator-() const {
+            return {-re, -im};
+        }
         ComplexNum operator*(const ComplexNum& a) const {
             return {re*a.re-im*a.im, re*a.im+im*a.re};
         }

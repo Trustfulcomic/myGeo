@@ -26,49 +26,6 @@ std::vector<wxPoint2DDouble> util::IntersectLineConic(const wxPoint2DDouble &A, 
 /// @param B Coeffs of the second conic
 /// @return Vector of intersection points
 std::vector<wxPoint2DDouble> util::IntersectConics(const std::vector<double> &A, const std::vector<double> &B){
-    /* 
-    Attempt at intersection using degenerate conics (don!t know how to decompose the conic)
-
-    Poly a = {{A[0], B[0]}};
-    Poly b = {{A[1]/2, B[1]/2}};
-    Poly c = {{A[3]/2, B[3]/2}};
-    Poly d = {{A[1]/2, B[1]/2}};
-    Poly e = {{A[2], B[2]}};
-    Poly f = {{A[4]/2, B[4]/2}};
-    Poly g = {{A[3]/2, B[3]/2}};
-    Poly h = {{A[4]/2, B[4]/2}};
-    Poly i = {{A[5], B[5]}};
-
-    // Determinant of the pencil of conics through A,B
-    Poly det = a*(e*i-f*h)-b*(d*i-f*g)+c*(d*h-e*g);
-    std::vector<ComplexNum> ls = det.Solve();
-    ComplexNum best_l = ls[0];
-    if (fabs(best_l.im) > fabs(ls[1].im)) best_l=ls[1];
-    if (fabs(best_l.im) > fabs(ls[2].im)) best_l=ls[2];
-
-    double l = best_l.re;
-
-    // Degenerate conic from the pencil
-    std::vector<double> degen(6);
-    for (int i = 0; i<6; i++){
-        degen[i] = A[i]+l*B[i];
-    }
-
-    if (degen[1]*degen[1]-4*degen[0]*degen[2] >= 0) {
-        // Degenerate hyperbola or parabloa
-        if (degen[2] == 0 && degen[0] == 0) {
-            // Vertical and horizontal line
-            
-        } else if (degen[2] == 0) {
-            // One vertical line
-        } else {
-
-        }
-    } else {
-        //Degenerate ellipse - hopefully doesn't matter
-        return {};
-    } */
-
    // Using coefficients from https://math.stackexchange.com/questions/1767225/algorithm-intersection-of-two-conics
 
     const double& a = A[0];
@@ -137,4 +94,70 @@ std::vector<wxPoint2DDouble> util::IntersectConics(const std::vector<double> &A,
     }
 
     return res;
+}
+
+/// @brief Calculates eccentricity of the given conic
+/// @param coeff Coefficients of the conic in general form
+/// @return Eccentricity of the given conic 
+double util::GetEccentricity(const std::vector<double> &coeff) {
+    std::vector<std::vector<double>> conic_matrix =    {{coeff[0],      coeff[1]/2,    coeff[3]/2},
+                                                        {coeff[1]/2,    coeff[2],      coeff[4]/2},
+                                                        {coeff[3]/2,    coeff[4]/2,    coeff[5] }};
+    // Standard eccentricity formula (viz wiki)
+
+    int n = 1;
+    if (util::DetMatrix3x3(conic_matrix) > 0) {
+        n = -1;
+    }
+
+    double inside = (coeff[0]-coeff[2])*(coeff[0]-coeff[2])+coeff[1]*coeff[1];
+    return sqrt((2*sqrt(inside))/(n*(coeff[0]+coeff[2]) + sqrt(inside)));
+}
+
+/// @brief Calculates conic focus
+/// @param dual Dual conic symmetric matrix (the adjugate matrix of the symmetric conic matrix)
+/// @return One of the foci of the conic
+wxPoint2DDouble util::GetConicFocus(const std::vector<std::vector<double>> &dual) {
+    // https://math.stackexchange.com/questions/44391/foci-of-a-general-conic-equation
+
+    const double G = dual[0][0]/2;
+    const double K = dual[1][1]/2;
+    const double& H = dual[0][1];
+    const double& R =  dual[0][2];
+    const double& S = dual[1][2];
+    const double T  = dual[2][2]/2;
+
+    util::ComplexNum a = {T, 0};
+    util::ComplexNum b = {-R, -S};
+    util::ComplexNum c = {G-K, H};
+
+    util::ComplexNum zF;
+    if (T == 0) {
+        zF = -c/b;
+    } else {
+        zF = (-b+cmplxSqrt(b*b-a*c*4))/(a*2); 
+    }
+
+    return {zF.re, zF.im};
+}
+
+/// @brief Calculates polar of a point
+/// @param conic Matrix representing the conic
+/// @param pt The pole from which to calculate the polar line
+/// @param mainPoint Writes the mainPoint of the line into this
+/// @param vect Writes the vector of the line into this
+void util::GetPolar(const std::vector<std::vector<double>> &conic, const wxPoint2DDouble& pt, wxPoint2DDouble &mainPoint, wxPoint2DDouble &vect){
+    // If P is the point and M the matrix of the conic, then pole can be easily calulated as M*P
+    // From the projective line one can calculate the pramateric representation of the line
+
+    std::vector<double> polar = {conic[0][0]*pt.m_x + conic[0][1]*pt.m_y + conic[0][2],
+                                conic[1][0]*pt.m_x + conic[1][1]*pt.m_y + conic[1][2],
+                                conic[2][0]*pt.m_x + conic[2][1]*pt.m_y + conic[2][2]};
+
+    // (polar[0], polar[1]) is the normal vector of the line
+    vect = {-polar[1], polar[0]};
+
+    // As mainPoint we can choose orthogonal projection of the origin (0,0) onto the line
+    mainPoint = {-(polar[0]*polar[2])/(polar[0]*polar[0]+polar[1]*polar[1]),
+                -(polar[1]*polar[2]/(polar[0]*polar[0]+polar[1]*polar[1]))};
 }
