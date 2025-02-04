@@ -7,7 +7,8 @@
 /// All possible types of a curve
 enum GeoCurveType {
     LINE,
-    SEGMENT
+    SEGMENT,
+    GENERAL_CONIC
 };
 
 /// @brief Abstract class for a curve

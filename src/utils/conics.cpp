@@ -157,7 +157,13 @@ void util::GetPolar(const std::vector<std::vector<double>> &conic, const wxPoint
     // (polar[0], polar[1]) is the normal vector of the line
     vect = {-polar[1], polar[0]};
 
-    // As mainPoint we can choose orthogonal projection of the origin (0,0) onto the line
-    mainPoint = {-(polar[0]*polar[2])/(polar[0]*polar[0]+polar[1]*polar[1]),
-                -(polar[1]*polar[2]/(polar[0]*polar[0]+polar[1]*polar[1]))};
+    if (polar[1] == 0 && polar[0] == 0) {
+        // In case of lint at infinity
+        mainPoint = {0,0};
+        return;
+    }
+
+    // As mainPoint we can choose orthogonal projection of pt onto the line
+    mainPoint = {pt.m_x - (polar[0]*(polar[2]+polar[1]*pt.m_y+polar[0]*pt.m_x))/(polar[0]*polar[0]+polar[1]*polar[1]),
+                pt.m_y - (polar[1]*(polar[2]+polar[1]*pt.m_y+polar[0]*pt.m_x))/(polar[0]*polar[0]+polar[1]*polar[1])};
 }
