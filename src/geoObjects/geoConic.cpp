@@ -22,10 +22,14 @@ void GeoConic::ReloadPrecomp() {
 
     if (directrix_vct.m_x == 0 && directrix_vct.m_y == 0) {
         angle = 0;
+        dist = 0;
     } else {
         wxPoint2DDouble focus_directrix = directrix_pt-focus;
         angle = focus_directrix.GetVectorAngle();
+        dist = focus_directrix.GetVectorLength();
     }
+
+    ecc = util::GetEccentricity(coeffs);
 }
 
 wxPoint2DDouble GeoConic::GetClosestPoint(const wxPoint2DDouble &pt)
@@ -55,7 +59,29 @@ wxPoint2DDouble GeoConic::GetClosestPoint(const wxPoint2DDouble &pt)
     }
 }
 
-wxPoint2DDouble GeoConic::GetTangentAtPoint(const wxPoint2DDouble &pt) {
+double GeoConic::GetParameter(const wxPoint2DDouble &pt) {
+    wxPoint2DDouble vect = pt-focus;
+
+    // Because r in the polar coordinate form can by negative, we need to check both possible values of the angle (cant distinguish between x and x+pi)
+    double poss_ang_1 = vect.GetVectorAngle() - angle;
+    double poss_ang_2 = std::fmod(poss_ang_1 + M_PI, 2*M_PI);
+
+    if (GetPointFromParameter(poss_ang_1).GetDistance(pt) < GetPointFromParameter(poss_ang_2).GetDistance(pt)) {
+        return poss_ang_1;
+    } else {
+        return poss_ang_2;
+    }
+}
+
+wxPoint2DDouble GeoConic::GetPointFromParameter(const double &param) {
+    double point_ang = param + angle;
+
+    double r = (ecc*dist)/(1+ecc*cos(point_ang));
+    return {focus.m_x + r*cos(point_ang), focus.m_y + r*sin(point_ang)};
+}
+
+wxPoint2DDouble GeoConic::GetTangentAtPoint(const wxPoint2DDouble &pt)
+{
     double& a = coeffs[0];
     double& b = coeffs[1];
     double& c = coeffs[2];

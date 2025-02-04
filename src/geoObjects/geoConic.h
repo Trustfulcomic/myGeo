@@ -38,6 +38,10 @@ private:
 
     /// One of the conic's foci
     wxPoint2DDouble focus;
+    /// Eccentricity of the ocnic
+    double ecc;
+    /// Distance of focus from directrix
+    double dist;
 
     /// Point on the directrix of the focus
     wxPoint2DDouble directrix_pt;

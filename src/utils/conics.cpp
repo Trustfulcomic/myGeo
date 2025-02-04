@@ -142,6 +142,7 @@ wxPoint2DDouble util::GetConicFocus(const std::vector<std::vector<double>> &dual
 }
 
 /// @brief Calculates polar of a point
+/// @details The returned polar has its mainPoint at the orthogonal projection of \p pt
 /// @param conic Matrix representing the conic
 /// @param pt The pole from which to calculate the polar line
 /// @param mainPoint Writes the mainPoint of the line into this
