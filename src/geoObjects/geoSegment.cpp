@@ -88,7 +88,7 @@ wxPoint2DDouble GeoSegment::GetPerpPoint(const wxPoint2DDouble &pt) {
     return projectedPoint;
 }
 
-wxPoint2DDouble GeoSegment::GetClosestPoint(const wxPoint2DDouble &pt) {
+wxPoint2DDouble GeoSegment::GetClosestPoint(const wxPoint2DDouble &pt) const {
     wxPoint2DDouble projectedPoint = util::ProjectAToLineBVec(pt, mainPoint, lineVect);
 
     if (GetParameter(projectedPoint) > 1){
@@ -100,19 +100,19 @@ wxPoint2DDouble GeoSegment::GetClosestPoint(const wxPoint2DDouble &pt) {
     return projectedPoint;
 }
 
-double GeoSegment::GetParameter(const wxPoint2DDouble &pt) {
+double GeoSegment::GetParameter(const wxPoint2DDouble &pt) const {
     return util::VectDivide(pt - mainPoint, lineVect);
 }
 
-wxPoint2DDouble GeoSegment::GetPointFromParameter(const double &param) {
+wxPoint2DDouble GeoSegment::GetPointFromParameter(const double &param) const {
     return mainPoint + param * lineVect;
 }
 
-wxPoint2DDouble GeoSegment::GetTangentAtPoint(const wxPoint2DDouble &pt) {
+wxPoint2DDouble GeoSegment::GetTangentAtPoint(const wxPoint2DDouble &pt) const {
     return lineVect;
 }
 
-wxPoint2DDouble GeoSegment::GetMidpoint() {
+wxPoint2DDouble GeoSegment::GetMidpoint() const {
     return (pointA->GetPos() + pointB->GetPos())/2;
 }
 

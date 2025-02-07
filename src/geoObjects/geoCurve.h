@@ -31,7 +31,7 @@ public:
     /// @param pt The point from which the distance is taken
     /// @return The closest point
     /// @note This can have different behaviour from GetPerpPoint() on curves that are only part of a curve (such as segment). The function GetPerpPoint() "extends" the curve and gets the perpendicular projection. GetClosestPoint() returns the actual closest point. 
-    virtual wxPoint2DDouble GetClosestPoint(const wxPoint2DDouble &pt) = 0;
+    virtual wxPoint2DDouble GetClosestPoint(const wxPoint2DDouble &pt) const = 0;
     double GetDistance(const wxPoint2DDouble &pt);
 
 
@@ -39,23 +39,23 @@ public:
     /// @param pt The point on the curve
     /// @return The parameter of \p pt
     /// @warning Point must be on the curve
-    virtual double GetParameter(const wxPoint2DDouble &pt) = 0;
+    virtual double GetParameter(const wxPoint2DDouble &pt) const = 0;
 
     /// @brief Calculates point on the curve from a given parameter
     /// @param param The given parameter
     /// @return The calculated point
     /// @warning Parameter must be valid (ideally a value returned from GetParameter())
-    virtual wxPoint2DDouble GetPointFromParameter(const double &param) = 0;
+    virtual wxPoint2DDouble GetPointFromParameter(const double &param) const = 0;
 
     /// @brief Calculates the tangent vector to the curve at point
     /// @param pt Point at which the tangent is calculated
     /// @return The tangent vector at \p pt
     /// @warning Point must be on the curve
-    virtual wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) = 0;
+    virtual wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) const = 0;
 
     /// @brief Finds the midpoint of the curve
     /// @returns The midpoint
-    virtual wxPoint2DDouble GetMidpoint() = 0;
+    virtual wxPoint2DDouble GetMidpoint() const = 0;
 
     /// @brief Check if the curve is instance of GeoLineBase
     bool IsAsLine();

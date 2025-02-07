@@ -1,6 +1,6 @@
 #include "complexNum.h"
 
-util::ComplexNum princSqrt(const util::ComplexNum &x, const size_t &n) {
+util::ComplexNum util::princSqrt(const util::ComplexNum &x, const size_t &n) {
     double arg = x.GetArg()/n;
     double arg_diff = 2*M_PI/n;
 
@@ -17,7 +17,7 @@ util::ComplexNum princSqrt(const util::ComplexNum &x, const size_t &n) {
     return {res_size * cos(arg), res_size * sin(arg)};
 }
 
-util::ComplexNum cmplxSqrt(const util::ComplexNum &x, const size_t &n) {
+util::ComplexNum util::cmplxSqrt(const util::ComplexNum &x, const size_t &n) {
     double arg = x.GetArg()/n;
 
     double res_size = std::pow(x.GetSize(), 1.0/n);

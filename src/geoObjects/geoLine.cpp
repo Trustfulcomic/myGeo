@@ -187,23 +187,23 @@ void GeoLine::ReloadSelf() {
     }
 }
 
-wxPoint2DDouble GeoLine::GetClosestPoint(const wxPoint2DDouble &pt) {
+wxPoint2DDouble GeoLine::GetClosestPoint(const wxPoint2DDouble &pt) const {
     return util::ProjectAToLineBVec(pt, mainPoint, lineVect);
 }
 
-double GeoLine::GetParameter(const wxPoint2DDouble &pt) {
+double GeoLine::GetParameter(const wxPoint2DDouble &pt) const {
     return util::VectDivide(pt - mainPoint, lineVect);
 }
 
-wxPoint2DDouble GeoLine::GetPointFromParameter(const double &param) {
+wxPoint2DDouble GeoLine::GetPointFromParameter(const double &param) const {
     return mainPoint + param * lineVect;
 }
 
-wxPoint2DDouble GeoLine::GetTangentAtPoint(const wxPoint2DDouble &pt) {
+wxPoint2DDouble GeoLine::GetTangentAtPoint(const wxPoint2DDouble &pt) const {
     return lineVect;
 }
 
-wxPoint2DDouble GeoLine::GetMidpoint() {
+wxPoint2DDouble GeoLine::GetMidpoint() const {
     return {0.0, 0.0};
 }
 

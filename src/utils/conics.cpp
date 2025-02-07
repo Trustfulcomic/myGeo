@@ -52,11 +52,6 @@ std::vector<wxPoint2DDouble> util::IntersectConics(const std::vector<double> &A,
     Poly top = {{fpp, dpp, app}};
     Poly main = (Poly){{f, d, a}} * bot * bot + top * top * b + (Poly){{e, c}} * bot * top;
 
-    for (double c : main.coeffs) {
-        std::cout << c << " ";
-    }
-    std::cout << std::endl;
-
     std::vector<ComplexNum> roots = main.Solve();
     if (roots.size() < 4) {
         std::cout << "Degenerate quartic in util::IntersectConics()" << std::endl;
@@ -167,4 +162,60 @@ void util::GetPolar(const std::vector<std::vector<double>> &conic, const wxPoint
     // As mainPoint we can choose orthogonal projection of pt onto the line
     mainPoint = {pt.m_x - (polar[0]*(polar[2]+polar[1]*pt.m_y+polar[0]*pt.m_x))/(polar[0]*polar[0]+polar[1]*polar[1]),
                 pt.m_y - (polar[1]*(polar[2]+polar[1]*pt.m_y+polar[0]*pt.m_x))/(polar[0]*polar[0]+polar[1]*polar[1])};
+}
+
+/// @brief Applies a given affine transform onto a conic
+/// @param conic The conic in matrix form
+/// @param transform The affine transform to apply
+/// @return Matrix of the transformed conic
+std::vector<std::vector<double>> util::TransformConic(const std::vector<std::vector<double>>& conic, const std::vector<std::vector<double>> &transform) {
+    const std::vector<std::vector<double>>& t_matrix = transform;
+
+    std::vector<std::vector<double>> t_matrixT = util::Transpose(t_matrix);
+
+    // Inverses are the same as adjugate matrices up to a scalar, which we dont mind
+    std::vector<std::vector<double>> t_matrix_inv = util::AdjMatrix3x3(t_matrix);
+    std::vector<std::vector<double>> t_matrixT_inv = util::AdjMatrix3x3(t_matrixT);
+
+    std::vector<std::vector<double>> half_res = util::MatrixMult(util::MatrixMult(t_matrixT_inv, conic), t_matrix_inv);
+    std::vector<std::vector<double>> half_resT = util::Transpose(half_res);
+
+    return util::MatrixAdd(half_res, half_resT);
+}
+
+/// @brief Calulates parameter of a point on a conic
+/// @param pt Point of which to calculate the parameter
+/// @param focus Focus of the conic
+/// @param angle Angle of the conic
+/// @param ecc Eccentricity of the conic
+/// @param dist Distance of directrix and focus
+/// @warning The point \p pt should lie on the conic.
+/// @return Parameter of the point
+double util::GetConicParam(const wxPoint2DDouble &pt, const wxPoint2DDouble &focus, const double &angle, const double &ecc, const double &dist) {
+    wxPoint2DDouble vect = pt-focus;
+
+    // Because r in the polar coordinate form can by negative, we need to check both possible values of the angle (cant distinguish between x and x+pi)
+    double poss_ang_1 = vect.GetVectorAngle()*M_PI/180 - angle;
+    double poss_ang_2 = std::fmod(poss_ang_1 + M_PI, 2*M_PI);
+
+    if (util::GetConicPtFromParam(poss_ang_1, focus, angle, ecc, dist).GetDistance(pt) <
+        util::GetConicPtFromParam(poss_ang_2, focus, angle, ecc, dist).GetDistance(pt)) {
+        return poss_ang_1;
+    } else {
+        return poss_ang_2;
+    }
+}
+
+/// @brief Calulates point on a conic given its parameter
+/// @param param Parameter of the point
+/// @param focus Focus of the conic
+/// @param angle Angle of the conic
+/// @param ecc Eccentricity of the conic
+/// @param dist Distance of directrix and focus
+/// @return Point on the conic with the given parameter
+wxPoint2DDouble util::GetConicPtFromParam(const double &param, const wxPoint2DDouble &focus, const double &angle, const double &ecc, const double &dist) {
+    double point_ang = param + angle;
+
+    double r = (ecc*dist)/(1+ecc*cos(param));
+    return {focus.m_x + r*cos(point_ang), focus.m_y + r*sin(point_ang)};
 }

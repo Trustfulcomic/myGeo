@@ -39,3 +39,78 @@ std::vector<std::vector<double>> util::AdjMatrix3x3(const std::vector<std::vecto
             {a2*b3 - a3*b2, a3*b1 - a1*b3, a1*b2 - a2*b1}};
 }
 
+/// @brief Transposes a matrix
+/// @param matrix The matrix to transpose
+/// @return The transposed matrix
+std::vector<std::vector<double>> util::Transpose(const std::vector<std::vector<double>> &matrix) {
+    if (matrix.size() == 0) return {};
+    if (matrix[0].size() == 0) return {};
+
+    std::vector<std::vector<double>> res(matrix[0].size(), std::vector<double>(matrix.size()));
+    for (int i = 0; i<matrix.size(); i++) {
+        for (int j = 0; j<matrix[0].size(); j++) {
+            res[j][i] = matrix[i][j];
+        }
+    }
+
+    return res;
+}
+
+/// @brief Multiplies two matrices
+/// @param A First matrix
+/// @param B Second matrix
+/// @return The result of the multiplication (empty if the two matrices cannot be multplied)
+std::vector<std::vector<double>> util::MatrixMult(const std::vector<std::vector<double>> &A, const std::vector<std::vector<double>> &B) {
+    if (A.size() == 0) return {};
+    if (A[0].size() == 0) return {};
+    if (B.size() == 0) return {};
+    if (B[0].size() == 0) return {};
+
+    if (A[0].size() != B.size()) return {};
+
+    std::vector<std::vector<double>> res(A.size(), std::vector<double>(B[0].size(), 0));
+    for (int i = 0; i<A.size(); i++) {
+        for (int j = 0; j<B[0].size(); j++) {
+            for (int k = 0; k<A[0].size(); k++) {
+                res[i][j] += A[i][k]*B[k][j];
+            }
+        }
+    }
+
+    return res;
+}
+
+/// @brief Adds two matrices
+/// @param A First matrix
+/// @param B Second matrix
+/// @return Result of the addition
+std::vector<std::vector<double>> util::MatrixAdd(const std::vector<std::vector<double>> &A, const std::vector<std::vector<double>> &B) {
+    if (A.size() == 0) return {};
+    if (A[0].size() == 0) return {};
+    if (B.size() == 0) return {};
+    if (B[0].size() == 0) return {};
+
+    if (A.size() != B.size() || A[0].size() != B[0].size()) return {};
+
+    std::vector<std::vector<double>> res(A.size(), std::vector<double>(A[0].size()));
+    for (int i = 0; i<A.size(); i++) {
+        for (int j = 0; j<A[0].size(); j++) {
+            res[i][j] = A[i][j] + B[i][j];
+        }
+    }
+
+    return res;
+}
+
+/// @brief Converts wxAffineMatrix2D to vectors
+/// @param aff_matrix The matrix to convert
+/// @return The converted matrix
+std::vector<std::vector<double>> util::WxAffineToMatrix(const wxAffineMatrix2D &aff_matrix) {
+    wxMatrix2D mat2D;
+    wxPoint2DDouble tr;
+    aff_matrix.Get(&mat2D, &tr);
+
+    return  {{mat2D.m_11, mat2D.m_12, 0},
+            {mat2D.m_21, mat2D.m_22, 0},
+            {tr.m_x, tr.m_y, 1}};
+}

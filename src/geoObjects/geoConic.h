@@ -15,17 +15,29 @@ public:
     /// @brief "Default" constructor for GeoConic
     GeoConic(GeoCurveType type) : GeoCurve(type) {};
 
+    /// Testing constructor
+    GeoConic(DrawingCanvas *parent, const std::vector<double>& coeffs);
+
+    virtual void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
+
     /// @brief Get coefficients of the conic general form (x^2,xy,y^2,x,y,1)
     std::vector<double> GetCoeffs() { return coeffs; }
 
     /// @brief Reloads precomputed stuff (rotation, focus, directrix, ...) from coeffs
     void ReloadPrecomp();
 
-    virtual wxPoint2DDouble GetClosestPoint(const wxPoint2DDouble &pt) override;
-    virtual double GetParameter(const wxPoint2DDouble &pt) override;
-    virtual wxPoint2DDouble GetPointFromParameter(const double &param) override;
-    virtual wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) override;
-    virtual wxPoint2DDouble GetMidpoint() override;
+    virtual void ReloadSelf() override;
+
+    virtual wxPoint2DDouble GetClosestPoint(const wxPoint2DDouble &pt) const override;
+    virtual double GetParameter(const wxPoint2DDouble &pt) const override;
+    virtual wxPoint2DDouble GetPointFromParameter(const double &param) const override;
+    virtual wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) const override;
+    virtual wxPoint2DDouble GetMidpoint() const override;
+
+    virtual double GetDistance(const wxPoint2DDouble &pt) override;
+    virtual GeoObject* GetTransformed(GeoTransform *geoTransform) override;
+    virtual void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs) override;
+    virtual ListItem GetListItem() override;
 
 private:
     /// Vector of conic coefficients in general form (x^2,xy,y^2,x,y,1)

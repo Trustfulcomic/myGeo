@@ -30,14 +30,14 @@ public:
 
     void ReloadSelf() override;
 
-    wxPoint2DDouble GetClosestPoint(const wxPoint2DDouble &pt) override;
+    wxPoint2DDouble GetClosestPoint(const wxPoint2DDouble &pt) const override;
 
-    double GetParameter(const wxPoint2DDouble &pt) override;
-    wxPoint2DDouble GetPointFromParameter(const double &param) override;
+    double GetParameter(const wxPoint2DDouble &pt) const override;
+    wxPoint2DDouble GetPointFromParameter(const double &param) const override;
 
-    wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) override;
+    wxPoint2DDouble GetTangentAtPoint(const wxPoint2DDouble &pt) const override;
 
-    wxPoint2DDouble GetMidpoint() override;
+    wxPoint2DDouble GetMidpoint() const override;
 
     GeoObject* GetTransformed(GeoTransform *geoTransform) override;
 
