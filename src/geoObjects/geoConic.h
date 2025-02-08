@@ -39,6 +39,8 @@ public:
     virtual void CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPtrs) override;
     virtual ListItem GetListItem() override;
 
+    static wxString DefToString() { return "Conic"; }
+
 private:
     /// Vector of conic coefficients in general form (x^2,xy,y^2,x,y,1)
     std::vector<double> coeffs = {};

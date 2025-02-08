@@ -211,9 +211,22 @@ GeoObject *GeoConic::GetTransformed(GeoTransform *geoTransform) {
 }
 
 void GeoConic::CreateCopy(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) {
-    // TODO
+    GeoConic* copy = new GeoConic(GENERAL_CONIC);
+
+    copy->parent = this->parent;
+    copy->coeffs = this->coeffs;
+    copy->outlineColor = this->outlineColor;
+    copy->outlineWidth = this->outlineWidth;
+    copy->isPoint = this->isPoint;
+    copy->ReloadPrecomp();
+
+    copy->Rename(this->GetName());
+
+    copiedPtrs[this] = copy;
+
+    CreateCopyDeps(copy, copiedPtrs);
 }
 
 ListItem GeoConic::GetListItem() {
-    return {GetName(), wxString::Format("Conic(%s,%s,%s,%S,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName(), parentObjs[3]->GetName(), parentObjs[4]->GetName()), parameter, this};
+    return {GetName(), wxString::Format(GeoConic::DefToString() + "(%s,%s,%s,%S,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName(), parentObjs[3]->GetName(), parentObjs[4]->GetName()), parameter, this};
 }

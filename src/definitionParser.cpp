@@ -4,6 +4,7 @@
 #include "geoObjects/geoPoint.h"
 #include "geoObjects/geoLine.h"
 #include "geoObjects/geoSegment.h"
+#include "geoObjects/geoConic.h"
 
 #include "geoTransforms/geoTransform.h"
 
@@ -86,6 +87,17 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
                 return new GeoLine(canvas, "", argObjs[0], argObjs[1], ANGLE_BISECTOR_PERP);
             } else if (CheckObjectTypes({-1,-1,-1}, argObjs)) {
                 return new GeoLine(canvas, "", static_cast<GeoPoint*>(argObjs[0]), static_cast<GeoPoint*>(argObjs[1]), static_cast<GeoPoint*>(argObjs[2]), true);
+            }
+        }
+
+        // General conic
+        if (parsedStr.def.compare(GeoConic::DefToString()) == 0) {
+            if (CheckObjectTypes({-1,-1,-1,-1,-1}, argObjs)) {
+                return new GeoConic(canvas, "", {static_cast<GeoPoint*>(argObjs[0]),
+                                                static_cast<GeoPoint*>(argObjs[1]),
+                                                static_cast<GeoPoint*>(argObjs[2]),
+                                                static_cast<GeoPoint*>(argObjs[3]),
+                                                static_cast<GeoPoint*>(argObjs[4])});
             }
         }
 
