@@ -93,7 +93,6 @@ void GeoConic::ReloadSelf() {
 
 wxPoint2DDouble GeoConic::GetClosestPoint(const wxPoint2DDouble &pt) const {
     // TODO - problems with circles (causes degenerate conic somewhere)
-    // TODO - problem when inside the conic
 
     const double& a = coeffs[0];
     const double& b = coeffs[1];

@@ -64,9 +64,9 @@ namespace util {
             im = sin(arg) * cur_size;
         }
 
-        /// @brief Checks if the number is real (up to epsilon)
+        /// @brief Checks if the number is real (up to some epsilon)
         bool IsReal() const {
-            if (fabs(im) < 10 * std::numeric_limits<double>::epsilon()) {
+            if (fabs(im) < 0.000000001) {
                 return true;
             } else {
                 return false;
