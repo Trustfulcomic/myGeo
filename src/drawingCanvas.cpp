@@ -7,8 +7,6 @@
 #include <fstream>
 #include <queue>
 
-#include "geoObjects/geoConic.h" // DELETE
-
 /// @brief The constructor of DrawingCanvas
 /// @param parent The parent wxWindow
 /// @param id ID of the wxWindow
@@ -19,10 +17,6 @@ DrawingCanvas::DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos
     this->SetBackgroundStyle(wxBG_STYLE_PAINT);
 
     this->Bind(wxEVT_PAINT, &DrawingCanvas::OnPaint, this);
-
-    // TESTING
-    this->geoCurves.push_back(new GeoConic(this, {1, -1, 1, 0, 0, -10000}));
-    // TESTING
 
     mousePt = new GeoPoint(this, "", {0, 0});
     SaveState();

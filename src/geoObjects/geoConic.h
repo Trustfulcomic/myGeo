@@ -1,6 +1,8 @@
 #pragma once
 #include "geoCurve.h"
 
+#include "geoPoint.h"
+
 enum ConicType {
     ELLIPSE,
     PARABOLA,
@@ -14,9 +16,7 @@ public:
     GeoConic(DrawingCanvas *parent, const wxString &name, GeoCurveType type) : GeoCurve(parent, name, type) {};
     /// @brief "Default" constructor for GeoConic
     GeoConic(GeoCurveType type) : GeoCurve(type) {};
-
-    /// Testing constructor
-    GeoConic(DrawingCanvas *parent, const std::vector<double>& coeffs);
+    GeoConic(DrawingCanvas *parent, const wxString& name, std::vector<GeoPoint*> points);
 
     virtual void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 

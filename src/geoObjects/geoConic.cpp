@@ -1,12 +1,20 @@
 #include "geoConic.h"
 #include "../sidePanel/sidePanel.h"
 
-GeoConic::GeoConic(DrawingCanvas *parent, const std::vector<double> &coeffs) : GeoCurve(parent, "", GENERAL_CONIC) {
+/// @brief Constructor for general conic (passing through 5 points)
+/// @param parent Drawing canvas on which the conic is
+/// @param name Name of the conic
+/// @param points The 5 points throufh which the conic passes
+GeoConic::GeoConic(DrawingCanvas *parent, const wxString &name, std::vector<GeoPoint*> points)
+    : GeoCurve(parent, name, GENERAL_CONIC) {
     this->outlineColor = *wxBLACK;
     this->fillColor = *wxYELLOW;
     this->outlineWidth = 2;
 
-    this->coeffs = coeffs;
+    for (GeoPoint* pt : points) {
+        this->parentObjs.push_back(pt);
+        pt->AddChild(this);
+    }
     ReloadSelf();
 }
 
@@ -88,6 +96,42 @@ void GeoConic::ReloadPrecomp() {
 }
 
 void GeoConic::ReloadSelf() {
+    // https://en.wikipedia.org/wiki/Five_points_determine_a_conic#Construction
+    std::vector<std::vector<double>> matrix(5, std::vector<double>(6));
+    for (int i = 0; i<5; i++) {
+        double x = static_cast<GeoPoint*>(parentObjs[i])->GetPos().m_x;
+        double y = static_cast<GeoPoint*>(parentObjs[i])->GetPos().m_y;
+
+        matrix[i][0] = x*x;
+        matrix[i][1] = x*y;
+        matrix[i][2] = y*y;
+        matrix[i][3] = x;
+        matrix[i][4] = y;
+        matrix[i][5] = 1;
+    }
+
+    coeffs = std::vector<double>(6);
+
+    for (int i = 0; i<6; i++) {
+        std::vector<std::vector<double>> minor(5, std::vector<double>(5));
+        for (int j = 0; j<5; j++) {
+            for (int k = 0; k<6; k++) {
+                if (k == i) continue;
+                if (k < i) {
+                    minor[j][k] = matrix[j][k];
+                } else {
+                    minor[j][k-1] = matrix[j][k];
+                }
+            }
+        }
+
+        if (i%2 == 0) {
+            coeffs[i] = util::DetMatrix5x5(minor);
+        } else {
+            coeffs[i] = -util::DetMatrix5x5(minor);
+        }
+    }
+
     ReloadPrecomp();
 }
 
@@ -116,7 +160,6 @@ wxPoint2DDouble GeoConic::GetClosestPoint(const wxPoint2DDouble &pt) const {
             }
         }
 
-        std::cout << "pt " << pt.m_x << " " << pt.m_y << " best " << best.m_x << " " << best.m_y << std::endl;
         return best;
     }
 }
@@ -172,5 +215,5 @@ void GeoConic::CreateCopy(std::unordered_map<GeoObject *, GeoObject *> &copiedPt
 }
 
 ListItem GeoConic::GetListItem() {
-    return {GetName(), "", parameter, this};
+    return {GetName(), wxString::Format("Conic(%s,%s,%s,%S,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName(), parentObjs[3]->GetName(), parentObjs[4]->GetName()), parameter, this};
 }

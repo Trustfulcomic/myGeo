@@ -12,4 +12,5 @@ target_sources(main PRIVATE     tool.cpp
                                 pointReflectTool.cpp
                                 lineReflectTool.cpp
                                 isoConjTool.cpp
-                                homothetyTool.cpp)
+                                homothetyTool.cpp
+                                conicBy5PTool.cpp)

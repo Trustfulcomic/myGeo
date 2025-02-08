@@ -11,3 +11,4 @@
 #include "lineReflectTool.h"
 #include "isoConjTool.h"
 #include "homothetyTool.h"
+#include "conicBy5PTool.h"

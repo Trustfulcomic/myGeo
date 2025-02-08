@@ -15,6 +15,8 @@ namespace util {
 
     double DetMatrix2x2(const wxPoint2DDouble &a, const wxPoint2DDouble &b);
     double DetMatrix3x3(const std::vector<std::vector<double>>& matrix);
+    double DetMatrix4x4(const std::vector<std::vector<double>>& matrix);
+    double DetMatrix5x5(const std::vector<std::vector<double>>& matrix);
     std::vector<std::vector<double>> AdjMatrix3x3(const std::vector<std::vector<double>>& matrix);
     std::vector<std::vector<double>> Transpose(const std::vector<std::vector<double>>& matrix);
     std::vector<std::vector<double>> MatrixMult(const std::vector<std::vector<double>>& A, const std::vector<std::vector<double>>& B);

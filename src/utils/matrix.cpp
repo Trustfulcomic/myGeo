@@ -28,6 +28,56 @@ double util::DetMatrix3x3(const std::vector<std::vector<double>> &matrix) {
     return (a1*b2*c3 + a3*b1*c2 + a2*b3*c1) - (a3*b2*c1 + a1*b3*c2 + a2*b1*c3);
 }
 
+/// @brief Calculates the determinant of a 4x4 matrix
+/// @param matrix The matrix (given by rows)
+/// @return The calculated determinant
+double util::DetMatrix4x4(const std::vector<std::vector<double>> &matrix) {
+    double res = 0;
+    for (int i = 0; i<4; i++) {
+        std::vector<std::vector<double>> minor(3, std::vector<double>(3));
+        for (int j = 1; j<4; j++) {
+            for (int k = 0; k<4; k++) {
+                if (k == i) continue;
+                if (k < i) {
+                    minor[j-1][k] = matrix[j][k];
+                } else {
+                    minor[j-1][k-1] = matrix[j][k];
+                }
+            }
+        }
+
+        if (i%2 == 0) res += util::DetMatrix3x3(minor) * matrix[0][i];
+        else res -= util::DetMatrix3x3(minor) * matrix[0][i];
+    }
+
+    return res;
+}
+
+/// @brief Calculates the determinant of a 5x5 matrix
+/// @param matrix The matrix (given by rows)
+/// @return The calculated determinant
+double util::DetMatrix5x5(const std::vector<std::vector<double>> &matrix) {
+    double res = 0;
+    for (int i = 0; i<5; i++) {
+        std::vector<std::vector<double>> minor(4, std::vector<double>(4));
+        for (int j = 1; j<5; j++) {
+            for (int k = 0; k<5; k++) {
+                if (k == i) continue;
+                if (k < i) {
+                    minor[j-1][k] = matrix[j][k];
+                } else {
+                    minor[j-1][k-1] = matrix[j][k];
+                }
+            }
+        }
+
+        if (i%2 == 0) res += util::DetMatrix4x4(minor) * matrix[0][i];
+        else res -= util::DetMatrix4x4(minor) * matrix[0][i];
+    }
+
+    return res;
+}
+
 /// @brief Calculates adjugate matrix of 3x3 matrix
 /// @param matrix The matrix to calculate ajugate matrix of (given by rows)
 /// @return The calulated adjugate matrix
