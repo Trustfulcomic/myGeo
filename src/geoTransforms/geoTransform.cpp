@@ -4,7 +4,7 @@
 
 /// @brief Basic constructor for point reflection
 /// @param parent Point defining the transformation
-PointReflection::PointReflection(GeoPoint* parent) : GeoTransform() {
+PointReflection::PointReflection(GeoPoint* parent) : AffineGeoTransform() {
     this->parent = parent;
 }
 
@@ -37,7 +37,7 @@ wxString PointReflection::DefString() {
 
 /// @brief Basic constructor for line reflection
 /// @param parent Line defining the transformation
-LineReflection::LineReflection(GeoLineBase *parent) : GeoTransform() {
+LineReflection::LineReflection(GeoLineBase *parent) : AffineGeoTransform() {
     this->parent = parent;
 }
 
@@ -126,7 +126,7 @@ wxString IsoConjugate::DefString() {
 /// @brief Basic constructor for homothety
 /// @param center Center of the homthety
 /// @param param Factor by which to scale
-Homothety::Homothety(GeoPoint *center, double param) {
+Homothety::Homothety(GeoPoint *center, double param) : AffineGeoTransform() {
     this->center = center;
     this->param = param;
 }

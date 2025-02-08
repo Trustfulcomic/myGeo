@@ -50,6 +50,10 @@ void PointReflectTool::OnMouseDown(wxMouseEvent &event) {
     } else if (closestObj->IsPoint()){
         PointReflection* geoTransform = new PointReflection(static_cast<GeoPoint*>(closestObj));
         GeoObject* transformedObj = toReflect->GetTransformed(geoTransform);
+        if (transformedObj == nullptr) {
+            delete geoTransform;
+            return;
+        }
         if (transformedObj->IsPoint()){
             drawingCanvas->geoPoints.push_back(static_cast<GeoPoint*>(transformedObj));
         } else {
@@ -60,6 +64,10 @@ void PointReflectTool::OnMouseDown(wxMouseEvent &event) {
     } else {
         PointReflection* geoTransform = new PointReflection(CreatePointAtPos(mouse_pt));
         GeoObject* transformedObj = toReflect->GetTransformed(geoTransform);
+        if (transformedObj == nullptr) {
+            delete geoTransform;
+            return;
+        }
         if (transformedObj->IsPoint()){
             drawingCanvas->geoPoints.push_back(static_cast<GeoPoint*>(transformedObj));
         } else {

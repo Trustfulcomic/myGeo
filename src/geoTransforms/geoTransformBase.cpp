@@ -9,3 +9,26 @@ GeoTransform::GeoTransform(const double& param) {
 void GeoTransform::SetParam(const double &param) {
     this->param = param;
 }
+
+/// @brief Returns a 3x3 matrix describing the affine transform 
+std::vector<std::vector<double>> AffineGeoTransform::GetMatrix() {
+    wxPoint2DDouble origin = TransformPoint({0,0});
+    wxPoint2DDouble i_vect = TransformPoint({1,0});
+    wxPoint2DDouble j_vect = TransformPoint({0,1});
+    
+    // The matrix is in form
+    // a b 0
+    // c d 0
+    // e f 1
+
+    double e = origin.m_x;
+    double f = origin.m_y;
+    double a = i_vect.m_x - e;
+    double b = i_vect.m_y - f;
+    double c = j_vect.m_x - e;
+    double d = j_vect.m_y - f;
+
+    return {{a, b ,0},
+            {c, d, 0},
+            {e, f, 1}};
+}

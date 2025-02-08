@@ -36,7 +36,20 @@ public:
 
     void SetParam(const double& param);
     double GetParam(){ return param; };
+
+    bool IsAffine(){ return affine; }
 protected:
     /// Parameter for the transform if necessary
     double param;
+
+    /// True if the transform is affine
+    bool affine = false;
+};
+
+/// @brief Base class for affine transformations
+class AffineGeoTransform : public GeoTransform {
+public:
+    AffineGeoTransform(const double& param = 0) : GeoTransform(param) { affine = true; }
+
+    std::vector<std::vector<double>> GetMatrix();
 };

@@ -50,6 +50,10 @@ void LineReflectTool::OnMouseDown(wxMouseEvent &event) {
     } else if (closestObj != nullptr && !closestObj->IsPoint() && static_cast<GeoCurve*>(closestObj)->IsAsLine()){
         LineReflection* geoTransform = new LineReflection(static_cast<GeoLineBase*>(closestObj));
         GeoObject* transformedObj = toReflect->GetTransformed(geoTransform);
+        if (transformedObj == nullptr) {
+            delete geoTransform;
+            return;
+        }
         if (transformedObj->IsPoint()){
             drawingCanvas->geoPoints.push_back(static_cast<GeoPoint*>(transformedObj));
         } else {

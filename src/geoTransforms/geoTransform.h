@@ -7,7 +7,7 @@
 #include "../geoObjects/geoLineBase.h"
 
 /// @brief Class for point reflection
-class PointReflection : public GeoTransform {
+class PointReflection : public AffineGeoTransform {
 public:
     PointReflection(GeoPoint* parent);
 
@@ -24,7 +24,7 @@ private:
 };
 
 /// @brief Class for line reflection
-class LineReflection : public GeoTransform {
+class LineReflection : public AffineGeoTransform {
 public:
     LineReflection(GeoLineBase* parent);
 
@@ -58,7 +58,7 @@ private:
 };
 
 /// @brief Class for homothety
-class Homothety : public GeoTransform {
+class Homothety : public AffineGeoTransform {
 public:
     Homothety(GeoPoint* center, double param);
 

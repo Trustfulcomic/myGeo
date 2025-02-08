@@ -17,6 +17,7 @@ public:
     /// @brief "Default" constructor for GeoConic
     GeoConic(GeoCurveType type) : GeoCurve(type) {};
     GeoConic(DrawingCanvas *parent, const wxString& name, std::vector<GeoPoint*> points);
+    GeoConic(DrawingCanvas *parent, const wxString& name, GeoConic *parentObj, AffineGeoTransform* geoTransform);
 
     virtual void DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const override;
 

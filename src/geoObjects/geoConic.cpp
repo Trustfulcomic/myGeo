@@ -18,6 +18,31 @@ GeoConic::GeoConic(DrawingCanvas *parent, const wxString &name, std::vector<GeoP
     ReloadSelf();
 }
 
+/// @brief Constructor for conic defined by conic and GeoTransform (affine)
+/// @param parent DrawingCanvas on which the object is
+/// @param name Name of the object
+/// @param parentObj The parent object to be transformed
+/// @param geoTransform The used transformation
+GeoConic::GeoConic(DrawingCanvas *parent, const wxString &name, GeoConic *parentObj, AffineGeoTransform *geoTransform)
+    : GeoCurve(parent, name, GENERAL_CONIC) {
+    this->parentObjs.push_back(parentObj);
+    parentObj->AddChild(this);
+
+    for (GeoObject* obj : geoTransform->GetDeps()){
+        this->parentObjs.push_back(obj);
+        obj->AddChild(this);
+    }
+
+    this->geoTransform = geoTransform;
+    this->parameter = geoTransform->GetParam();
+
+    this->outlineColor = *wxBLACK;
+    this->fillColor = *wxYELLOW;
+    this->outlineWidth = 2;
+
+    ReloadSelf();
+}
+
 void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {
     // Pls send help
     std::vector<std::vector<double>> trans_matrix = util::TransformConic(matrix, util::WxAffineToMatrix(transform));
@@ -64,6 +89,17 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
 }
 
 void GeoConic::ReloadPrecomp() {
+    double max_coeff = 0;
+    for (int i = 0; i<6; i++) {
+        if (fabs(coeffs[i]) > max_coeff) {
+            max_coeff = coeffs[i];
+        }
+    }
+    max_coeff /= 1000.0;
+    for (int i = 0; i<6; i++) {
+        coeffs[i] /= max_coeff;
+    }
+
     matrix =    {{coeffs[0], coeffs[1]/2, coeffs[3]/2},
                 {coeffs[1]/2, coeffs[2], coeffs[4]/2},
                 {coeffs[3]/2, coeffs[4]/2, coeffs[5]}};
@@ -96,40 +132,75 @@ void GeoConic::ReloadPrecomp() {
 }
 
 void GeoConic::ReloadSelf() {
-    // https://en.wikipedia.org/wiki/Five_points_determine_a_conic#Construction
-    std::vector<std::vector<double>> matrix(5, std::vector<double>(6));
-    for (int i = 0; i<5; i++) {
-        double x = static_cast<GeoPoint*>(parentObjs[i])->GetPos().m_x;
-        double y = static_cast<GeoPoint*>(parentObjs[i])->GetPos().m_y;
+    if (parentObjs.size() == 5) {
+        // Conic passing through 5 points
+        // https://en.wikipedia.org/wiki/Five_points_determine_a_conic#Construction
+        std::vector<std::vector<double>> matrix(5, std::vector<double>(6));
+        for (int i = 0; i<5; i++) {
+            double x = static_cast<GeoPoint*>(parentObjs[i])->GetPos().m_x;
+            double y = static_cast<GeoPoint*>(parentObjs[i])->GetPos().m_y;
 
-        matrix[i][0] = x*x;
-        matrix[i][1] = x*y;
-        matrix[i][2] = y*y;
-        matrix[i][3] = x;
-        matrix[i][4] = y;
-        matrix[i][5] = 1;
-    }
+            matrix[i][0] = x*x;
+            matrix[i][1] = x*y;
+            matrix[i][2] = y*y;
+            matrix[i][3] = x;
+            matrix[i][4] = y;
+            matrix[i][5] = 1;
+        }
 
-    coeffs = std::vector<double>(6);
+        coeffs = std::vector<double>(6);
 
-    for (int i = 0; i<6; i++) {
-        std::vector<std::vector<double>> minor(5, std::vector<double>(5));
-        for (int j = 0; j<5; j++) {
-            for (int k = 0; k<6; k++) {
-                if (k == i) continue;
-                if (k < i) {
-                    minor[j][k] = matrix[j][k];
-                } else {
-                    minor[j][k-1] = matrix[j][k];
+        for (int i = 0; i<6; i++) {
+            std::vector<std::vector<double>> minor(5, std::vector<double>(5));
+            for (int j = 0; j<5; j++) {
+                for (int k = 0; k<6; k++) {
+                    if (k == i) continue;
+                    if (k < i) {
+                        minor[j][k] = matrix[j][k];
+                    } else {
+                        minor[j][k-1] = matrix[j][k];
+                    }
                 }
             }
-        }
 
-        if (i%2 == 0) {
-            coeffs[i] = util::DetMatrix5x5(minor);
-        } else {
-            coeffs[i] = -util::DetMatrix5x5(minor);
+            if (i%2 == 0) {
+                coeffs[i] = util::DetMatrix5x5(minor);
+            } else {
+                coeffs[i] = -util::DetMatrix5x5(minor);
+            }
         }
+    } else {
+        // Transformed conic
+        std::vector<std::vector<double>> transform_matrix = static_cast<AffineGeoTransform*>(geoTransform)->GetMatrix();
+        std::cout << "ttansform matrix" << std::endl;
+        for (int i = 0; i<3; i++){
+            for (int j = 0; j<3; j++){
+                std::cout << transform_matrix[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+        std::cout << "original matrix" << std::endl;
+        for (int i = 0; i<3; i++){
+            for (int j = 0; j<3; j++){
+                std::cout << static_cast<GeoConic*>(parentObjs[0])->matrix[i][j] << " ";
+            }
+            std::cout << std::endl;
+        }
+        std::vector<std::vector<double>> transformed = util::TransformConic(static_cast<GeoConic*>(parentObjs[0])->matrix, transform_matrix);
+
+        coeffs = std::vector<double>(6);
+        coeffs[0] = transformed[0][0];
+        coeffs[1] = transformed[0][1]*2;
+        coeffs[2] = transformed[1][1];
+        coeffs[3] = transformed[2][0]*2;
+        coeffs[4] = transformed[2][1]*2;
+        coeffs[5] = transformed[2][2];
+
+        std::cout << "coeffs ";
+        for (int i = 0; i<6; i++) {
+            std::cout << coeffs[0] << " ";
+        }
+        std::cout << std::endl;
     }
 
     ReloadPrecomp();
@@ -206,8 +277,11 @@ double GeoConic::GetDistance(const wxPoint2DDouble &pt) {
 }
 
 GeoObject *GeoConic::GetTransformed(GeoTransform *geoTransform) {
-    // TODO
-    return nullptr;
+    if (geoTransform->IsAffine()) {
+        return new GeoConic(parent, parent->nameHandler.GetNextCurveName(), this, static_cast<AffineGeoTransform*>(geoTransform));
+    } else {
+        return nullptr;
+    }
 }
 
 void GeoConic::CreateCopy(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) {
@@ -228,5 +302,9 @@ void GeoConic::CreateCopy(std::unordered_map<GeoObject *, GeoObject *> &copiedPt
 }
 
 ListItem GeoConic::GetListItem() {
-    return {GetName(), wxString::Format(GeoConic::DefToString() + "(%s,%s,%s,%S,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName(), parentObjs[3]->GetName(), parentObjs[4]->GetName()), parameter, this};
+    if (parentObjs.size() == 5) {
+        return {GetName(), wxString::Format(GeoConic::DefToString() + "(%s,%s,%s,%S,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName(), parentObjs[3]->GetName(), parentObjs[4]->GetName()), parameter, this};
+    } else {
+        return {GetName(), geoTransform->GetListText(parentObjs[0]), parameter, this};
+    }
 }

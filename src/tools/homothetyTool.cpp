@@ -64,6 +64,10 @@ void HomothetyTool::OnMouseDown(wxMouseEvent &event) {
 
         Homothety* geoTransform = new Homothety(static_cast<GeoPoint*>(closestObj), param);
         GeoObject* transformedObj = toScale->GetTransformed(geoTransform);
+        if (transformedObj == nullptr) {
+            delete geoTransform;
+            return;
+        }
         transformedObj->parameter = param;
         if (transformedObj->IsPoint()){
             drawingCanvas->geoPoints.push_back(static_cast<GeoPoint*>(transformedObj));
