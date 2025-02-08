@@ -172,20 +172,6 @@ void GeoConic::ReloadSelf() {
     } else {
         // Transformed conic
         std::vector<std::vector<double>> transform_matrix = static_cast<AffineGeoTransform*>(geoTransform)->GetMatrix();
-        std::cout << "ttansform matrix" << std::endl;
-        for (int i = 0; i<3; i++){
-            for (int j = 0; j<3; j++){
-                std::cout << transform_matrix[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
-        std::cout << "original matrix" << std::endl;
-        for (int i = 0; i<3; i++){
-            for (int j = 0; j<3; j++){
-                std::cout << static_cast<GeoConic*>(parentObjs[0])->matrix[i][j] << " ";
-            }
-            std::cout << std::endl;
-        }
         std::vector<std::vector<double>> transformed = util::TransformConic(static_cast<GeoConic*>(parentObjs[0])->matrix, transform_matrix);
 
         coeffs = std::vector<double>(6);
@@ -195,12 +181,6 @@ void GeoConic::ReloadSelf() {
         coeffs[3] = transformed[2][0]*2;
         coeffs[4] = transformed[2][1]*2;
         coeffs[5] = transformed[2][2];
-
-        std::cout << "coeffs ";
-        for (int i = 0; i<6; i++) {
-            std::cout << coeffs[0] << " ";
-        }
-        std::cout << std::endl;
     }
 
     ReloadPrecomp();

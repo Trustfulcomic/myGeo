@@ -24,11 +24,11 @@ std::vector<std::vector<double>> AffineGeoTransform::GetMatrix() {
     double e = origin.m_x;
     double f = origin.m_y;
     double a = i_vect.m_x - e;
-    double b = i_vect.m_y - f;
-    double c = j_vect.m_x - e;
+    double c = i_vect.m_y - f;
+    double b = j_vect.m_x - e;
     double d = j_vect.m_y - f;
 
-    return {{a, b ,0},
-            {c, d, 0},
-            {e, f, 1}};
+    return {{a, b, e},
+            {c, d, f},
+            {0, 0, 1}};
 }

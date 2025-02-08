@@ -84,9 +84,9 @@ double util::DetMatrix5x5(const std::vector<std::vector<double>> &matrix) {
 std::vector<std::vector<double>> util::AdjMatrix3x3(const std::vector<std::vector<double>> &matrix) {
     RENAME_3X3MATRIX_NUMS
     
-    return {{b2*c3 - b3*c2, b3*c1 - b1*c3, b1*c2 - b2*c1},
-            {a3*c2 - a2*c3, a1*c3 - a3*c1, a2*c1 - a1*c2},
-            {a2*b3 - a3*b2, a3*b1 - a1*b3, a1*b2 - a2*b1}};
+    return util::Transpose({{b2*c3 - b3*c2, b3*c1 - b1*c3, b1*c2 - b2*c1},
+                            {a3*c2 - a2*c3, a1*c3 - a3*c1, a2*c1 - a1*c2},
+                            {a2*b3 - a3*b2, a3*b1 - a1*b3, a1*b2 - a2*b1}});
 }
 
 /// @brief Transposes a matrix
@@ -160,7 +160,7 @@ std::vector<std::vector<double>> util::WxAffineToMatrix(const wxAffineMatrix2D &
     wxPoint2DDouble tr;
     aff_matrix.Get(&mat2D, &tr);
 
-    return  {{mat2D.m_11, mat2D.m_12, 0},
-            {mat2D.m_21, mat2D.m_22, 0},
-            {tr.m_x, tr.m_y, 1}};
+    return  {{mat2D.m_11, mat2D.m_21, tr.m_x},
+            {mat2D.m_12, mat2D.m_22, tr.m_y},
+            {0, 0, 1}};
 }
