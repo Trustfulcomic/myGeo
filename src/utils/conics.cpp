@@ -194,15 +194,15 @@ std::vector<std::vector<double>> util::TransformConic(const std::vector<std::vec
 /// @param dist Distance of directrix and focus
 /// @warning The point \p pt should lie on the conic.
 /// @return Parameter of the point
-double util::GetConicParam(const wxPoint2DDouble &pt, const wxPoint2DDouble &focus, const double &angle, const double &ecc, const double &dist) {
+double util::GetConicParam(const wxPoint2DDouble &pt, const wxPoint2DDouble &focus, const double &angle, const double &ecc, const double &dist, const double& latus) {
     wxPoint2DDouble vect = pt-focus;
 
     // Because r in the polar coordinate form can by negative, we need to check both possible values of the angle (cant distinguish between x and x+pi)
     double poss_ang_1 = vect.GetVectorAngle()*M_PI/180 - angle;
     double poss_ang_2 = std::fmod(poss_ang_1 + M_PI, 2*M_PI);
 
-    if (util::GetConicPtFromParam(poss_ang_1, focus, angle, ecc, dist).GetDistance(pt) <
-        util::GetConicPtFromParam(poss_ang_2, focus, angle, ecc, dist).GetDistance(pt)) {
+    if (util::GetConicPtFromParam(poss_ang_1, focus, angle, ecc, dist, latus).GetDistance(pt) <
+        util::GetConicPtFromParam(poss_ang_2, focus, angle, ecc, dist, latus).GetDistance(pt)) {
         return poss_ang_1;
     } else {
         return poss_ang_2;
@@ -216,10 +216,10 @@ double util::GetConicParam(const wxPoint2DDouble &pt, const wxPoint2DDouble &foc
 /// @param ecc Eccentricity of the conic
 /// @param dist Distance of directrix and focus
 /// @return Point on the conic with the given parameter
-wxPoint2DDouble util::GetConicPtFromParam(const double &param, const wxPoint2DDouble &focus, const double &angle, const double &ecc, const double &dist) {
+wxPoint2DDouble util::GetConicPtFromParam(const double &param, const wxPoint2DDouble &focus, const double &angle, const double &ecc, const double &dist, const double& latus) {
     double point_ang = param + angle;
 
-    double r = (ecc*dist)/(1+ecc*cos(param));
+    double r = (latus/2)/(1+ecc*cos(param));
     return {focus.m_x + r*cos(point_ang), focus.m_y + r*sin(point_ang)};
 }
 
@@ -228,8 +228,8 @@ wxPoint2DDouble util::GetConicPtFromParam(const double &param, const wxPoint2DDo
 /// @param b The second curve
 /// @return Vector of the intersections
 std::vector<wxPoint2DDouble> util::IntersectCurves(GeoCurve* a, GeoCurve* b) {
-    GeoCurve* firstCurve = a;
-    GeoCurve* secondCurve = b;
+    GeoCurve* firstCurve = a < b ? a : b;
+    GeoCurve* secondCurve = a < b ? b : a;
 
     if (firstCurve->IsAsLine() && secondCurve->IsAsLine()) {
         GeoLineBase* firstLine = static_cast<GeoLineBase*>(firstCurve);
@@ -260,4 +260,19 @@ std::vector<wxPoint2DDouble> util::IntersectCurves(GeoCurve* a, GeoCurve* b) {
         std::vector<wxPoint2DDouble> intersects = util::IntersectLineConic(line->GetPoint(), line->GetVect(), conic->GetCoeffs());
         return intersects;
     }
+}
+
+/// @brief Calculates length of latus rectum of a conic
+/// @param coeffs Coefficients of the conic
+/// @param focus Focus of the conic
+/// @param angle Angle of the conic
+/// @return Length of the conics latus rectum
+double util::GetLatus(const std::vector<double> coeffs, const wxPoint2DDouble &focus, const double &angle) {
+    double perp_angle = angle + M_PI/2.0;
+    wxPoint2DDouble vect = {cos(perp_angle), sin(perp_angle)};
+
+    std::vector<wxPoint2DDouble> intersections = util::IntersectLineConic(focus, vect, coeffs);
+    if (intersections.size() < 2) return 0;
+
+    return intersections[0].GetDistance(intersections[1]);
 }

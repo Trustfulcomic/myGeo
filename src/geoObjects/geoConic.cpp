@@ -64,6 +64,7 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
         trans_angle = focus_directrix.GetVectorAngle()*M_PI/180.0;
         trans_dist = focus_directrix.GetVectorLength();
     }
+    double trans_latus = util::GetLatus(trans_coeffs, trans_focus, trans_angle);
 
     wxPoint2DDouble topLeft = {0.0, 0.0};
     wxPoint2DDouble bottomRight = {static_cast<double>(parent->GetSize().GetWidth()), static_cast<double>(parent->GetSize().GetHeight())};
@@ -80,7 +81,7 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
 
     std::vector<double> intersect_params;
     for (wxPoint2DDouble& pt : intersects) {
-        intersect_params.push_back(util::GetConicParam(pt, trans_focus, trans_angle, trans_ecc, trans_dist));
+        intersect_params.push_back(util::GetConicParam(pt, trans_focus, trans_angle, trans_ecc, trans_dist, trans_latus));
     }
     for (double& par : intersect_params) {
         while (par < 0) par += 2*M_PI;
@@ -104,7 +105,7 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
     // Checks which intervals are in the view
     for (std::pair<double,double>& interval : intervals) {
         double midpoint_param = (interval.first + interval.second)/2;
-        wxPoint2DDouble midpoint = util::GetConicPtFromParam(midpoint_param, trans_focus, trans_angle, trans_ecc, trans_dist);
+        wxPoint2DDouble midpoint = util::GetConicPtFromParam(midpoint_param, trans_focus, trans_angle, trans_ecc, trans_dist, trans_latus);
         if (midpoint.m_x >= topLeft.m_x && midpoint.m_x <= bottomRight.m_x && midpoint.m_y >= topLeft.m_y && midpoint.m_y <= bottomRight.m_y) {
             seen_intervals.push_back(interval);
         }
@@ -114,7 +115,7 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
     for (std::pair<double,double>& interval : seen_intervals) {
         wxPoint2DDouble points[101];
         for (int i = 0; i<101; i++) {
-            points[i] = util::GetConicPtFromParam(interval.first + i*(interval.second-interval.first)/100.0, trans_focus, trans_angle, trans_ecc, trans_dist);
+            points[i] = util::GetConicPtFromParam(interval.first + i*(interval.second-interval.first)/100.0, trans_focus, trans_angle, trans_ecc, trans_dist, trans_latus);
         }
 
         if (selected || highlited) {
@@ -168,6 +169,7 @@ void GeoConic::ReloadPrecomp() {
     }
 
     ecc = util::GetEccentricity(coeffs);
+    latus = util::GetLatus(coeffs, focus, angle);
 }
 
 void GeoConic::ReloadSelf() {
@@ -226,8 +228,6 @@ void GeoConic::ReloadSelf() {
 }
 
 wxPoint2DDouble GeoConic::GetClosestPoint(const wxPoint2DDouble &pt) const {
-    // TODO - problems with circles (causes degenerate conic somewhere)
-
     const double& a = coeffs[0];
     const double& b = coeffs[1];
     const double& c = coeffs[2];
@@ -255,11 +255,11 @@ wxPoint2DDouble GeoConic::GetClosestPoint(const wxPoint2DDouble &pt) const {
 }
 
 double GeoConic::GetParameter(const wxPoint2DDouble &pt) const {
-    return util::GetConicParam(pt, focus, angle, ecc, dist);
+    return util::GetConicParam(pt, focus, angle, ecc, dist, latus);
 }
 
 wxPoint2DDouble GeoConic::GetPointFromParameter(const double &param) const {
-    return util::GetConicPtFromParam(param, focus, angle, ecc, dist);
+    return util::GetConicPtFromParam(param, focus, angle, ecc, dist, latus);
 }
 
 wxPoint2DDouble GeoConic::GetTangentAtPoint(const wxPoint2DDouble &pt) const {

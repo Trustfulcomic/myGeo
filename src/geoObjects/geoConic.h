@@ -57,6 +57,8 @@ private:
     double ecc;
     /// Distance of focus from directrix
     double dist;
+    /// Length of latus rectum of the conic
+    double latus;
 
     /// Point on the directrix of the focus
     wxPoint2DDouble directrix_pt;

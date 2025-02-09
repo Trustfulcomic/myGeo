@@ -36,7 +36,8 @@ namespace util {
     wxPoint2DDouble GetConicFocus(const std::vector<std::vector<double>>& dual);
     void GetPolar(const std::vector<std::vector<double>>& conic, const wxPoint2DDouble& pt, wxPoint2DDouble& mainPoint, wxPoint2DDouble& vect);
     std::vector<std::vector<double>> TransformConic(const std::vector<std::vector<double>>& conic, const std::vector<std::vector<double>>& transform);
-    double GetConicParam(const wxPoint2DDouble& pt, const wxPoint2DDouble& focus, const double& angle, const double& ecc, const double& dist);
-    wxPoint2DDouble GetConicPtFromParam(const double& param, const wxPoint2DDouble& focus, const double& angle, const double& ecc, const double& dist);
+    double GetConicParam(const wxPoint2DDouble& pt, const wxPoint2DDouble& focus, const double& angle, const double& ecc, const double& dist, const double& latus);
+    wxPoint2DDouble GetConicPtFromParam(const double& param, const wxPoint2DDouble& focus, const double& angle, const double& ecc, const double& dist, const double& latus);
     std::vector<wxPoint2DDouble> IntersectCurves(GeoCurve* a, GeoCurve* b);
+    double GetLatus(const std::vector<double> coeffs, const wxPoint2DDouble& focus, const double& angle);
 }
