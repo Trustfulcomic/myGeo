@@ -42,11 +42,13 @@ void GeoCircle::CreateCopy(std::unordered_map<GeoObject *, GeoObject *> &copiedP
 
     copy->parent = this->parent;
     copy->center = this->center;
+    copy->coeffs = this->coeffs;
     copy->radius = this->radius;
     copy->outlineColor = this->outlineColor;
     copy->outlineWidth = this->outlineWidth;
     copy->isPoint = this->isPoint;
     copy->definition = this->definition;
+    copy->ReloadPrecomp();
 
     copy->Rename(this->GetName());
 

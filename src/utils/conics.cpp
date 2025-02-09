@@ -2,6 +2,7 @@
 
 #include "../geoObjects/geoLineBase.h"
 #include "../geoObjects/geoConic.h"
+#include "../geoObjects/geoCircle.h"
 
 /// @brief Intersects a line with a conic
 /// @param A Main point of the line
@@ -239,9 +240,21 @@ std::vector<wxPoint2DDouble> util::IntersectCurves(GeoCurve* a, GeoCurve* b) {
         GeoConic* secondConic = static_cast<GeoConic*>(secondCurve);
 
         std::vector<wxPoint2DDouble> intersects = util::IntersectConics(firstConic->GetCoeffs(), secondConic->GetCoeffs());
-        std::sort(intersects.begin(), intersects.end(), [&](const wxPoint2DDouble& a, const wxPoint2DDouble& b){
-            return firstConic->GetParameter(a) < firstConic->GetParameter(b);
-        });
+
+        if (firstConic->GetType() == CIRCLE && secondConic->GetType() == CIRCLE) {
+            // If both conics are circles, then the intersects are sorted based in which halfplane against line through centers are
+            wxPoint2DDouble firstCenter = static_cast<GeoCircle*>(firstConic)->GetCenter();
+            wxPoint2DDouble secondCenter = static_cast<GeoCircle*>(secondConic)->GetCenter();
+
+            std::sort(intersects.begin(), intersects.end(), [&](const wxPoint2DDouble& a, const wxPoint2DDouble& b){
+                return  util::DetMatrix3x3({{firstCenter.m_x, firstCenter.m_y, 1}, {secondCenter.m_x, secondCenter.m_y, 1}, {a.m_x, a.m_y, 1}}) < 
+                        util::DetMatrix3x3({{firstCenter.m_x, firstCenter.m_y, 1}, {secondCenter.m_x, secondCenter.m_y, 1}, {b.m_x, b.m_y, 1}});
+            });
+        } else {
+            std::sort(intersects.begin(), intersects.end(), [&](const wxPoint2DDouble& a, const wxPoint2DDouble& b){
+                return firstConic->GetParameter(a) < firstConic->GetParameter(b);
+            });
+        }
         return intersects;
     } else {
         GeoLineBase* line;

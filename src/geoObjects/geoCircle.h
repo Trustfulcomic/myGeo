@@ -19,6 +19,9 @@ public:
     virtual ListItem GetListItem() override;
     static wxString DefToString(const CircleDefinition& def);
 
+    wxPoint2DDouble GetCenter() { return center; }
+    double GetRadius() { return radius; }
+
 private:
     // Center of the circle
     wxPoint2DDouble center;
