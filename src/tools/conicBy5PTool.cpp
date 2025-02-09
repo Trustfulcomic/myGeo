@@ -11,6 +11,12 @@ ConicBy5PTool::ConicBy5PTool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxW
 void ConicBy5PTool::ResetState() {
     points.clear();
 
+    if (tempConic != nullptr){
+        delete tempConic;
+        tempConic = nullptr;
+        drawingCanvas->tempGeoCurve = nullptr;
+    }
+
     drawingCanvas->DeselectAllObjects();
     ReloadObjects({0.0, 0.0});
 }
@@ -46,6 +52,16 @@ void ConicBy5PTool::OnMouseDown(wxMouseEvent &event) {
         drawingCanvas->geoCurves.push_back(new GeoConic(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), points));
         ResetState();
         drawingCanvas->SaveState();
+    } else if (points.size() == 3) {
+        points.push_back(closestPoint);
+        drawingCanvas->SelectObject(closestPoint);
+
+        std::vector<GeoPoint*> copied_pts = points;
+        copied_pts.push_back(drawingCanvas->mousePt);
+
+        tempConic = new GeoConic(drawingCanvas, "", copied_pts);
+        tempConic->temporary = true;
+        drawingCanvas->tempGeoCurve = tempConic;
     } else {
         drawingCanvas->SelectObject(closestPoint);
         points.push_back(closestPoint);

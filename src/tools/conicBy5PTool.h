@@ -5,6 +5,7 @@
 #include "../geoObjects/geoObject.h"
 #include "../geoObjects/geoPoint.h"
 #include "../geoObjects/geoLine.h"
+#include "../geoObjects/geoConic.h"
 
 /// @brief Class for a tool that creates a conic by five points lying on it
 class ConicBy5PTool : public Tool {
@@ -24,4 +25,6 @@ private:
 
     /// Vector of already selected points
     std::vector<GeoPoint*> points;
+    /// Temporary conic
+    GeoConic* tempConic = nullptr;
 };
