@@ -165,8 +165,20 @@ GeoPoint *Tool::CreatePointAtPos(const wxPoint2DDouble &pt) {
         drawingCanvas->SaveState();
         ReloadObjects(pt);
     } else {
-        drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), static_cast<GeoCurve*>(clickableObjs[0]), static_cast<GeoCurve*>(clickableObjs[1])));
-        createdPoint = drawingCanvas->geoPoints.back();
+        std::vector<wxPoint2DDouble> intersects = util::IntersectCurves(static_cast<GeoCurve*>(clickableObjs[0]), static_cast<GeoCurve*>(clickableObjs[1]));
+        if (intersects.size() == 0) return nullptr;
+
+        int best_i = 0;
+        for (int i = 1; i<intersects.size(); i++) {
+            if (intersects[i].GetDistance(pt) < intersects[best_i].GetDistance(pt)) best_i = i;
+        }
+        
+        GeoPoint* new_point = new GeoPoint(this->drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), static_cast<GeoCurve*>(clickableObjs[0]), static_cast<GeoCurve*>(clickableObjs[1]));
+        new_point->parameter = best_i;
+        new_point->ReloadSelf();
+        drawingCanvas->geoPoints.push_back(new_point);
+
+        createdPoint = new_point;
         drawingCanvas->SaveState();
         ReloadObjects(pt);
     }

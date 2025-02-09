@@ -2,6 +2,7 @@
 
 #include "geoLine.h"
 #include "geoSegment.h"
+#include "geoConic.h"
 
 #include "../drawingCanvas.h"
 #include "../sidePanel/sidePanel.h"
@@ -202,13 +203,19 @@ void GeoPoint::ReloadSelf() {
             break;
 
         case POINT_ON_INTERSECT:
-            // TODO - works only for lines rn
             {
-            GeoLineBase* firstLine = static_cast<GeoLineBase*>(parentObjs[0]);
-            GeoLineBase* secondLine = static_cast<GeoLineBase*>(parentObjs[1]);
+            int intersect_i = (int)(parameter+0.5);
+            if (intersect_i < 0) intersect_i = 0;
 
-            pos = util::IntersectLines(firstLine->GetPoint(), firstLine->GetVect(),
-                                       secondLine->GetPoint(), secondLine->GetVect());
+            std::vector<wxPoint2DDouble> intersects = util::IntersectCurves(static_cast<GeoCurve*>(parentObjs[0]), static_cast<GeoCurve*>(parentObjs[1]));
+
+            if (intersect_i >= intersects.size()) {
+                // TODO - undefined
+                pos = {0.0, 0.0};
+            } else {
+                pos = intersects[intersect_i];
+            }
+
             break;
             }
 

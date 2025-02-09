@@ -1,5 +1,8 @@
 #include "utils.h"
 
+#include "../geoObjects/geoLineBase.h"
+#include "../geoObjects/geoConic.h"
+
 /// @brief Intersects a line with a conic
 /// @param A Main point of the line
 /// @param a Vector of the line
@@ -218,4 +221,43 @@ wxPoint2DDouble util::GetConicPtFromParam(const double &param, const wxPoint2DDo
 
     double r = (ecc*dist)/(1+ecc*cos(param));
     return {focus.m_x + r*cos(point_ang), focus.m_y + r*sin(point_ang)};
+}
+
+/// @brief Calculates intersection of two curves
+/// @param a The first curve
+/// @param b The second curve
+/// @return Vector of the intersections
+std::vector<wxPoint2DDouble> util::IntersectCurves(GeoCurve* a, GeoCurve* b) {
+    GeoCurve* firstCurve = a;
+    GeoCurve* secondCurve = b;
+
+    if (firstCurve->IsAsLine() && secondCurve->IsAsLine()) {
+        GeoLineBase* firstLine = static_cast<GeoLineBase*>(firstCurve);
+        GeoLineBase* secondLine = static_cast<GeoLineBase*>(secondCurve);
+
+        return {util::IntersectLines(firstLine->GetPoint(), firstLine->GetVect(),
+                                     secondLine->GetPoint(), secondLine->GetVect())};
+    } else if (!firstCurve->IsAsLine() && !secondCurve->IsAsLine()) {
+        GeoConic* firstConic = static_cast<GeoConic*>(firstCurve);
+        GeoConic* secondConic = static_cast<GeoConic*>(secondCurve);
+
+        std::vector<wxPoint2DDouble> intersects = util::IntersectConics(firstConic->GetCoeffs(), secondConic->GetCoeffs());
+        std::sort(intersects.begin(), intersects.end(), [&](const wxPoint2DDouble& a, const wxPoint2DDouble& b){
+            return firstConic->GetParameter(a) < firstConic->GetParameter(b);
+        });
+        return intersects;
+    } else {
+        GeoLineBase* line;
+        GeoConic* conic;
+        if (firstCurve->IsAsLine()) {
+            line = static_cast<GeoLineBase*>(firstCurve);
+            conic = static_cast<GeoConic*>(secondCurve);
+        } else {
+            line = static_cast<GeoLineBase*>(secondCurve);
+            conic = static_cast<GeoConic*>(firstCurve);
+        }
+
+        std::vector<wxPoint2DDouble> intersects = util::IntersectLineConic(line->GetPoint(), line->GetVect(), conic->GetCoeffs());
+        return intersects;
+    }
 }
