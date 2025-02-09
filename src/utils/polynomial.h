@@ -101,7 +101,7 @@ namespace util {
                 double discr = b*b - 4*a*c;
                 ComplexNum cmplx_discr = {discr, 0};
                 ComplexNum sq = cmplxSqrt(cmplx_discr);
-                return {(sq+b)/(-2), (sq-b)/2};
+                return {(sq+b)/(-2*a), (sq-b)/(2*a)};
                 
             } else if (coeffs.size() == 4) {
                 // Cardanos formula
