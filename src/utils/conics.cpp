@@ -226,8 +226,8 @@ wxPoint2DDouble util::GetConicPtFromParam(const double &param, const wxPoint2DDo
 /// @param b The second curve
 /// @return Vector of the intersections
 std::vector<wxPoint2DDouble> util::IntersectCurves(GeoCurve* a, GeoCurve* b) {
-    GeoCurve* firstCurve = a < b ? a : b;
-    GeoCurve* secondCurve = a < b ? b : a;
+    GeoCurve* firstCurve = a->GetName().Cmp(b->GetName()) ? a : b;
+    GeoCurve* secondCurve = a->GetName().Cmp(b->GetName()) ? b : a;
 
     if (firstCurve->IsAsLine() && secondCurve->IsAsLine()) {
         GeoLineBase* firstLine = static_cast<GeoLineBase*>(firstCurve);
