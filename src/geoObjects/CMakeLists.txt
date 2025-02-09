@@ -4,4 +4,5 @@ target_sources(main PRIVATE     geoObject.cpp
                                 geoSegment.cpp
                                 geoLine.cpp
                                 geoCurve.cpp
-                                geoConic.cpp)                                  
+                                geoConic.cpp
+                                geoCircle.cpp)                                  

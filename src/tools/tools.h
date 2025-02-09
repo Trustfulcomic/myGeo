@@ -12,3 +12,4 @@
 #include "isoConjTool.h"
 #include "homothetyTool.h"
 #include "conicBy5PTool.h"
+#include "circleBy2PTool.h"

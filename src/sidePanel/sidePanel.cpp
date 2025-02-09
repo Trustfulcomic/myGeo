@@ -99,6 +99,7 @@ void SidePanel::SetupTools() {
     ADD_TOOL(IsoConjTool);
     ADD_TOOL(HomothetyTool);
     ADD_TOOL(ConicBy5PTool);
+    ADD_TOOL(CircleBy2PTool);
     toolPanelSizer->Add(toolPanesSizer, 0, wxALL, FromDIP(5));
 
     toolPanel->SetSizer(toolPanelSizer);

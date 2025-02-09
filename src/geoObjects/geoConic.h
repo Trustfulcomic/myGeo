@@ -42,10 +42,11 @@ public:
 
     static wxString DefToString() { return "Conic"; }
 
-private:
+protected:
     /// Vector of conic coefficients in general form (x^2,xy,y^2,x,y,1)
     std::vector<double> coeffs = {};
 
+private:
     /// Symmetric matrix descibing the conic
     std::vector<std::vector<double>> matrix;
     /// Symmetric matrix describing the dual conic

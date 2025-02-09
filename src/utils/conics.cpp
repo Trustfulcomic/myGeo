@@ -56,9 +56,6 @@ std::vector<wxPoint2DDouble> util::IntersectConics(const std::vector<double> &A,
     Poly main = (Poly){{f, d, a}} * bot * bot + top * top * b + (Poly){{e, c}} * bot * top;
 
     std::vector<ComplexNum> roots = main.Solve();
-    if (roots.size() < 4) {
-        std::cout << "Degenerate quartic in util::IntersectConics()" << std::endl;
-    }
 
     std::vector<wxPoint2DDouble> res;
     std::vector<double> checked;

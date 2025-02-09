@@ -13,4 +13,5 @@ target_sources(main PRIVATE     tool.cpp
                                 lineReflectTool.cpp
                                 isoConjTool.cpp
                                 homothetyTool.cpp
-                                conicBy5PTool.cpp)
+                                conicBy5PTool.cpp
+                                circleBy2PTool.cpp)
