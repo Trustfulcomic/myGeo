@@ -15,4 +15,5 @@ target_sources(main PRIVATE     tool.cpp
                                 homothetyTool.cpp
                                 conicBy5PTool.cpp
                                 circleBy2PTool.cpp
-                                circleBy3PTool.cpp)
+                                circleBy3PTool.cpp
+                                ellipseByFociTool.cpp)

@@ -9,7 +9,8 @@ enum GeoCurveType {
     LINE,
     SEGMENT,
     GENERAL_CONIC,
-    CIRCLE
+    CIRCLE,
+    ELLIPSE
 };
 
 /// @brief Abstract class for a curve

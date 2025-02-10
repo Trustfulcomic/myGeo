@@ -164,3 +164,12 @@ std::vector<std::vector<double>> util::WxAffineToMatrix(const wxAffineMatrix2D &
             {mat2D.m_12, mat2D.m_22, tr.m_y},
             {0, 0, 1}};
 }
+
+/// @brief Calculates matrix that rotates by given angle
+/// @param angle Tha angle to rotate by
+/// @return 3x3 matrix describing the rotation
+std::vector<std::vector<double>> util::GetRotationMatrix(const double& angle) {
+    return {{cos(angle), -sin(angle), 0},
+            {sin(angle), cos(angle), 0},
+            {0, 0, 1}};
+}

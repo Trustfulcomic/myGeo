@@ -150,11 +150,11 @@ void GeoConic::ReloadPrecomp() {
     double minor = 4*coeffs[0]*coeffs[2]-coeffs[1]*coeffs[1];
 
     if (minor < 0) {
-        conicType = HYPERBOLA;
+        conicType = HYPERBOLA_T;
     } else if (minor > 0) {
-        conicType = ELLIPSE;
+        conicType = ELLIPSE_T;
     } else {
-        conicType = PARABOLA;
+        conicType = PARABOLA_T;
     }
 
     util::GetPolar(matrix, focus, directrix_pt, directrix_vct);

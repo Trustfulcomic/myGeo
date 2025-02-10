@@ -286,3 +286,19 @@ double util::GetLatus(const std::vector<double> coeffs, const wxPoint2DDouble &f
 
     return intersections[0].GetDistance(intersections[1]);
 }
+
+/// @brief Calculates conic matrix from coefficients
+/// @param coeffs Coefficients of the conic
+/// @return The matrix describing the conic
+std::vector<std::vector<double>> util::GetConicMatrix(const std::vector<double> &coeffs) {
+    return {{coeffs[0], coeffs[1]/2, coeffs[3]/2},
+            {coeffs[1]/2, coeffs[2], coeffs[4]/2},
+            {coeffs[3]/2, coeffs[4]/2, coeffs[5]}};
+}
+
+/// @brief Calculates conic coefficients from its symmetric matrix
+/// @param matrix Matrix of the conic
+/// @return Coefficients of the conic (x^2, xy, y^2, x, y, 1)
+std::vector<double> util::GetConicCoeffs(const std::vector<std::vector<double>> &matrix) {
+    return {matrix[0][0], matrix[0][1]*2, matrix[1][1], matrix[0][2]*2, matrix[2][1]*2, matrix[2][2]};
+}

@@ -4,9 +4,9 @@
 #include "geoPoint.h"
 
 enum ConicType {
-    ELLIPSE,
-    PARABOLA,
-    HYPERBOLA
+    ELLIPSE_T,
+    PARABOLA_T,
+    HYPERBOLA_T
 };
 
 /// @brief Base class for conic sections

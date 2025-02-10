@@ -14,3 +14,4 @@
 #include "conicBy5PTool.h"
 #include "circleBy2PTool.h"
 #include "circleBy3PTool.h"
+#include "ellipseByFociTool.h"

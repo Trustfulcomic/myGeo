@@ -24,6 +24,7 @@ namespace util {
     std::vector<std::vector<double>> MatrixMult(const std::vector<std::vector<double>>& A, const std::vector<std::vector<double>>& B);
     std::vector<std::vector<double>> MatrixAdd(const std::vector<std::vector<double>>& A, const std::vector<std::vector<double>>& B);
     std::vector<std::vector<double>> WxAffineToMatrix(const wxAffineMatrix2D& aff_matrix);
+    std::vector<std::vector<double>> GetRotationMatrix(const double& angle);
 
     wxPoint2DDouble PointReflectPoint(const wxPoint2DDouble &S, const wxPoint2DDouble &A);
     wxPoint2DDouble PointReflectVector(const wxPoint2DDouble &S, const wxPoint2DDouble &a);
@@ -40,4 +41,6 @@ namespace util {
     wxPoint2DDouble GetConicPtFromParam(const double& param, const wxPoint2DDouble& focus, const double& angle, const double& ecc, const double& dist, const double& latus);
     std::vector<wxPoint2DDouble> IntersectCurves(GeoCurve* a, GeoCurve* b);
     double GetLatus(const std::vector<double> coeffs, const wxPoint2DDouble& focus, const double& angle);
+    std::vector<std::vector<double>> GetConicMatrix(const std::vector<double>& coeffs);
+    std::vector<double> GetConicCoeffs(const std::vector<std::vector<double>>& matrix);
 }
