@@ -6,4 +6,5 @@ target_sources(main PRIVATE     geoObject.cpp
                                 geoCurve.cpp
                                 geoConic.cpp
                                 geoCircle.cpp
-                                geoEllipse.cpp)                                  
+                                geoEllipse.cpp
+                                geoHyperbola.cpp)                                  

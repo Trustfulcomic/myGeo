@@ -101,7 +101,8 @@ void SidePanel::SetupTools() {
     ADD_TOOL(ConicBy5PTool);
     ADD_TOOL(CircleBy2PTool);
     ADD_TOOL(CircleBy3PTool);
-    ADD_TOOL(EllipseByFociTool)
+    ADD_TOOL(EllipseByFociTool);
+    ADD_TOOL(HyperByFociTool);
     toolPanelSizer->Add(toolPanesSizer, 0, wxALL, FromDIP(5));
 
     toolPanel->SetSizer(toolPanelSizer);
