@@ -21,14 +21,14 @@ GeoEllipse::GeoEllipse(DrawingCanvas *parent, const wxString &name, GeoPoint *fo
     this->outlineColor = wxColor(0,0,0);
     this->outlineWidth = 2;
 
-    this->definition = BY_FOCI_AND_POINT;
+    this->definition = ELLIPSE_BY_FOCI_AND_POINT;
 
     ReloadSelf();    
 }
 
 void GeoEllipse::ReloadSelf() {
     switch (definition) {
-        case BY_FOCI_AND_POINT:
+        case ELLIPSE_BY_FOCI_AND_POINT:
             wxPoint2DDouble focusA = static_cast<GeoPoint*>(parentObjs[0])->GetPos();
             wxPoint2DDouble focusB = static_cast<GeoPoint*>(parentObjs[1])->GetPos();
             wxPoint2DDouble pt = static_cast<GeoPoint*>(parentObjs[2])->GetPos();
@@ -84,8 +84,8 @@ void GeoEllipse::CreateCopy(std::unordered_map<GeoObject *, GeoObject *> &copied
 ListItem GeoEllipse::GetListItem()
 {
     switch (definition) {
-        case BY_FOCI_AND_POINT:
-            return {GetName(), wxString::Format(GeoEllipse::DefToString(definition) + "(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[1]->GetName()), parameter, this};
+        case ELLIPSE_BY_FOCI_AND_POINT:
+            return {GetName(), wxString::Format(GeoEllipse::DefToString(definition) + "(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), parameter, this};
         default:
             return {GetName(), "He?", parameter, this};
     }
@@ -93,7 +93,7 @@ ListItem GeoEllipse::GetListItem()
 
 wxString GeoEllipse::DefToString(const EllipseDefinition &def) {
     switch (def) {
-        case BY_FOCI_AND_POINT:
+        case ELLIPSE_BY_FOCI_AND_POINT:
             return "Ellipse";
         default:
             return "He?";

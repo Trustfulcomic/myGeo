@@ -78,7 +78,7 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
     for (wxPoint2DDouble& pt : util::IntersectLineConic(topLeft, horiz_vect, trans_coeffs)) intersects.push_back(pt); // Top line
     for (wxPoint2DDouble& pt : util::IntersectLineConic(bottomRight, horiz_vect, trans_coeffs)) intersects.push_back(pt); // Bottom line
     for (wxPoint2DDouble& pt : util::IntersectLineConic(topLeft, vert_vect, trans_coeffs)) intersects.push_back(pt); // Left line
-    for (wxPoint2DDouble& pt : util::IntersectLineConic(bottomRight, horiz_vect, trans_coeffs)) intersects.push_back(pt); // Right line
+    for (wxPoint2DDouble& pt : util::IntersectLineConic(bottomRight, vert_vect, trans_coeffs)) intersects.push_back(pt); // Right line
 
     // Calculate parameters of the intersections
     std::vector<double> intersect_params;

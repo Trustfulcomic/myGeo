@@ -28,7 +28,7 @@ GeoHyperbola::GeoHyperbola(DrawingCanvas *parent, const wxString &name, GeoPoint
 
 void GeoHyperbola::ReloadSelf() {
     switch (definition) {
-        case BY_FOCI_AND_POINT:
+        case HYPERBOLA_BY_FOCI_AND_POINT:
             wxPoint2DDouble focusA = static_cast<GeoPoint*>(parentObjs[0])->GetPos();
             wxPoint2DDouble focusB = static_cast<GeoPoint*>(parentObjs[1])->GetPos();
             wxPoint2DDouble pt = static_cast<GeoPoint*>(parentObjs[2])->GetPos();
@@ -85,7 +85,7 @@ ListItem GeoHyperbola::GetListItem()
 {
     switch (definition) {
         case HYPERBOLA_BY_FOCI_AND_POINT:
-            return {GetName(), wxString::Format(GeoHyperbola::DefToString(definition) + "(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[1]->GetName()), parameter, this};
+            return {GetName(), wxString::Format(GeoHyperbola::DefToString(definition) + "(%s,%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName(), parentObjs[2]->GetName()), parameter, this};
         default:
             return {GetName(), "He?", parameter, this};
     }

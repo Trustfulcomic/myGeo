@@ -133,7 +133,7 @@ wxPoint2DDouble util::GetConicFocus(const std::vector<std::vector<double>> &dual
     util::ComplexNum c = {G-K, H};
 
     util::ComplexNum zF;
-    if (T == 0) {
+    if (fabs(T) < 0.00000001) {
         zF = -c/b;
     } else {
         zF = (-b+cmplxSqrt(b*b-a*c*4))/(a*2); 

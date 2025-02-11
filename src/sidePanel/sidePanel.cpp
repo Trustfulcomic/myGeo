@@ -103,6 +103,7 @@ void SidePanel::SetupTools() {
     ADD_TOOL(CircleBy3PTool);
     ADD_TOOL(EllipseByFociTool);
     ADD_TOOL(HyperByFociTool);
+    ADD_TOOL(ParabByFocDirTool);
     toolPanelSizer->Add(toolPanesSizer, 0, wxALL, FromDIP(5));
 
     toolPanel->SetSizer(toolPanelSizer);

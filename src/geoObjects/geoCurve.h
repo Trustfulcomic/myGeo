@@ -11,7 +11,8 @@ enum GeoCurveType {
     GENERAL_CONIC,
     CIRCLE,
     ELLIPSE,
-    HYPERBOLA
+    HYPERBOLA,
+    PARABOLA
 };
 
 /// @brief Abstract class for a curve

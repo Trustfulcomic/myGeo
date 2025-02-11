@@ -4,7 +4,7 @@
 #include "geoPoint.h"
 
 enum EllipseDefinition {
-    BY_FOCI_AND_POINT
+    ELLIPSE_BY_FOCI_AND_POINT
 };
 
 /// @brief Class for an ellipse

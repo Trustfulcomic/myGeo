@@ -17,4 +17,5 @@ target_sources(main PRIVATE     tool.cpp
                                 circleBy2PTool.cpp
                                 circleBy3PTool.cpp
                                 ellipseByFociTool.cpp
-                                hyperByFociTool.cpp)
+                                hyperByFociTool.cpp
+                                parabByFocDirTool.cpp)

@@ -16,3 +16,4 @@
 #include "circleBy3PTool.h"
 #include "ellipseByFociTool.h"
 #include "hyperByFociTool.h"
+#include "parabByFocDirTool.h"

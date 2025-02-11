@@ -7,4 +7,5 @@ target_sources(main PRIVATE     geoObject.cpp
                                 geoConic.cpp
                                 geoCircle.cpp
                                 geoEllipse.cpp
-                                geoHyperbola.cpp)                                  
+                                geoHyperbola.cpp
+                                geoParabola.cpp)
