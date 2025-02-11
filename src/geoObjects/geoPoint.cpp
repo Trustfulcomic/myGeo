@@ -140,6 +140,7 @@ GeoPoint::GeoPoint(DrawingCanvas *parent, const wxString &name, GeoPoint *parent
 }
 
 void GeoPoint::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) const {
+    // Transform the point to accommodate for the canvas shift and scaling
     wxPoint2DDouble trans_pos = transform.TransformPoint(pos);
 
     if (highlited || selected) {

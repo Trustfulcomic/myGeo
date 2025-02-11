@@ -43,16 +43,19 @@ void ConicBy5PTool::OnMouseDown(wxMouseEvent &event) {
 
     GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
 
+    // If selecting duplicit point, do nothing
     for (GeoPoint* pt : points) {
         if (closestPoint == pt) return;
     }
 
     if (points.size() == 4) {
+        // If 5th point is being selected, create final conic
         points.push_back(closestPoint);
         drawingCanvas->geoCurves.push_back(new GeoConic(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), points));
         ResetState();
         drawingCanvas->SaveState();
     } else if (points.size() == 3) {
+        // If 4th point is being selected, create temporary curve
         points.push_back(closestPoint);
         drawingCanvas->SelectObject(closestPoint);
 
@@ -63,6 +66,7 @@ void ConicBy5PTool::OnMouseDown(wxMouseEvent &event) {
         tempConic->temporary = true;
         drawingCanvas->tempGeoCurve = tempConic;
     } else {
+        // Add point clicked on
         drawingCanvas->SelectObject(closestPoint);
         points.push_back(closestPoint);
     }

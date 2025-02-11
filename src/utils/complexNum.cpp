@@ -4,6 +4,7 @@ util::ComplexNum util::princSqrt(const util::ComplexNum &x, const size_t &n) {
     double arg = x.GetArg()/n;
     double arg_diff = 2*M_PI/n;
 
+    // Find the argument that is closest to zero
     double best_arg = arg;
     for (int i = 0; i<n; i++){
         arg += arg_diff;

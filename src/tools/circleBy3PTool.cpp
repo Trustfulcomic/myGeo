@@ -44,17 +44,21 @@ void CircleBy3PTool::OnMouseDown(wxMouseEvent &event) {
     GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
 
     if (firstPoint == nullptr) {
+        // Select first point
         firstPoint = closestPoint;
         drawingCanvas->SelectObject(firstPoint);
     } else if (secondPoint == nullptr) {
+        // Select second point
         if (firstPoint == closestPoint) return;
         secondPoint = closestPoint;
         drawingCanvas->SelectObject(secondPoint);
 
+        // Create temporary circle
         tempCircle = new GeoCircle(drawingCanvas, nullName, firstPoint, secondPoint, drawingCanvas->mousePt);
         tempCircle->temporary = true;
         drawingCanvas->tempGeoCurve = tempCircle;
     } else {
+        // Create final circle if points are different
         if (closestPoint == firstPoint || closestPoint == secondPoint) return;
 
         drawingCanvas->geoCurves.push_back(new GeoCircle(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstPoint, secondPoint, closestPoint));

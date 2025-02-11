@@ -45,15 +45,19 @@ void MidpointTool::OnMouseDown(wxMouseEvent &event) {
     }
 
     if (closestObj->IsPoint()){
+        // If the closest object is point
         if (firstPoint == nullptr){
+            // If first point not selected, select it
             firstPoint = static_cast<GeoPoint*>(closestObj);
             drawingCanvas->SelectObject(firstPoint);
         } else {
+            // First point already selected, create midpoint of the segment
             drawingCanvas->geoPoints.push_back(new GeoPoint(drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), firstPoint, static_cast<GeoPoint*>(closestObj)));
             drawingCanvas->SaveState();
             ResetState();
         }
     } else if (firstPoint == nullptr){
+        // Create midpoint of the curve if it is not LINE
         if (static_cast<GeoCurve*>(closestObj)->GetType() != LINE) {
             drawingCanvas->geoPoints.push_back(new GeoPoint(drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), static_cast<GeoCurve*>(closestObj)));
             drawingCanvas->SaveState();

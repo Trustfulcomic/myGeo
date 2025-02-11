@@ -50,12 +50,15 @@ void AngleBisectorTool::OnMouseDown(wxMouseEvent &event) {
     }
 
     if (firstObj == nullptr){
+        // If first object is not selected yet
         if (closestObj->IsPoint() || (!closestObj->IsPoint() && static_cast<GeoCurve*>(closestObj)->IsAsLine())){
             firstObj = closestObj;
             firstObj->selected = true;
         }
     } else if (secondObj == nullptr){
+        // If second object is not selected yet
         if (firstObj->IsPoint() && closestObj->IsPoint()){
+            // Angle bisector by 3 points
             secondObj = closestObj;
             secondObj->selected = true;
             tempLine = new GeoLine(drawingCanvas, nullName, static_cast<GeoPoint*>(firstObj), static_cast<GeoPoint*>(secondObj), drawingCanvas->mousePt);
@@ -64,12 +67,14 @@ void AngleBisectorTool::OnMouseDown(wxMouseEvent &event) {
         }
 
         if (!firstObj->IsPoint() && (!closestObj->IsPoint() && static_cast<GeoCurve*>(closestObj)->IsAsLine())){
+            // Angle bisector by two lines
             drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstObj, closestObj, ANGLE_BISECTOR));
             drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstObj, closestObj, ANGLE_BISECTOR_PERP));
             drawingCanvas->SaveState();
             ResetState();
         }
     } else if (closestObj->IsPoint()){
+        // Create angle bisector by 3 points
         drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), static_cast<GeoPoint*>(firstObj), static_cast<GeoPoint*>(secondObj), static_cast<GeoPoint*>(closestObj)));
         drawingCanvas->SaveState();
         ResetState();

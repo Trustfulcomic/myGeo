@@ -50,11 +50,13 @@ void PerpLineTool::OnMouseDown(wxMouseEvent &event) {
     GeoObject* closestObj = GetNearestClickObject();
 
     if (tempLine != nullptr){
+        // If there is temporary line, create final line through clicked point
         GeoPoint* mainPoint = CreatePointAtPos(mouse_pt);
         drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), mainPoint, curve, LINE_BY_POINT_AND_CURVE_PERP));
         drawingCanvas->SaveState();
         ResetState();
     } else if (point != nullptr){
+        // If there is point selected and clicked curve, create line
         if (closestObj != nullptr && !closestObj->IsPoint()){
             drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), point, static_cast<GeoCurve*>(closestObj), LINE_BY_POINT_AND_CURVE_PERP));
             drawingCanvas->SaveState();
@@ -66,10 +68,12 @@ void PerpLineTool::OnMouseDown(wxMouseEvent &event) {
         }
 
         if (closestObj->IsPoint()){
+            // If clicked point, select it
             moving_point = true;
             point = static_cast<GeoPoint*>(closestObj);
             drawingCanvas->SelectObject(point);
         } else {
+            // If clicked curve, create temporary line
             drawingCanvas->tempGeoCurve = new GeoLine(drawingCanvas, nullName, drawingCanvas->mousePt, closestObj, LINE_BY_POINT_AND_CURVE_PERP);
             tempLine = static_cast<GeoLine*>(drawingCanvas->tempGeoCurve);
             tempLine->temporary = true;

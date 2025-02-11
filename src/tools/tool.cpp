@@ -61,6 +61,7 @@ void Tool::ReloadObjects(const wxPoint2DDouble &pt) {
 void Tool::SortObjects(const wxPoint2DDouble &pt) {
     currentReferencePoint = pt;
 
+    // Sorts points
     std::vector<std::pair<GeoPoint*, double>> geoPointsSortVector;
     for (auto geoObj : geoPointsSorted){
         geoPointsSortVector.push_back({geoObj, geoObj->GetDistance(pt)});
@@ -72,6 +73,7 @@ void Tool::SortObjects(const wxPoint2DDouble &pt) {
         geoPointsSorted[i] = geoPointsSortVector[i].first;
     }
 
+    // Sorts curves
     std::vector<std::pair<GeoCurve*, double>> geoCurveSortVector;
     for (auto geoObj : geoCurvesSorted){
         geoCurveSortVector.push_back({geoObj, geoObj->GetDistance(pt)});
@@ -89,9 +91,11 @@ void Tool::SortObjects(const wxPoint2DDouble &pt) {
 GeoObject *Tool::GetNearestObject() {
     GeoObject *nearestObj = nullptr;
 
+    // Get closest point (if it exists)
     if (geoPointsSorted.size() != 0){
         nearestObj = geoPointsSorted[0];
     }
+    // Get closest curve if point didn't exist or it is closer than the point
     if ((nearestObj == nullptr && geoCurvesSorted.size() != 0) || (geoCurvesSorted.size() != 0 && geoCurvesSorted[0]->GetDistance(currentReferencePoint) < geoPointsSorted[0]->GetDistance(currentReferencePoint))){
         nearestObj = geoCurvesSorted[0];
     }
@@ -106,11 +110,13 @@ GeoObject *Tool::GetNearestClickObject() {
     GeoPoint *nearestPoint = nullptr;
     GeoCurve *nearestCurve = nullptr;
 
+    // Check if closest point/curve is closer than FromDIP(8) pixels
     if (geoPointsSorted.size() != 0 && geoPointsSorted[0]->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8) / drawingCanvas->GetScale())
         nearestPoint = geoPointsSorted[0];
     if (geoCurvesSorted.size() != 0 && geoCurvesSorted[0]->GetDistance(currentReferencePoint) < drawingCanvas->FromDIP(8) / drawingCanvas->GetScale())
         nearestCurve = geoCurvesSorted[0];
 
+    // Prioritize point
     if (nearestPoint != nullptr)
         return nearestPoint;
     else
@@ -153,21 +159,26 @@ GeoPoint *Tool::CreatePointAtPos(const wxPoint2DDouble &pt) {
 
     GeoPoint *createdPoint = nullptr;
     if (nearestObj == nullptr){
+        // If there is no clickable object, create point at the position
         drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), pt));
         createdPoint = drawingCanvas->geoPoints.back();
         drawingCanvas->SaveState();
         ReloadObjects(pt);
     } else if (nearestObj->IsPoint()){
+        // If nearest object is point, return it
         createdPoint = static_cast<GeoPoint*>(nearestObj);
     } else if (clickableObjs.size() == 1){
+        // If there is only one curve in the click radius, attach a new point to it
         drawingCanvas->geoPoints.push_back(new GeoPoint(this->drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), pt, static_cast<GeoCurve*>(nearestObj)));
         createdPoint = drawingCanvas->geoPoints.back();
         drawingCanvas->SaveState();
         ReloadObjects(pt);
     } else {
+        // If there are more curves in the click range, put point on the nearest intersection of the nearest two curves
         std::vector<wxPoint2DDouble> intersects = util::IntersectCurves(static_cast<GeoCurve*>(clickableObjs[0]), static_cast<GeoCurve*>(clickableObjs[1]));
         if (intersects.size() == 0) return nullptr;
 
+        // Find the index of the closest intersection
         int best_i = 0;
         for (int i = 1; i<intersects.size(); i++) {
             if (intersects[i].GetDistance(pt) < intersects[best_i].GetDistance(pt)) best_i = i;

@@ -48,13 +48,16 @@ void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {
     GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
 
     if (tempSegment == nullptr){
+        // If there is not a point selected, select it
         firstPoint = closestPoint;
         drawingCanvas->SelectObject(firstPoint);
 
+        // Create temporary segment
         tempSegment = new GeoSegment(drawingCanvas, nullName, drawingCanvas->mousePt, firstPoint);
         tempSegment->temporary = true;
         drawingCanvas->tempGeoCurve = tempSegment;
     } else {
+        // If there is first poitn selected, and the second is different, create final segment
         if (closestPoint != firstPoint){
             drawingCanvas->geoCurves.push_back(new GeoSegment(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstPoint, closestPoint));
             drawingCanvas->SaveState();

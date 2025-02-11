@@ -41,6 +41,7 @@ void CircleBy2PTool::OnMouseDown(wxMouseEvent &event) {
     GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
 
     if (tempCircle == nullptr){
+        // If there is no temporary circle, than the center was not selected yet
         firstPoint = closestPoint;
         drawingCanvas->SelectObject(firstPoint);
 
@@ -48,6 +49,7 @@ void CircleBy2PTool::OnMouseDown(wxMouseEvent &event) {
         tempCircle->temporary = true;
         drawingCanvas->tempGeoCurve = tempCircle;
     } else {
+        // Create circle if selected different points
         if (closestPoint != firstPoint){
             drawingCanvas->geoCurves.push_back(new GeoCircle(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstPoint, closestPoint));
             ResetState();

@@ -18,6 +18,7 @@ DrawingCanvas::DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos
 
     this->Bind(wxEVT_PAINT, &DrawingCanvas::OnPaint, this);
 
+    // Creates a point that follows the cursor and is used in temporary curves
     mousePt = new GeoPoint(this, "", {0, 0});
     SaveState();
 }
@@ -49,9 +50,11 @@ void DrawingCanvas::ApplyScale(double factor) {
 /// @param obj The object to remove
 void DrawingCanvas::RemoveObj(GeoObject *obj) {
     if (obj->stateDelete == nullptr){
+        // If the object is not deleted from a state but from current objects
         geoPoints.remove(static_cast<GeoPoint*>(obj));
         geoCurves.remove(static_cast<GeoCurve*>(obj));
     } else {
+        // If the object is being deleted from a state
         obj->stateDelete->geoPoints.remove(static_cast<GeoPoint*>(obj));
         obj->stateDelete->geoCurves.remove(static_cast<GeoCurve*>(obj));
     }
@@ -62,6 +65,7 @@ void DrawingCanvas::SaveState() {
     state.transform = transform;
     state.scale = scale;
 
+    // Copy all the objects from live objects
     std::unordered_map<GeoObject*, GeoObject*> copiedPtrs;
     for (GeoPoint* obj : geoPoints) {
         if (copiedPtrs.find(obj) == copiedPtrs.end()){
@@ -77,6 +81,7 @@ void DrawingCanvas::SaveState() {
         state.geoCurves.push_back(static_cast<GeoCurve*>(copiedPtrs[obj]));
     }
 
+    // If the loaded state is not the last one, delete all future states
     while (stateIdx + 1 < states.size()){
         DrawingCanvasState toDel = states.back(); states.pop_back();
         for (GeoObject* obj : toDel.geoPoints) obj->stateDelete = &toDel;
@@ -92,6 +97,7 @@ void DrawingCanvas::SaveState() {
         }
     }
 
+    // Add the newly created state
     states.push_back(state);
     stateIdx = states.size() - 1;
 
@@ -141,6 +147,7 @@ std::unordered_set<GeoObject *> DrawingCanvas::GetSelectedObjs() {
 }
 
 bool DrawingCanvas::ChangeObject(GeoObject *originalObj, GeoObject *targetObj) {
+    // Goes through all objects and swaps the pointer on match
     for (GeoPoint*& obj : geoPoints){
         if (obj == originalObj) {
             obj = static_cast<GeoPoint*>(targetObj);
@@ -165,12 +172,15 @@ void DrawingCanvas::OnPaint(wxPaintEvent &event) {
 
     wxGraphicsContext *gc = wxGraphicsContext::Create(dc);
     if (gc){
+        // Paint curves first
         for (auto geoObj : geoCurves){
             geoObj->DrawOnContext(gc, transform);
         }
+        // Paint points next
         for (auto geoObj : geoPoints){
             geoObj->DrawOnContext(gc, transform);
         }
+        // Paint temporary curve last
         if (tempGeoCurve != nullptr){
             tempGeoCurve->DrawOnContext(gc, transform);
         }
@@ -183,9 +193,11 @@ void DrawingCanvas::LoadState() {
     scale = states[stateIdx].scale;
     nameHandler = NameHandler();
 
+    // Delete current objects
     geoPoints.clear();
     geoCurves.clear();
-
+    
+    // Copy objects from the state into live objects
     std::unordered_map<GeoObject*, GeoObject*> copiedPtrs;
     for (GeoPoint* obj : states[stateIdx].geoPoints) {
         if (copiedPtrs.find(obj) == copiedPtrs.end()){
@@ -241,6 +253,7 @@ void DrawingCanvas::ShowSaveAsDialog() {
 
     if (saveAsFileDialog.ShowModal() == wxID_CANCEL) return;
 
+    // Creates a bitmap of size of the canvas and draws everything on it the same way
     wxBitmap bitmap(this->GetSize());
     wxMemoryDC memDC;
 
@@ -262,6 +275,7 @@ void DrawingCanvas::ShowSaveAsDialog() {
         delete gc;
     }
 
+    // Saves file into the chosen place
     bitmap.SaveFile(saveAsFileDialog.GetPath(), wxBITMAP_TYPE_PNG);
 }
 
@@ -272,6 +286,7 @@ void DrawingCanvas::ShowSaveDialog() {
 
     std::ofstream file(saveFileDialog.GetPath());
     if (file.is_open()) {
+        // Creates CSV lines for all objects (points and then curves)
         for (auto geoObj : geoPoints){
             ListItem li = geoObj->GetListItem();
             file << li.name << ";" << li.definition << ";" << li.parameter << ";" << li.obj->outlineColor.GetRGB() << ";" << li.obj->fillColor.GetRGB() << ";" << li.obj->outlineWidth << ";\n";
@@ -290,7 +305,8 @@ void DrawingCanvas::ShowOpenDialog() {
     if (openFileDialog.ShowModal() == wxID_CANCEL) return;
 
     std::vector<DefinitionParser::ObjectCSVLine> csvLines;
-
+    
+    // Read all the lines and parse them
     std::string line = "";
     std::ifstream file(openFileDialog.GetPath());
     if (file.is_open()) {
@@ -300,7 +316,8 @@ void DrawingCanvas::ShowOpenDialog() {
         }
         file.close();
     }
-
+    
+    // Parse the definitions od the objects
     std::vector<DefinitionParser::ParsedString> parsedDefs;
     for (auto& csvLine : csvLines) {
         parsedDefs.push_back(DefinitionParser::ParseString(csvLine.definition));
@@ -311,6 +328,7 @@ void DrawingCanvas::ShowOpenDialog() {
 
     std::unordered_map<wxString, std::vector<wxString>> dag;
     std::unordered_map<wxString, int> dag_parentNums;
+    // Organise the lines using names
     for (auto& csvLine : csvLines) {
         if (dag.find(csvLine.name) != dag.end()) {
             return;
@@ -319,6 +337,7 @@ void DrawingCanvas::ShowOpenDialog() {
         nameToCSV[csvLine.name] = csvLine;
     }
 
+    // Get number of parents of objects
     for (int i = 0; i<csvLines.size(); i++) {
         for (wxString& par : parsedDefs[i].args) {
             dag[par].push_back(csvLines[i].name);
@@ -326,6 +345,7 @@ void DrawingCanvas::ShowOpenDialog() {
         dag_parentNums[csvLines[i].name] = parsedDefs[i].args.size();
     }
 
+    // Push all free points into the queue
     std::queue<wxString> q;
     for (int i = 0; i<csvLines.size(); i++){
         if (parsedDefs[i].def == "") {
@@ -333,10 +353,12 @@ void DrawingCanvas::ShowOpenDialog() {
         }
     }
 
+    // Backup current objects
     std::list<GeoPoint*> backupGeoPoints = geoPoints;
     std::list<GeoCurve*> backupGeoCurves = geoCurves;
     NameHandler backupNameHandler = nameHandler;
 
+    // Delete all current objects
     geoPoints.clear();
     geoCurves.clear();
     nameHandler = NameHandler();
@@ -346,22 +368,26 @@ void DrawingCanvas::ShowOpenDialog() {
     while (!q.empty()) {
         wxString curName = q.front(); q.pop();
 
+        // Update number of not created parents of children
         for (wxString& child : dag[curName]) {
             dag_parentNums[child]--;
             if (dag_parentNums[child] == 0) q.push(child);
         }
 
+        // Try to create the object
         GeoObject* newObj = DefinitionParser::CreateObject(nameToCSV[curName].definition, this);
         if (newObj == nullptr) {
-            success = false;
+            success = false; // Something went wrong...
             break;
         }
+        // Add the object to the canvas
         if (newObj->IsPoint()) {
             geoPoints.push_back(static_cast<GeoPoint*>(newObj));
         } else {
             geoCurves.push_back(static_cast<GeoCurve*>(newObj));
         }
 
+        // Do stuff with the new object
         newObj->nameHandler = &nameHandler;
         newObj->Rename(curName);
         newObj->parameter = nameToCSV[curName].parameter;
@@ -371,6 +397,7 @@ void DrawingCanvas::ShowOpenDialog() {
     }
 
     if (!success) {
+        // If something went wrong, delete all the objects
         for (GeoPoint* obj : geoPoints) {
             obj->nameHandler = nullptr;
             delete obj;
@@ -380,10 +407,12 @@ void DrawingCanvas::ShowOpenDialog() {
             delete obj;
         }
 
+        // Restore backup
         geoPoints = backupGeoPoints;
         geoCurves = backupGeoCurves;
         nameHandler = backupNameHandler;
     } else {
+        // Delete all old objects
         std::list<GeoObject*> toDelete;
         std::unordered_set<GeoObject*> deleted;
 

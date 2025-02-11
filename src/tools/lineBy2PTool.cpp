@@ -48,13 +48,16 @@ void LineBy2PTool::OnMouseDown(wxMouseEvent &event) {
     GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
 
     if (tempLine == nullptr){
+        // If there is no temporary curve, select first point
         firstPoint = closestPoint;
         drawingCanvas->SelectObject(firstPoint);
 
+        // Create temporary line
         tempLine = new GeoLine(drawingCanvas, nullName, drawingCanvas->mousePt, firstPoint, LINE_BY_TWO_POINTS);
         tempLine->temporary = true;
         drawingCanvas->tempGeoCurve = tempLine;
     } else {
+        // If second pont is different, create final line
         if (closestPoint != firstPoint){
             drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstPoint, closestPoint, LINE_BY_TWO_POINTS));
             ResetState();

@@ -29,6 +29,7 @@ wxString NameHandler::GetNextCurveName() {
 void NameHandler::RenameObject(GeoObject *obj, wxString name) {
     auto nameIter = nameToObject.find(name);
     if (nameIter == nameToObject.end()){
+        // If object of the name doesnt exist
         auto prevNameIter = nameToObject.find(obj->name);
         if (prevNameIter != nameToObject.end()){
             nameToObject.erase(nameToObject.find(obj->name));

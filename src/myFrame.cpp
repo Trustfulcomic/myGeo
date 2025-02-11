@@ -47,6 +47,7 @@ void MyFrame::BuildMenuBar() {
     editMenu->Append(wxID_REDO);
     menuBar->Append(editMenu, "Edit");
 
+    // Handeling of menu events
     this->Bind(wxEVT_MENU, [&](wxCommandEvent &event){
         if (event.GetId() == wxID_UNDO){
             this->canvas->LoadPreviousState();
@@ -79,6 +80,7 @@ void MyFrame::OnScroll(wxMouseEvent &event) {
         canvas->ApplyScale(1/0.97);
     }
 
+    // Translate the canavs, such that it scrolls "towards" the cursor
     wxPoint2DDouble newMousePt = canvas->TransformPoint(event.GetPosition());
     canvas->transform.Translate(newMousePt.m_x - originalMousePt.m_x, newMousePt.m_y - originalMousePt.m_y);
     canvas->Refresh();
@@ -111,6 +113,7 @@ void MyFrame::OnChar(wxKeyEvent &event) {
             {std::list<GeoObject*> toDelete;
             std::unordered_set<GeoObject*> deleted;
 
+            // Gets object to delete (that are selected)
             for (auto geoObj : canvas->geoPoints) {
                 if (geoObj->selected)
                     toDelete.push_back(geoObj);
@@ -122,6 +125,7 @@ void MyFrame::OnChar(wxKeyEvent &event) {
 
             bool deletedSmth = false;
             for (auto toDelObj : toDelete){
+                // Delete object if it is not deleted yet
                 if (deleted.find(toDelObj) != deleted.end()) continue;
 
                 for (GeoObject* obj : toDelObj->GetDescendants()){

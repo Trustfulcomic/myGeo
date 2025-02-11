@@ -26,10 +26,14 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
 
         return new GeoPoint(canvas, "", {x_coord, y_coord});
     } else {
+        // All other dependent objects
+
+        // Check if all arguments exist
         for (const wxString& argName : parsedStr.args) {
             if (!canvas->nameHandler.DoesExist(argName)) return nullptr;
         }
 
+        // Get the actual objects based on the name
         std::vector<GeoObject*> argObjs;
         for (const wxString& argName : parsedStr.args) {
             argObjs.push_back(canvas->nameHandler.GetObject(argName));
@@ -150,6 +154,7 @@ GeoObject *DefinitionParser::RedefineObject(GeoObject *obj, const wxString &defS
         return nullptr;
     }
 
+    // Change parent pointer of children of the redefined object
     for (GeoObject* childObj : obj->GetChildren()){
         childObj->ChangeParent(obj, newObj);
         newObj->AddChild(childObj);
@@ -167,12 +172,14 @@ DefinitionParser::ParsedString DefinitionParser::ParseString(const wxString &def
     DefinitionParser::ParsedString result = {wxString(""), {}, false};
 
     int currentChar = 0;
+    // Read definition until '('
     while (currentChar < defStr.Len()) {
         if (defStr[currentChar] == '(') break;
         result.def += defStr[currentChar];
         currentChar++;
     }
 
+    // Check if there really if '('
     if (defStr[currentChar] != '(') {
         result.good = false;
         return result;
@@ -181,9 +188,11 @@ DefinitionParser::ParsedString DefinitionParser::ParseString(const wxString &def
     currentChar++;
     result.args.push_back("");
 
+    // Read arguments until ')'
     while (currentChar < defStr.Len()){
         if (defStr[currentChar] == ')') break;
         if (defStr[currentChar] == ',') {
+            // Create new argument on ','
             result.args.push_back("");
             currentChar++;
             continue;
@@ -193,6 +202,7 @@ DefinitionParser::ParsedString DefinitionParser::ParseString(const wxString &def
         currentChar++;
     }
 
+    // Check if there is ')' on the end
     if (defStr[currentChar] != ')') {
         result.good = false;
         return result;
@@ -214,7 +224,7 @@ bool DefinitionParser::CheckObjectTypes(const std::vector<int> &types, const std
             if (objs[i]->IsPoint()) return false;
             if (!static_cast<GeoCurve*>(objs[i])->IsAsLine()) return false;
         } else if (types[i] == -4) {
-
+            // Accepts anything, soooo, nothing ever happens...
         } else {
             if (objs[i]->IsPoint()) return false;
             else if (static_cast<GeoCurve*>(objs[i])->GetType() != types[i]) return false;
@@ -224,19 +234,26 @@ bool DefinitionParser::CheckObjectTypes(const std::vector<int> &types, const std
     return true;
 }
 
+/// @brief Parses a CSV line
+/// @param str String with the line
+/// @return The parsed line
 DefinitionParser::ObjectCSVLine DefinitionParser::ParseCSVLine(const std::string &str) {
+    // Things are separated by ';' becasue ',' is used in definitions
     DefinitionParser::ObjectCSVLine res;
     res.good = true;
 
     std::string part;
     std::stringstream ss(str);
 
+    // First is name
     res.good &= !!std::getline(ss, part, ';');
     res.name = wxString::FromUTF8(part);
 
+    // Second is definition
     res.good &= !!std::getline(ss, part, ';');
     res.definition = wxString::FromUTF8(part);
 
+    // Than there is the parameter
     res.good &= !!std::getline(ss, part, ';');
     try {
         res.parameter = std::stod(part);
@@ -245,6 +262,7 @@ DefinitionParser::ObjectCSVLine DefinitionParser::ParseCSVLine(const std::string
         res.good = false;
     }
 
+    // And here is the outline color
     res.good &= !!std::getline(ss, part, ';');
     try {
         res.outlineColor = wxColor(std::stoi(part));
@@ -252,6 +270,7 @@ DefinitionParser::ObjectCSVLine DefinitionParser::ParseCSVLine(const std::string
         std::cout << e.what() << std::endl;
     }
 
+    // And fill color
     res.good &= !!std::getline(ss, part, ';');
     try {
         res.fillCOlor = wxColor(std::stoi(part));
@@ -259,6 +278,7 @@ DefinitionParser::ObjectCSVLine DefinitionParser::ParseCSVLine(const std::string
         std::cout << e.what() << std::endl;
     }
 
+    // And at last there is the outline width
     res.good &= !!std::getline(ss, part, ';');
     try {
         res.outlineWidth = std::stoi(part);

@@ -39,6 +39,7 @@ void HandTool::OnMouseDown(wxMouseEvent &event) {
         selectedObj = nullptr;
     }
 
+    // If control is not held, deselect all objects
     if (!wxGetKeyState(WXK_CONTROL)){
         drawingCanvas->DeselectAllObjects();
     }
@@ -48,6 +49,7 @@ void HandTool::OnMouseDown(wxMouseEvent &event) {
 
     GeoObject *nearestObj = GetNearestClickObject();
     if (nearestObj != nullptr) {    
+        // Select nearest object and set it to dragging if it can be dragged
         if (nearestObj->IsPoint() && static_cast<GeoPoint*>(nearestObj)->IsDraggable()){
             isDragging = true;
             draggingObj = static_cast<GeoPoint*>(nearestObj);
@@ -66,11 +68,13 @@ void HandTool::OnMouseMove(wxMouseEvent &event) {
     CheckHighlight();
 
     if (isDragging){
+        // Change position and reload children
         draggingObj->SetPos(mouse_pt);
         draggingObj->ReloadAllChildren();
     }
 
     if (isDraggingCanvas){
+        // Translate canvas if dragging canvas
         drawingCanvas->transform.Translate((event.GetPosition().x - canvasDragPoint.m_x)/drawingCanvas->GetScale(), (event.GetPosition().y - canvasDragPoint.m_y)/drawingCanvas->GetScale());
         canvasDragPoint = event.GetPosition();
     }

@@ -48,13 +48,16 @@ void PerpBisectorTool::OnMouseDown(wxMouseEvent &event) {
     GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
 
     if (tempLine == nullptr){
+        // If there is no temporary line, select first point
         firstPoint = closestPoint;
         drawingCanvas->SelectObject(firstPoint);
 
+        // Create temporary line
         tempLine = new GeoLine(drawingCanvas, nullName, drawingCanvas->mousePt, firstPoint, LINE_PERPENDICULAR_BISECTOR);
         tempLine->temporary = true;
         drawingCanvas->tempGeoCurve = tempLine;
     } else {
+        // If clicked point is different than first, create final line
         if (closestPoint != firstPoint){
             drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstPoint, closestPoint, LINE_PERPENDICULAR_BISECTOR));
             drawingCanvas->SaveState();

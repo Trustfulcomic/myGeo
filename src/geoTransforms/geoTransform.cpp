@@ -79,6 +79,7 @@ IsoConjugate::IsoConjugate(GeoPoint *A, GeoPoint *B, GeoPoint *C) {
 }
 
 wxPoint2DDouble IsoConjugate::TransformPoint(const wxPoint2DDouble &pt) {
+    // Pick two isogonals and intersect them
     wxPoint2DDouble f_isogonal_A_vect = pt - A->GetPos();
     wxPoint2DDouble f_isogonal_B_vect = pt - B->GetPos();
 
@@ -101,6 +102,7 @@ std::list<GeoObject *> IsoConjugate::GetDeps() {
 }
 
 GeoTransform *IsoConjugate::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) {
+    // Copy all parents and than create new transform
     if (copiedPtrs.find(A) == copiedPtrs.end()){
         A->CreateCopy(copiedPtrs);
     }

@@ -24,6 +24,7 @@ ObjectDialog::ObjectDialog(GeoObject* obj, wxWindow *parent, wxWindowID id, cons
     wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
     wxBoxSizer* fieldSizer = new wxBoxSizer(wxVERTICAL);
 
+    // Init all text controls (fields)
     nameBox = new wxTextCtrl(this, wxID_ANY, objItem.name);
     definitionBox = new wxTextCtrl(this, wxID_ANY, objItem.definition);
     parameterBox = new wxTextCtrl(this, wxID_ANY, wxString::Format("%.5f", objItem.parameter));
@@ -31,6 +32,7 @@ ObjectDialog::ObjectDialog(GeoObject* obj, wxWindow *parent, wxWindowID id, cons
     outlineColor = obj->outlineColor;
     fillColor = obj->fillColor;
 
+    // Adds the text controls with names to the sizer
     fieldSizer->Add(new wxStaticText(this, wxID_ANY, wxString::FromUTF8("Jméno")), 0, wxEXPAND | wxLEFT | wxUP | wxRIGHT, FromDIP(5));
     fieldSizer->Add(nameBox, 0, wxEXPAND | wxALL, FromDIP(5));
     fieldSizer->Add(new wxStaticText(this, wxID_ANY, wxString::FromUTF8("Definice")), 0, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(5));
@@ -40,6 +42,7 @@ ObjectDialog::ObjectDialog(GeoObject* obj, wxWindow *parent, wxWindowID id, cons
     fieldSizer->Add(new wxStaticText(this, wxID_ANY, wxString::FromUTF8("Tloušťka")), 0, wxEXPAND | wxLEFT | wxRIGHT, FromDIP(5));
     fieldSizer->Add(outlineWidth, 0, wxEXPAND | wxALL, FromDIP(5));
 
+    // Create buttons for color change
     wxButton* outlineButton = new wxButton(this, wxID_ANY, wxString::FromUTF8("Barva hranice"));
     wxButton* fillButton = new wxButton(this, wxID_ANY, wxString::FromUTF8("Barva výplně"));
     outlineButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event){
@@ -61,6 +64,7 @@ ObjectDialog::ObjectDialog(GeoObject* obj, wxWindow *parent, wxWindowID id, cons
         }
     });
 
+    // Put everything together
     fieldSizer->Add(outlineButton, 0, wxEXPAND | wxALL, FromDIP(5));
     fieldSizer->Add(fillButton, 0, wxEXPAND | wxLEFT | wxRIGHT | wxDOWN, FromDIP(5));
 
@@ -84,11 +88,13 @@ bool ObjectDialog::ApplyChanges(DrawingCanvas* drawingCanvas) {
     bool smthChanged = false;
     ListItem original = obj->GetListItem();
 
+    // Change name if changed in dialog
     if (nameBox->GetValue().compare(original.name) != 0){
         smthChanged = true;
         drawingCanvas->nameHandler.RenameObject(obj, nameBox->GetValue());
     }
 
+    // Change defintion if it is valid
     if (definitionBox->GetValue().compare(original.definition) != 0){
         GeoObject* returnedObj = DefinitionParser::RedefineObject(obj, definitionBox->GetValue());
         if (returnedObj != nullptr){
@@ -101,6 +107,7 @@ bool ObjectDialog::ApplyChanges(DrawingCanvas* drawingCanvas) {
         }
     }
 
+    // Change parameter if it is valid
     if (parameterBox->GetValue().compare(wxString::Format("%.5f", original.parameter)) != 0){
         double new_param = original.parameter;
         try {
@@ -115,21 +122,25 @@ bool ObjectDialog::ApplyChanges(DrawingCanvas* drawingCanvas) {
         }
     } 
 
+    // Change outline width
     if (outlineWidth->GetValue() != obj->outlineWidth){
         smthChanged = true;
         obj->outlineWidth = outlineWidth->GetValue();
     }
 
+    // Change outline color
     if (outlineColor != obj->outlineColor){
         smthChanged = true;
         obj->outlineColor = outlineColor;
     }
 
+    // Change fill color
     if (fillColor != obj->fillColor){
         smthChanged = true;
         obj->fillColor = fillColor;
     }
 
+    // If something has changed with the object, reload all the children
     if (smthChanged) {
         obj->ReloadAllChildren();
     }

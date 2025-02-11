@@ -45,15 +45,18 @@ void LineReflectTool::OnMouseDown(wxMouseEvent &event) {
     }
 
     if (toReflect == nullptr){
+        // If object to reflect is not selected yet, select this one
         toReflect = closestObj;
         drawingCanvas->SelectObject(toReflect);
     } else if (closestObj != nullptr && !closestObj->IsPoint() && static_cast<GeoCurve*>(closestObj)->IsAsLine()){
+        // Create transformed object
         LineReflection* geoTransform = new LineReflection(static_cast<GeoLineBase*>(closestObj));
         GeoObject* transformedObj = toReflect->GetTransformed(geoTransform);
         if (transformedObj == nullptr) {
             delete geoTransform;
             return;
         }
+        // Add object to canvas
         if (transformedObj->IsPoint()){
             drawingCanvas->geoPoints.push_back(static_cast<GeoPoint*>(transformedObj));
         } else {

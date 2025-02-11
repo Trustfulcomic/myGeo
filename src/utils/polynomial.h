@@ -124,7 +124,7 @@ namespace util {
                 ComplexNum ksi = {-1.0/2.0, sqrt(3)/2.0};
 
                 if (C.re == 0 && C.im == 0) {
-                     std::vector<ComplexNum> res;
+                    std::vector<ComplexNum> res;
                     ComplexNum ksi_pow = {1,0};
                     ComplexNum cmplx_b = {b,0};
                     for (int k = 0; k<3; k++){

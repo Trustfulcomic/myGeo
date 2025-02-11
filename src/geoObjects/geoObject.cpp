@@ -21,13 +21,16 @@ GeoObject::GeoObject(DrawingCanvas *parent, const wxString &name) {
 /// @brief Destroys the GeoObject properly.
 /// @details Removes itself from the DrawingCanvas ( \a parent ) and all of its parent GeoObjects. Starts DFS to destroy all dependent children. 
 GeoObject::~GeoObject() {
+    // Removes object from canavs and name handler
     parent->RemoveObj(this);
     if (nameHandler != nullptr) nameHandler->RemoveObject(this);
 
+    // Remove the object from its parent objects
     for (auto parentObj : parentObjs){
         parentObj->RemoveChild(this);
     }
 
+    // Delete all its children
     while (childObjs.size() > 0){
         auto childToDelete = childObjs.front(); 
 
@@ -35,6 +38,7 @@ GeoObject::~GeoObject() {
         childObjs.remove(childToDelete);
     }
 
+    // Delete geoTransform if present
     if (geoTransform != nullptr){
         delete geoTransform;
     }
@@ -60,7 +64,7 @@ void GeoObject::AddChild(GeoObject *obj) {
 void GeoObject::ReloadAllChildren() {
     std::queue<GeoObject*> objQ; objQ.push(this);
 
-    // BFS to determine number of parents that need could be updated
+    // BFS to determine number of parents that need to be updated
     while(!objQ.empty()){
         GeoObject* topObj = objQ.front(); objQ.pop();
         for (GeoObject* childObj : topObj->childObjs) {
@@ -73,7 +77,7 @@ void GeoObject::ReloadAllChildren() {
         }
     }
 
-    // BFS to traverse the GeoObject DAG in topological order
+    // BFS to traverse the GeoObject DAG in topological order and update the objects when traversing
     objQ.push(this);
     while(!objQ.empty()){
         GeoObject* topObj = objQ.front(); objQ.pop();
@@ -89,6 +93,7 @@ void GeoObject::ReloadAllChildren() {
 }
 
 void GeoObject::Rename(const wxString &name) {
+    // If no nameHandler is associated, than just change name. Otherwise let nameHandler handle it
     if (nameHandler == nullptr) {
         this->name = name;
     } else {
@@ -100,6 +105,7 @@ std::unordered_set<GeoObject*> GeoObject::GetDescendants() {
     std::unordered_set<GeoObject*> res;
     std::queue<GeoObject*> q; q.push(this);
 
+    // Simple BFS to find all descendants
     while(!q.empty()){
         GeoObject* obj = q.front();
         q.pop();
@@ -142,10 +148,9 @@ void GeoObject::CopyStyleTo(GeoObject *targetObj) {
 }
 
 /// @brief Copies the parents and children of \p copy if they do not yet exist in \p copiedPtrs
-/// @details Copies the object itself and then copies its parents and children if they are not yet copied. All the copies can be accessed by traversing \p copiedPtrs afterwards.
+/// @details Copies the object itself and then copies its parents and children if they are not yet copied. All the copies can be accessed in \p copiedPtrs afterwards.
 /// @param copy The object being copied
 /// @param copiedPtrs Unordered map matching the old pointers to new pointers of already copied objects
-/// @param nameHandler NameHandler used for naming the copies
 void GeoObject::CreateCopyDeps(GeoObject *copy, std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) {
     for (GeoObject* parentObj : this->parentObjs){
         if (parentObj->temporary) continue;

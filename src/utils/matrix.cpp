@@ -32,6 +32,7 @@ double util::DetMatrix3x3(const std::vector<std::vector<double>> &matrix) {
 /// @param matrix The matrix (given by rows)
 /// @return The calculated determinant
 double util::DetMatrix4x4(const std::vector<std::vector<double>> &matrix) {
+    // Laplace expansion along the first row
     double res = 0;
     for (int i = 0; i<4; i++) {
         std::vector<std::vector<double>> minor(3, std::vector<double>(3));
@@ -57,6 +58,7 @@ double util::DetMatrix4x4(const std::vector<std::vector<double>> &matrix) {
 /// @param matrix The matrix (given by rows)
 /// @return The calculated determinant
 double util::DetMatrix5x5(const std::vector<std::vector<double>> &matrix) {
+    // Laplace expansion along the first row
     double res = 0;
     for (int i = 0; i<5; i++) {
         std::vector<std::vector<double>> minor(4, std::vector<double>(4));
@@ -111,11 +113,13 @@ std::vector<std::vector<double>> util::Transpose(const std::vector<std::vector<d
 /// @param B Second matrix
 /// @return The result of the multiplication (empty if the two matrices cannot be multplied)
 std::vector<std::vector<double>> util::MatrixMult(const std::vector<std::vector<double>> &A, const std::vector<std::vector<double>> &B) {
+    // Check if matrices are not empty
     if (A.size() == 0) return {};
     if (A[0].size() == 0) return {};
     if (B.size() == 0) return {};
     if (B[0].size() == 0) return {};
 
+    // Check if they have correct sizes
     if (A[0].size() != B.size()) return {};
 
     std::vector<std::vector<double>> res(A.size(), std::vector<double>(B[0].size(), 0));
@@ -135,11 +139,13 @@ std::vector<std::vector<double>> util::MatrixMult(const std::vector<std::vector<
 /// @param B Second matrix
 /// @return Result of the addition
 std::vector<std::vector<double>> util::MatrixAdd(const std::vector<std::vector<double>> &A, const std::vector<std::vector<double>> &B) {
+    // Check if matrices are not empty
     if (A.size() == 0) return {};
     if (A[0].size() == 0) return {};
     if (B.size() == 0) return {};
     if (B[0].size() == 0) return {};
 
+    // Check if they have correct sizes
     if (A.size() != B.size() || A[0].size() != B[0].size()) return {};
 
     std::vector<std::vector<double>> res(A.size(), std::vector<double>(A[0].size()));
@@ -156,6 +162,7 @@ std::vector<std::vector<double>> util::MatrixAdd(const std::vector<std::vector<d
 /// @param aff_matrix The matrix to convert
 /// @return The converted matrix
 std::vector<std::vector<double>> util::WxAffineToMatrix(const wxAffineMatrix2D &aff_matrix) {
+    // Basically just transpose of the wxAffineMatrix2D
     wxMatrix2D mat2D;
     wxPoint2DDouble tr;
     aff_matrix.Get(&mat2D, &tr);

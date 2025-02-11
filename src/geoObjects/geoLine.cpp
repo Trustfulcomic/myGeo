@@ -31,6 +31,7 @@ GeoLine::GeoLine(DrawingCanvas *parent, const wxString &name, GeoObject *objA, G
 /// @param ptA First point
 /// @param ptB Second point (apex)
 /// @param ptC Third point
+/// @param perpendicular True if the line is perpendicular to the angle bisector
 GeoLine::GeoLine(DrawingCanvas *parent, const wxString &name, GeoPoint *ptA, GeoPoint *ptB, GeoPoint *ptC, bool perpendicular)
     : GeoLineBase(parent, name, LINE){
 
@@ -93,6 +94,7 @@ void GeoLine::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform) 
     wxPoint2DDouble edgePointA, edgePointB;
 
     // The line is defined as pointA + t*lineVect, where  t \in R
+    // We "cut off" the line at intersection with horizontal boundary of canvas (vertical lines) or vertical boundary of canvas (horizontal lines)
 
     if (lineVect.m_x == 0 || abs(lineVect.m_y / lineVect.m_x) > 1) {
         //Vertical

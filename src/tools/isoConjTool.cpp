@@ -48,15 +48,19 @@ void IsoConjTool::OnMouseDown(wxMouseEvent &event) {
 
     GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
     if (A == nullptr){
+        // Select first point
         A = closestPoint;
         drawingCanvas->SelectObject(A);
     } else if (B == nullptr && closestPoint != A){
+        // Select second point
         B = closestPoint;
         drawingCanvas->SelectObject(B);
     } else if (C == nullptr && closestPoint != A && closestPoint != B){
+        // Select third point
         C = closestPoint;
         drawingCanvas->SelectObject(C);
     } else {
+        // Transform the last clicked object
         drawingCanvas->geoPoints.push_back(new GeoPoint(drawingCanvas, drawingCanvas->nameHandler.GetNextPointName(), closestPoint, new IsoConjugate(A, B, C)));
         drawingCanvas->SaveState();
         ResetState();

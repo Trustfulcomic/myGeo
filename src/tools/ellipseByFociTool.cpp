@@ -44,17 +44,21 @@ void EllipseByFociTool::OnMouseDown(wxMouseEvent &event) {
     GeoPoint* closestPoint = CreatePointAtPos(mouse_pt);
 
     if (firstFocus == nullptr) {
+        // If first focus not selected yet
         firstFocus = closestPoint;
         drawingCanvas->SelectObject(firstFocus);
     } else if (secondFocus == nullptr) {
+        // If second focus not selected yet
         if (firstFocus == closestPoint) return;
         secondFocus = closestPoint;
         drawingCanvas->SelectObject(secondFocus);
 
+        // Create temporary ellipse
         tempEllipse = new GeoEllipse(drawingCanvas, nullName, firstFocus, secondFocus, drawingCanvas->mousePt);
         tempEllipse->temporary = true;
         drawingCanvas->tempGeoCurve = tempEllipse;
     } else {
+        // Create final ellipse
         if (closestPoint == firstFocus || closestPoint == secondFocus) return;
 
         drawingCanvas->geoCurves.push_back(new GeoEllipse(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), firstFocus, secondFocus, closestPoint));

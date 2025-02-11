@@ -45,9 +45,11 @@ void HomothetyTool::OnMouseDown(wxMouseEvent &event) {
     }
 
     if (toScale == nullptr){
+        // If no object to scale is selected yet, here it is
         toScale = closestObj;
         drawingCanvas->SelectObject(toScale);
     } else if (closestObj != nullptr && closestObj->IsPoint()){
+        // Get scale parameter from user
         double param = 2;
         wxTextEntryDialog dialog(this, "Parametr", "Stejnolehlost", "1.0");
         if (dialog.ShowModal() == wxID_OK) {
@@ -59,16 +61,20 @@ void HomothetyTool::OnMouseDown(wxMouseEvent &event) {
                 return;
             }
         } else {
+            // Do nothing if canceled
             return;
         }
 
+        // Create the transformed object
         Homothety* geoTransform = new Homothety(static_cast<GeoPoint*>(closestObj), param);
         GeoObject* transformedObj = toScale->GetTransformed(geoTransform);
         if (transformedObj == nullptr) {
             delete geoTransform;
             return;
         }
+        // Set parameter to the object
         transformedObj->parameter = param;
+        // Add the object to the canvas
         if (transformedObj->IsPoint()){
             drawingCanvas->geoPoints.push_back(static_cast<GeoPoint*>(transformedObj));
         } else {

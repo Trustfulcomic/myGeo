@@ -91,6 +91,7 @@ wxPoint2DDouble GeoSegment::GetPerpPoint(const wxPoint2DDouble &pt) {
 wxPoint2DDouble GeoSegment::GetClosestPoint(const wxPoint2DDouble &pt) const {
     wxPoint2DDouble projectedPoint = util::ProjectAToLineBVec(pt, mainPoint, lineVect);
 
+    // The maximum parameter of the closest point can be 1, the smallest 0 (because it is a segment)
     if (GetParameter(projectedPoint) > 1){
         return GetPointFromParameter(1);
     } else if (GetParameter(projectedPoint) < 0){

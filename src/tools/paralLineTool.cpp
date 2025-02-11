@@ -50,26 +50,31 @@ void ParalLineTool::OnMouseDown(wxMouseEvent &event) {
     GeoObject* closestObj = GetNearestClickObject();
 
     if (tempLine != nullptr){
+        // If there is temporary line, create the final line through given point
         GeoPoint* mainPoint = CreatePointAtPos(mouse_pt);
         drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), mainPoint, curve, LINE_BY_POINT_AND_CURVE_PARAL));
         drawingCanvas->SaveState();
         ResetState();
     } else if (point != nullptr){
+        // If point already selected and clicked on curve, create the final line
         if (closestObj != nullptr && !closestObj->IsPoint()){
             drawingCanvas->geoCurves.push_back(new GeoLine(drawingCanvas, drawingCanvas->nameHandler.GetNextCurveName(), point, static_cast<GeoCurve*>(closestObj), LINE_BY_POINT_AND_CURVE_PARAL));
             drawingCanvas->SaveState();
             ResetState();
         }
     } else {
+        // If nothing is selected yet
         if (closestObj == nullptr){
             closestObj = CreatePointAtPos(mouse_pt);
         }
 
         if (closestObj->IsPoint()){
+            // If it is point, select it
             moving_point = true;
             point = static_cast<GeoPoint*>(closestObj);
             drawingCanvas->SelectObject(point);
         } else {
+            // If it is curve, select it and create temporary line
             drawingCanvas->tempGeoCurve = new GeoLine(drawingCanvas, nullName, drawingCanvas->mousePt, closestObj, LINE_BY_POINT_AND_CURVE_PARAL);
             tempLine = static_cast<GeoLine*>(drawingCanvas->tempGeoCurve);
             tempLine->temporary = true;

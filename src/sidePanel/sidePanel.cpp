@@ -142,6 +142,7 @@ void SidePanel::UpdateList() {
 /// @param id ID of the list control
 /// @param pos Position of the list
 /// @param size Size of the list
+/// @param drawingCanvas DrawingCanavs this list controls
 MyListCtrl::MyListCtrl(wxWindow *parent, const wxWindowID id, const wxPoint &pos, const wxSize &size, DrawingCanvas* drawingCanvas) 
     : wxListCtrl(parent, id, pos, size, wxLC_REPORT) {
     this->drawingCanvas = drawingCanvas;

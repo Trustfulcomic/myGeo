@@ -21,6 +21,7 @@ std::vector<std::vector<double>> AffineGeoTransform::GetMatrix() {
     // c d 0
     // e f 1
 
+    // Simply calculate the affine transform using 3 points ((0,0), (1,0), (0,1) are used because of simple calculation)
     double e = origin.m_x;
     double f = origin.m_y;
     double a = i_vect.m_x - e;
