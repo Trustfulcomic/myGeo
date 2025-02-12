@@ -72,6 +72,7 @@ void PointReflectTool::OnMouseDown(wxMouseEvent &event) {
             delete geoTransform;
             return;
         }
+        // Add object to canvas
         if (transformedObj->IsPoint()){
             drawingCanvas->geoPoints.push_back(static_cast<GeoPoint*>(transformedObj));
         } else {

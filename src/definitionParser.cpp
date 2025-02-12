@@ -6,6 +6,9 @@
 #include "geoObjects/geoSegment.h"
 #include "geoObjects/geoConic.h"
 #include "geoObjects/geoCircle.h"
+#include "geoObjects/geoEllipse.h"
+#include "geoObjects/geoParabola.h"
+#include "geoObjects/geoHyperbola.h"
 
 #include "geoTransforms/geoTransform.h"
 
@@ -114,6 +117,27 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
         } else if (parsedStr.def.compare(GeoCircle::DefToString(BY_THREE_POINTS)) == 0) {
             if (CheckObjectTypes({-1,-1,-1}, argObjs)) {
                 return new GeoCircle(canvas, "", static_cast<GeoPoint*>(argObjs[0]), static_cast<GeoPoint*>(argObjs[1]), static_cast<GeoPoint*>(argObjs[2]));
+            }
+        }
+
+        // Ellipse definition
+        if (parsedStr.def.compare(GeoEllipse::DefToString(ELLIPSE_BY_FOCI_AND_POINT)) == 0) {
+            if (CheckObjectTypes({-1,-1,-1}, argObjs)) {
+                return new GeoEllipse(canvas, "", static_cast<GeoPoint*>(argObjs[0]), static_cast<GeoPoint*>(argObjs[1]), static_cast<GeoPoint*>(argObjs[2]));
+            }
+        }
+
+        // Hyperbola definition
+        if (parsedStr.def.compare(GeoHyperbola::DefToString(HYPERBOLA_BY_FOCI_AND_POINT)) == 0) {
+            if (CheckObjectTypes({-1,-1,-1}, argObjs)) {
+                return new GeoHyperbola(canvas, "", static_cast<GeoPoint*>(argObjs[0]), static_cast<GeoPoint*>(argObjs[1]), static_cast<GeoPoint*>(argObjs[2]));
+            }
+        }
+
+        // Parabola definition
+        if (parsedStr.def.compare(GeoParabola::DefToString(PARABOLA_BY_FOCUS_AND_DIRECTRIX)) == 0) {
+            if (CheckObjectTypes({-1, -3}, argObjs)) {
+                return new GeoParabola(canvas, "", static_cast<GeoPoint*>(argObjs[0]), static_cast<GeoLineBase*>(argObjs[1]));
             }
         }
 
