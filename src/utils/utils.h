@@ -43,4 +43,5 @@ namespace util {
     double GetLatus(const std::vector<double> coeffs, const wxPoint2DDouble& focus, const double& angle);
     std::vector<std::vector<double>> GetConicMatrix(const std::vector<double>& coeffs);
     std::vector<double> GetConicCoeffs(const std::vector<std::vector<double>>& matrix);
+    wxPoint2DDouble GetPole(const std::vector<std::vector<double>>& conic, const wxPoint2DDouble& A, const wxPoint2DDouble& a);
 }

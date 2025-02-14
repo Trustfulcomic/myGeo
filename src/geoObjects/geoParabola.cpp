@@ -5,9 +5,8 @@
 /// @brief Constructor for parabola using foci and point on it
 /// @param parent DrawingCanvas on which the object is
 /// @param name Name of the object
-/// @param focusA First focus 
-/// @param focusB Second focus
-/// @param point Point on the parabola
+/// @param focus Focus of the parabola
+/// @param directrix Directrix of the parabola
 GeoParabola::GeoParabola(DrawingCanvas* parent, const wxString& name, GeoPoint* focus, GeoLineBase* directrix)
     : GeoConic(parent, name, PARABOLA) {
 

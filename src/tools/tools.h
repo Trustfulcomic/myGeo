@@ -17,3 +17,5 @@
 #include "ellipseByFociTool.h"
 #include "hyperByFociTool.h"
 #include "parabByFocDirTool.h"
+#include "polarTool.h"
+#include "poleTool.h"

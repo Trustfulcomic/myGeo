@@ -14,7 +14,8 @@ enum LineDefinition {
     LINE_PERPENDICULAR_BISECTOR,
     ANGLE_BISECTOR,
     ANGLE_BISECTOR_PERP, // Used for second angle bisector when selecting two lines
-    TRANSFORMED_LINE
+    TRANSFORMED_LINE,
+    POLAR
 };
 
 /// @brief Class for a line

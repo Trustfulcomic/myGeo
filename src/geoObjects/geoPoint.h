@@ -8,13 +8,17 @@
 #include "geoObject.h"
 #include "geoCurve.h"
 
+class GeoLineBase;
+class GeoConic;
+
 /// @brief All possible definitions of a GeoPoint
 enum PointDefinition {
     FREE_POINT,
     POINT_ON_CURVE,
     POINT_ON_INTERSECT,
     MIDPOINT,
-    TRANSFORMED_POINT
+    TRANSFORMED_POINT,
+    POLE
 };
 
 /// @brief Class for a point
@@ -24,6 +28,7 @@ public:
     GeoPoint(DrawingCanvas *parent, const wxString &name, GeoCurve *parentObj1, GeoCurve *parentObj2);
     GeoPoint(DrawingCanvas *parent, const wxString &name, GeoPoint *parentObj1, GeoPoint *parentObj2);
     GeoPoint(DrawingCanvas *parent, const wxString &name, GeoCurve *parentObj);
+    GeoPoint(DrawingCanvas *parent, const wxString &name, GeoLineBase *parentObj1, GeoConic *parentObj2);
     GeoPoint(DrawingCanvas *parent, const wxString &name, GeoPoint *parentObj, GeoTransform *geoTransform);
     /// @brief Default constructor for GeoPoint
     GeoPoint(){};

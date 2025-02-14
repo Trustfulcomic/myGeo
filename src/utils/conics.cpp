@@ -314,3 +314,20 @@ std::vector<std::vector<double>> util::GetConicMatrix(const std::vector<double> 
 std::vector<double> util::GetConicCoeffs(const std::vector<std::vector<double>> &matrix) {
     return {matrix[0][0], matrix[0][1]*2, matrix[1][1], matrix[0][2]*2, matrix[2][1]*2, matrix[2][2]};
 }
+
+/// @brief Calculates pole of a line in resepct to a conic
+/// @param conic The reference conic
+/// @param A Main point of the line
+/// @param a Vector of the line
+/// @return Pole of the line
+wxPoint2DDouble util::GetPole(const std::vector<std::vector<double>> &conic, const wxPoint2DDouble &A, const wxPoint2DDouble &a) {
+    // Again using that polar = M*pt (M is conic matrix), we have that pole = M^(-1)*polar
+    wxPoint2DDouble normVect = util::PerpVector(a);
+    double c = - normVect.m_x*A.m_x - normVect.m_y*A.m_y;
+
+    std::vector<std::vector<double>> line_matrix = {{normVect.m_x},{normVect.m_y},{c}};
+    std::vector<std::vector<double>> conic_inverse = util::AdjMatrix3x3(conic);
+
+    std::vector<std::vector<double>> point_matrix = util::MatrixMult(conic_inverse, line_matrix);
+    return {point_matrix[0][0]/point_matrix[2][0], point_matrix[1][0]/point_matrix[2][0]};
+}

@@ -104,6 +104,8 @@ void SidePanel::SetupTools() {
     ADD_TOOL(EllipseByFociTool);
     ADD_TOOL(HyperByFociTool);
     ADD_TOOL(ParabByFocDirTool);
+    ADD_TOOL(PolarTool);
+    ADD_TOOL(PoleTool);
     toolPanelSizer->Add(toolPanesSizer, 0, wxALL, FromDIP(5));
 
     toolPanel->SetSizer(toolPanelSizer);

@@ -110,6 +110,31 @@ GeoPoint::GeoPoint(DrawingCanvas *parent, const wxString &name, GeoCurve *parent
     ReloadSelf();
 }
 
+/// @brief Contructor for a pole of a line
+/// @param parent DrawingCanvas on which the point is
+/// @param name Name of the object
+/// @param parentObj1 The polar line
+/// @param parentObj2 The reference conic
+GeoPoint::GeoPoint(DrawingCanvas *parent, const wxString &name, GeoLineBase *parentObj1, GeoConic *parentObj2)
+    : GeoObject(parent, name) {
+    this->pointRadius = parent->FromDIP(4);
+    this->outlineColor = *wxBLACK;
+    this->fillColor = wxColor(100, 100, 100);
+
+    this->isPoint = true;
+    this->draggable = false;
+
+    this->parentObjs.push_back(parentObj1);
+    this->parentObjs.push_back(parentObj2);
+    parentObj1->AddChild(this);
+    parentObj2->AddChild(this);
+
+    this->definition = POLE;
+
+    ReloadSelf();
+
+}
+
 /// @brief Constructor for a point defined by a point and GeoTransfomr
 /// @param parent DrawingCanvas on which the point is
 /// @param name Name of the object
@@ -189,6 +214,8 @@ bool GeoPoint::SetPos(const wxPoint2DDouble &pos) {
         
         case TRANSFORMED_POINT:
             return false;
+        case POLE:
+            return false;
     }
 
     return false;
@@ -233,6 +260,9 @@ void GeoPoint::ReloadSelf() {
             geoTransform->SetParam(parameter);
             pos = geoTransform->TransformPoint(static_cast<GeoPoint*>(parentObjs[0])->GetPos());
             break;
+        case POLE:
+            pos = util::GetPole(static_cast<GeoConic*>(parentObjs[1])->GetConicMatrix(), static_cast<GeoLineBase*>(parentObjs[0])->GetPoint(), static_cast<GeoLineBase*>(parentObjs[0])->GetVect());
+            break;
     }
 }
 
@@ -276,6 +306,8 @@ ListItem GeoPoint::GetListItem() {
             }
         case TRANSFORMED_POINT:
             return {GetName(), geoTransform->GetListText(parentObjs[0]), parameter, this};
+        case POLE:
+            return {GetName(), wxString::Format(GeoPoint::DefToString(MIDPOINT) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
     }
 
     return {GetName(), "He?", parameter, this};
@@ -292,6 +324,8 @@ wxString GeoPoint::DefToString(PointDefinition definition) {
             return "OnIntersect";
         case MIDPOINT:
             return "Midpoint";
+        case POLE:
+            return "Pole";
         default:
             return "";
     }

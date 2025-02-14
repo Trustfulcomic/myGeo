@@ -185,7 +185,10 @@ void GeoLine::ReloadSelf() {
             mainPoint = geoTransform->TransformPoint(static_cast<GeoLineBase*>(parentObjs[0])->GetPoint());
             lineVect = geoTransform->TransformVect(static_cast<GeoLineBase*>(parentObjs[0])->GetVect());
             break;
-            
+        
+        case POLAR:
+            util::GetPolar(static_cast<GeoConic*>(parentObjs[1])->GetConicMatrix(), static_cast<GeoPoint*>(parentObjs[0])->GetPos(), mainPoint, lineVect);
+            break;
     }
 }
 
@@ -255,6 +258,8 @@ ListItem GeoLine::GetListItem() {
             }
         case TRANSFORMED_LINE:
             return {GetName(), geoTransform->GetListText(parentObjs[0]), parameter, this};
+        case POLAR:
+            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
     }
 
     return {GetName(), "He?", 0, this};
@@ -277,6 +282,8 @@ wxString GeoLine::DefToString(LineDefinition definition) {
             return "AngleBisector";
         case ANGLE_BISECTOR_PERP:
             return "AngleBisectorP";
+        case POLAR:
+            return "Polar";
         default:
             return "";
     }

@@ -96,6 +96,10 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
             } else if (CheckObjectTypes({-1,-1,-1}, argObjs)) {
                 return new GeoLine(canvas, "", static_cast<GeoPoint*>(argObjs[0]), static_cast<GeoPoint*>(argObjs[1]), static_cast<GeoPoint*>(argObjs[2]), true);
             }
+        } else if (parsedStr.def.compare(GeoLine::DefToString(POLAR)) == 0) {
+            if (CheckObjectTypes({-1,-5}, argObjs)) {
+                return new GeoLine(canvas, "", argObjs[0], argObjs[1], POLAR);
+            }
         }
 
         // General conic
@@ -249,6 +253,9 @@ bool DefinitionParser::CheckObjectTypes(const std::vector<int> &types, const std
             if (!static_cast<GeoCurve*>(objs[i])->IsAsLine()) return false;
         } else if (types[i] == -4) {
             // Accepts anything, soooo, nothing ever happens...
+        } else if (types[i] == -5) {
+            if (objs[i]->IsPoint()) return false;
+            if (static_cast<GeoCurve*>(objs[i])->IsAsLine()) return false;
         } else {
             if (objs[i]->IsPoint()) return false;
             else if (static_cast<GeoCurve*>(objs[i])->GetType() != types[i]) return false;

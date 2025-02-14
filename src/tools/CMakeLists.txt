@@ -18,4 +18,6 @@ target_sources(main PRIVATE     tool.cpp
                                 circleBy3PTool.cpp
                                 ellipseByFociTool.cpp
                                 hyperByFociTool.cpp
-                                parabByFocDirTool.cpp)
+                                parabByFocDirTool.cpp
+                                polarTool.cpp
+                                poleTool.cpp)

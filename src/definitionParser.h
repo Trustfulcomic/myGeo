@@ -28,7 +28,7 @@ namespace DefinitionParser {
     ParsedString ParseString(const wxString& defStr);
 
     /// @brief Checks whether objects are certain type
-    /// @details -4 for any, -3 for AsLine, -2 for GeoCurve, -1 for GeoPoint and GeoCurveType enum for specific curves is used, size of objs is at least the size of types 
+    /// @details -5 for conic, -4 for any, -3 for AsLine, -2 for GeoCurve, -1 for GeoPoint and GeoCurveType enum for specific curves is used, size of objs is at least the size of types 
     /// @param types Vector of the types
     /// @param objs Vector of the objects
     /// @return True if the types match
