@@ -30,6 +30,7 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
         return new GeoPoint(canvas, "", {x_coord, y_coord});
     } else {
         // All other dependent objects
+        std::cout << parsedStr.def << std::endl;
 
         // Check if all arguments exist
         for (const wxString& argName : parsedStr.args) {
@@ -57,6 +58,10 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
             } else if (CheckObjectTypes({-2}, argObjs)) {
                 if (CheckObjectTypes({LINE}, argObjs)) return nullptr;
                 return new GeoPoint(canvas, "", static_cast<GeoCurve*>(argObjs[0]));
+            }
+        } else if (parsedStr.def.compare(GeoPoint::DefToString(POLE)) == 0) {
+            if (CheckObjectTypes({-3,-5}, argObjs)) {
+                return new GeoPoint(canvas, "", static_cast<GeoLineBase*>(argObjs[0]), static_cast<GeoConic*>(argObjs[1]));
             }
         }
 
@@ -114,11 +119,11 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
         }
 
         // Circle definitions
-        if (parsedStr.def.compare(GeoCircle::DefToString(BY_CENTER)) == 0) {
+        if (parsedStr.def.IsSameAs(GeoCircle::DefToString(BY_CENTER))) {
             if (CheckObjectTypes({-1,-1}, argObjs)) {
                 return new GeoCircle(canvas, "", static_cast<GeoPoint*>(argObjs[0]), static_cast<GeoPoint*>(argObjs[1]));
             }
-        } else if (parsedStr.def.compare(GeoCircle::DefToString(BY_THREE_POINTS)) == 0) {
+        } else if (parsedStr.def.IsSameAs(GeoCircle::DefToString(BY_THREE_POINTS))) {
             if (CheckObjectTypes({-1,-1,-1}, argObjs)) {
                 return new GeoCircle(canvas, "", static_cast<GeoPoint*>(argObjs[0]), static_cast<GeoPoint*>(argObjs[1]), static_cast<GeoPoint*>(argObjs[2]));
             }
@@ -165,6 +170,11 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
             if (CheckObjectTypes({-4,-1}, argObjs)) {
                 Homothety* homothety = new Homothety(static_cast<GeoPoint*>(argObjs[1]), 1);
                 return argObjs[0]->GetTransformed(homothety);
+            }
+        } else if (parsedStr.def.compare(CircleInverse::DefString()) == 0) {
+            if (CheckObjectTypes({-1,CIRCLE}, argObjs)) {
+                CircleInverse* circleInverse = new CircleInverse(static_cast<GeoCircle*>(argObjs[1]));
+                return argObjs[0]->GetTransformed(circleInverse);
             }
         }
         

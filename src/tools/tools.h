@@ -19,3 +19,4 @@
 #include "parabByFocDirTool.h"
 #include "polarTool.h"
 #include "poleTool.h"
+#include "circleInverseTool.h"

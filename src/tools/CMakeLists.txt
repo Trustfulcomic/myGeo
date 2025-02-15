@@ -20,4 +20,5 @@ target_sources(main PRIVATE     tool.cpp
                                 hyperByFociTool.cpp
                                 parabByFocDirTool.cpp
                                 polarTool.cpp
-                                poleTool.cpp)
+                                poleTool.cpp
+                                circleInverseTool.cpp)

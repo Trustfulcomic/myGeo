@@ -5,6 +5,7 @@
 #include "../geoObjects/geoObject.h"
 #include "../geoObjects/geoPoint.h"
 #include "../geoObjects/geoLineBase.h"
+#include "../geoObjects/geoCircle.h"
 
 /// @brief Class for point reflection
 class PointReflection : public AffineGeoTransform {
@@ -55,6 +56,23 @@ public:
 private:
     /// Points of the traingle defining the transformation
     GeoPoint *A, *B, *C;
+};
+
+/// @brief Class for circle inverse
+class CircleInverse : public GeoTransform {
+public:
+    CircleInverse(GeoCircle* circle);
+
+    wxPoint2DDouble TransformPoint(const wxPoint2DDouble& pt) override;
+    wxPoint2DDouble TransformVect(const wxPoint2DDouble& vect) override;
+    std::list<GeoObject*> GetDeps() override;
+    GeoTransform* CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) override;
+
+    wxString GetListText(GeoObject* obj) override;
+    static wxString DefString();
+private:
+    /// Circle defining the inverse
+    GeoCircle* circle;
 };
 
 /// @brief Class for homothety

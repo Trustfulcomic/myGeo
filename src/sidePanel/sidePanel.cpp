@@ -106,6 +106,7 @@ void SidePanel::SetupTools() {
     ADD_TOOL(ParabByFocDirTool);
     ADD_TOOL(PolarTool);
     ADD_TOOL(PoleTool);
+    ADD_TOOL(CircleInverseTool);
     toolPanelSizer->Add(toolPanesSizer, 0, wxALL, FromDIP(5));
 
     toolPanel->SetSizer(toolPanelSizer);

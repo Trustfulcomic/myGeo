@@ -160,3 +160,45 @@ wxString Homothety::GetListText(GeoObject *obj) {
 wxString Homothety::DefString(){
     return "Homothety";
 }
+
+/// @brief Basic constructor for circle inverse transform
+/// @param circle Circle defining the transform
+CircleInverse::CircleInverse(GeoCircle *circle) {
+    this->circle = circle;
+}
+
+wxPoint2DDouble CircleInverse::TransformPoint(const wxPoint2DDouble &pt) {
+    wxPoint2DDouble center = circle->GetCenter();
+    double radius = circle->GetRadius();
+
+    // |XS|*|X'S|=r^2
+    double dist = center.GetDistance(pt);
+    double transformed_dist = radius*radius / dist;
+
+    wxPoint2DDouble begin_vect = pt - center;
+    return center + (begin_vect * (transformed_dist / dist));
+}
+
+wxPoint2DDouble CircleInverse::TransformVect(const wxPoint2DDouble &vect) {
+    // No, cant do, but again, here is null vector :D
+    return {0.0, 0.0};
+}
+
+std::list<GeoObject *> CircleInverse::GetDeps() {
+    return {circle};
+}
+
+GeoTransform *CircleInverse::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) {
+    if (copiedPtrs.find(circle) == copiedPtrs.end()){
+        circle->CreateCopy(copiedPtrs);
+    }
+    return new CircleInverse(static_cast<GeoCircle*>(copiedPtrs[circle]));
+}
+
+wxString CircleInverse::GetListText(GeoObject *obj) {
+    return wxString::Format(CircleInverse::DefString() + "(%s,%s)", obj->GetName(), circle->GetName());
+}
+
+wxString CircleInverse::DefString() {
+    return "CircleInverse";
+}
