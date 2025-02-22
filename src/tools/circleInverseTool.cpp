@@ -49,6 +49,8 @@ void CircleInverseTool::OnMouseDown(wxMouseEvent &event) {
         closestObj = CreatePointAtPos(mouse_pt);
     }
 
+    if (closestObj == nullptr) return;
+
     if (closestObj->IsPoint() && point == nullptr) {
         // If clicked point, select it
         point = static_cast<GeoPoint*>(closestObj);

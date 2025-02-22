@@ -34,12 +34,28 @@ void IsoConjTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
     gc->DrawRectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
 
     gc->SetPen(*wxBLACK_PEN);
-    gc->SetBrush(*wxRED_BRUSH);
+    gc->SetBrush(*wxGREY_BRUSH);
 
-    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 4.0, 
-                    rect.GetY() + rect.GetHeight() / 4.0, 
-                    rect.GetWidth() / 2.0, 
-                    rect.GetHeight() / 2.0);
+    wxPoint2DDouble vertA = {rect.GetX() + 2*rect.GetWidth()/5.0, rect.GetY() + rect.GetHeight()/5.0};
+    wxPoint2DDouble vertB = {rect.GetX() + rect.GetWidth()/5.0, rect.GetY() + 4*rect.GetHeight()/5.0};
+    wxPoint2DDouble vertC = {rect.GetX() + 4*rect.GetWidth()/5.0, rect.GetY() + 3*rect.GetHeight()/5.0};
+
+    double pt_radius = std::min(rect.GetWidth(), rect.GetHeight())/16.0;
+
+    gc->StrokeLine(vertA.m_x, vertA.m_y, vertB.m_x, vertB.m_y);
+    gc->StrokeLine(vertC.m_x, vertC.m_y, vertB.m_x, vertB.m_y);
+    gc->StrokeLine(vertA.m_x, vertA.m_y, vertC.m_x, vertC.m_y);
+    gc->DrawEllipse(vertA.m_x - pt_radius, vertA.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
+    gc->DrawEllipse(vertB.m_x - pt_radius, vertB.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
+    gc->DrawEllipse(vertC.m_x - pt_radius, vertC.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
+
+    gc->SetBrush(*wxBLUE_BRUSH);
+    wxPoint2DDouble first_point = {rect.GetX() + rect.GetWidth()/2.0, rect.GetY() + 2*rect.GetHeight()/5.0};
+    gc->DrawEllipse(first_point.m_x - pt_radius, first_point.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
+
+    gc->SetBrush(*wxRED_BRUSH);
+    wxPoint2DDouble second_point = {rect.GetX() + 2*rect.GetWidth()/5.0, rect.GetY() + 13*rect.GetHeight()/20.0};
+    gc->DrawEllipse(second_point.m_x - pt_radius, second_point.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
 }
 
 void IsoConjTool::OnMouseDown(wxMouseEvent &event) {

@@ -34,13 +34,16 @@ void PerpLineTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const 
 
     gc->DrawRectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
 
-    gc->SetPen(*wxBLACK_PEN);
-    gc->SetBrush(*wxWHITE_BRUSH);
+    gc->SetPen(*wxRED_PEN);
+    gc->StrokeLine(rect.GetX() + 2*rect.GetHeight()/5.0, rect.GetY(), rect.GetX() + 3*rect.GetHeight()/5.0, rect.GetBottomLeft().y);
 
-    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 4.0, 
-                    rect.GetY() + rect.GetHeight() / 4.0, 
-                    rect.GetWidth() / 2.0, 
-                    rect.GetHeight() / 2.0);
+    gc->SetPen(*wxBLACK_PEN);
+    gc->SetBrush(*wxBLUE_BRUSH);
+
+    gc->StrokeLine(rect.GetX(), rect.GetBottomLeft().y - rect.GetHeight()/5.0, rect.GetTopRight().x, rect.GetTopRight().y + 3*rect.GetHeight()/5.0);
+    double pt_radius = std::min(rect.GetWidth(), rect.GetHeight())/16.0;
+    wxPoint2DDouble pt_pos = {rect.GetX() + 23*rect.GetWidth()/50.0, rect.GetY() + 3*rect.GetHeight()/10.0};
+    gc->DrawEllipse(pt_pos.m_x - pt_radius, pt_pos.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
 }
 
 void PerpLineTool::OnMouseDown(wxMouseEvent &event) {

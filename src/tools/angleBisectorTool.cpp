@@ -31,13 +31,21 @@ void AngleBisectorTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) c
 
     gc->DrawRectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
 
-    gc->SetPen(*wxBLACK_PEN);
-    gc->SetBrush(*wxMEDIUM_GREY_BRUSH);
+    gc->SetPen(*wxRED_PEN);
+    gc->StrokeLine(rect.GetX(), rect.GetY() + 3*rect.GetHeight()/5.0, rect.GetX() + rect.GetWidth(), rect.GetY() + 2*rect.GetHeight()/5.0);
 
-    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 4.0, 
-                    rect.GetY() + rect.GetHeight() / 4.0, 
-                    rect.GetWidth() / 2.0, 
-                    rect.GetHeight() / 2.0);
+    gc->SetPen(*wxBLACK_PEN);
+    gc->SetBrush(*wxBLUE_BRUSH);
+
+    double pt_radius = std::min(rect.GetWidth(), rect.GetHeight())/16.0;
+    wxPoint2DDouble first_point = {rect.GetX() + 9*rect.GetWidth()/20.0, rect.GetY() + rect.GetHeight()/4.0};
+    wxPoint2DDouble second_point = {rect.GetX() + 11*rect.GetWidth()/20.0, rect.GetY() + 3*rect.GetHeight()/4.0};
+    wxPoint2DDouble third_point = {rect.GetX() + rect.GetWidth()/4.0, rect.GetY() + 11*rect.GetHeight()/20.0};
+    gc->StrokeLine(first_point.m_x, first_point.m_y, third_point.m_x, third_point.m_y);
+    gc->StrokeLine(second_point.m_x, second_point.m_y, third_point.m_x, third_point.m_y); 
+    gc->DrawEllipse(first_point.m_x - pt_radius, first_point.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
+    gc->DrawEllipse(second_point.m_x - pt_radius, second_point.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
+    gc->DrawEllipse(third_point.m_x - pt_radius, third_point.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
 }
 
 void AngleBisectorTool::OnMouseDown(wxMouseEvent &event) {

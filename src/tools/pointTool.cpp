@@ -22,12 +22,12 @@ void PointTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
     gc->DrawRectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
 
     gc->SetPen(*wxBLACK_PEN);
-    gc->SetBrush(*wxGREY_BRUSH);
+    gc->SetBrush(*wxBLUE_BRUSH);
 
-    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 4.0, 
-                    rect.GetY() + rect.GetHeight() / 4.0, 
-                    rect.GetWidth() / 2.0, 
-                    rect.GetHeight() / 2.0);
+    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 3.0, 
+                    rect.GetY() + rect.GetHeight() / 3.0, 
+                    rect.GetWidth() / 3.0, 
+                    rect.GetHeight() / 3.0);
 }
 
 void PointTool::OnMouseDown(wxMouseEvent &event) {

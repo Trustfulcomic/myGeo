@@ -33,12 +33,16 @@ void SegBy2PTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
     gc->DrawRectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
 
     gc->SetPen(*wxBLACK_PEN);
-    gc->SetBrush(*wxRED_BRUSH);
+    gc->SetBrush(*wxBLUE_BRUSH);
 
-    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 4.0, 
-                    rect.GetY() + rect.GetHeight() / 4.0, 
-                    rect.GetWidth() / 2.0, 
-                    rect.GetHeight() / 2.0);
+    wxPoint2DDouble first_point = {rect.GetX() + rect.GetWidth()/4.0, rect.GetY() + 13*rect.GetHeight()/20.0};
+    wxPoint2DDouble second_point = {rect.GetX() + 3*rect.GetWidth()/4.0, rect.GetY() + 7*rect.GetHeight()/20.0};
+
+    double pt_radius = std::min(rect.GetWidth(), rect.GetHeight())/16.0;
+
+    gc->StrokeLine(first_point.m_x, first_point.m_y, second_point.m_x, second_point.m_y);
+    gc->DrawEllipse(first_point.m_x - pt_radius, first_point.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
+    gc->DrawEllipse(second_point.m_x - pt_radius, second_point.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
 }
 
 void SegBy2PTool::OnMouseDown(wxMouseEvent &event) {

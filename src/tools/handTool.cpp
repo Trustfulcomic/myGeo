@@ -26,12 +26,22 @@ void HandTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
     gc->DrawRectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
 
     gc->SetPen(*wxBLACK_PEN);
-    gc->SetBrush(*wxGREEN_BRUSH);
 
-    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 4.0, 
-                    rect.GetY() + rect.GetHeight() / 4.0, 
-                    rect.GetWidth() / 2.0, 
-                    rect.GetHeight() / 2.0);
+    wxPoint2DDouble pts[8];
+    pts[0] = {3/10.0, 1/5.0};
+    pts[1] = {3/10.0, 4/5.0};
+    pts[2] = {69/140.0, 5/7.0};
+    pts[3] = {69/140.0 + 1/15.0, 1 - (2/7.0 - 3/20.0)};
+    pts[4] = {78/140.0 + 1/15.0, 1 - (11/35.0 - 3/20.0)};
+    pts[5] = {78/140.0, 24/35.0};
+    pts[6] = {3/4.0, 3/5.0};
+    pts[7] = pts[0];
+
+    for (int i = 0; i<8; i++) {
+        pts[i] = (wxPoint2DDouble){pts[i].m_x * rect.GetWidth(), pts[i].m_y * rect.GetHeight()} + rect.GetTopLeft();
+    }
+
+    gc->StrokeLines(8, pts);
 }
 
 void HandTool::OnMouseDown(wxMouseEvent &event) {
