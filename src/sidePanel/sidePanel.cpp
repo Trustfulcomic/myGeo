@@ -81,33 +81,50 @@ void SidePanel::ChangeLayout() {
 void SidePanel::SetupTools() {
     auto toolPanelSizer = new wxBoxSizer(wxVERTICAL);
 
-    auto textTools = new wxStaticText(toolPanel, wxID_ANY, wxString::FromUTF8("Nástroje"));
-    toolPanelSizer->Add(textTools, 0, wxALL, FromDIP(5));
+    wxStaticText* textTools;
+    wxWrapSizer* toolPanesSizer;
 
-    auto toolPanesSizer = new wxWrapSizer(wxHORIZONTAL);
-    ADD_TOOL(PointTool);
+    textTools = new wxStaticText(toolPanel, wxID_ANY, wxString::FromUTF8("Základní nástroje"));
+    toolPanelSizer->Add(textTools, 0, wxLEFT | wxRIGHT | wxTOP, FromDIP(5));
+    toolPanesSizer = new wxWrapSizer(wxHORIZONTAL);
     ADD_TOOL(HandTool);
-    ADD_TOOL(SegBy2PTool);
+    ADD_TOOL(PointTool);
+    toolPanelSizer->Add(toolPanesSizer, 0, wxLEFT | wxRIGHT | wxDOWN, FromDIP(5));
+
+    textTools = new wxStaticText(toolPanel, wxID_ANY, wxString::FromUTF8("Přímky a konstrukce"));
+    toolPanelSizer->Add(textTools, 0,  wxLEFT | wxRIGHT, FromDIP(5));
+    toolPanesSizer = new wxWrapSizer(wxHORIZONTAL);
     ADD_TOOL(LineBy2PTool);
+    ADD_TOOL(SegBy2PTool);
     ADD_TOOL(PerpLineTool);
     ADD_TOOL(ParalLineTool);
     ADD_TOOL(PerpBisectorTool);
     ADD_TOOL(MidpointTool);
     ADD_TOOL(AngleBisectorTool);
-    ADD_TOOL(PointReflectTool);
-    ADD_TOOL(LineReflectTool);
-    ADD_TOOL(IsoConjTool);
-    ADD_TOOL(HomothetyTool);
-    ADD_TOOL(ConicBy5PTool);
+    toolPanelSizer->Add(toolPanesSizer, 0, wxLEFT | wxRIGHT | wxDOWN, FromDIP(5));
+
+    textTools = new wxStaticText(toolPanel, wxID_ANY, wxString::FromUTF8("Kuželosečky"));
+    toolPanelSizer->Add(textTools, 0, wxLEFT | wxRIGHT, FromDIP(5));
+    toolPanesSizer = new wxWrapSizer(wxHORIZONTAL);
     ADD_TOOL(CircleBy2PTool);
     ADD_TOOL(CircleBy3PTool);
     ADD_TOOL(EllipseByFociTool);
-    ADD_TOOL(HyperByFociTool);
     ADD_TOOL(ParabByFocDirTool);
+    ADD_TOOL(HyperByFociTool);
+    ADD_TOOL(ConicBy5PTool);
+    toolPanelSizer->Add(toolPanesSizer, 0, wxLEFT | wxRIGHT | wxDOWN, FromDIP(5));
+
+    textTools = new wxStaticText(toolPanel, wxID_ANY, wxString::FromUTF8("Zobrazení"));
+    toolPanelSizer->Add(textTools, 0, wxLEFT | wxRIGHT, FromDIP(5));
+    toolPanesSizer = new wxWrapSizer(wxHORIZONTAL);
+    ADD_TOOL(PointReflectTool);
+    ADD_TOOL(LineReflectTool);
+    ADD_TOOL(HomothetyTool);
+    ADD_TOOL(CircleInverseTool);
     ADD_TOOL(PolarTool);
     ADD_TOOL(PoleTool);
-    ADD_TOOL(CircleInverseTool);
-    toolPanelSizer->Add(toolPanesSizer, 0, wxALL, FromDIP(5));
+    ADD_TOOL(IsoConjTool);
+    toolPanelSizer->Add(toolPanesSizer, 0, wxLEFT | wxRIGHT | wxDOWN, FromDIP(5));
 
     toolPanel->SetSizer(toolPanelSizer);
     SelectToolPane(tools[0]);
