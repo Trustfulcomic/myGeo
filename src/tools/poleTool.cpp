@@ -29,12 +29,20 @@ void PoleTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const {
     gc->DrawRectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
 
     gc->SetPen(*wxBLACK_PEN);
-    gc->SetBrush(*wxGREY_BRUSH);
 
-    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 4.0, 
-                    rect.GetY() + rect.GetHeight() / 4.0, 
+    gc->SetBrush(*wxTRANSPARENT_BRUSH);
+    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 12.0, 
+                    rect.GetY() + 5* rect.GetHeight() / 12.0, 
                     rect.GetWidth() / 2.0, 
                     rect.GetHeight() / 2.0);
+    
+    double pt_radius = std::min(rect.GetWidth(), rect.GetHeight())/16.0;
+    gc->SetBrush(*wxRED_BRUSH);
+    gc->DrawEllipse(rect.GetX() + 0.42*rect.GetWidth() - pt_radius,
+                    rect.GetY() + 0.58*rect.GetHeight() - pt_radius,
+                    2*pt_radius, 2*pt_radius);
+
+    gc->StrokeLine(rect.GetX() + rect.GetWidth()/5.0, rect.GetY(), rect.GetX() + rect.GetWidth(), rect.GetY() + 4*rect.GetHeight()/5.0);
 }
 
 void PoleTool::OnMouseDown(wxMouseEvent &event) {

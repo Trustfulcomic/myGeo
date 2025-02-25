@@ -34,12 +34,21 @@ void ParabByFocDirTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) c
     gc->DrawRectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
 
     gc->SetPen(*wxBLACK_PEN);
-    gc->SetBrush(*wxRED_BRUSH);
+    gc->SetBrush(*wxBLUE_BRUSH);
 
-    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 4.0, 
-                    rect.GetY() + rect.GetHeight() / 4.0, 
-                    rect.GetWidth() / 2.0, 
-                    rect.GetHeight() / 2.0);
+    // Parabola given by equation 1 - 5.0/2*(x*x-x+37.0/100)
+    int n = 11;
+    wxPoint2DDouble points[n];
+    for (int i = 0; i<n; i++) {
+        double x = (double)i/(n-1);
+        double y = 1 - 5.0/2*(x*x-x+37.0/100);
+        points[i] = {rect.GetX() + x*rect.GetWidth(), rect.GetY() + y*rect.GetHeight()};
+    }
+    gc->StrokeLines(n, points);
+
+    double pt_radius = std::min(rect.GetWidth(), rect.GetHeight())/16.0;
+    gc->StrokeLine(0, rect.GetY() + 4*rect.GetHeight()/5.0, rect.GetX() + rect.GetWidth(), rect.GetY() + 4*rect.GetHeight()/5.0);
+    gc->DrawEllipse(rect.GetX() + rect.GetWidth()/2.0 - pt_radius, rect.GetY() + 11*rect.GetHeight()/20.0 - pt_radius, 2*pt_radius, 2*pt_radius); // Not a real focus, a bit shifted to not touch
 }
 
 void ParabByFocDirTool::OnMouseDown(wxMouseEvent &event) {

@@ -30,12 +30,20 @@ void CircleInverseTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) c
     gc->DrawRectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
 
     gc->SetPen(*wxBLACK_PEN);
-    gc->SetBrush(*wxCYAN_BRUSH);
 
-    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 4.0, 
-                    rect.GetY() + rect.GetHeight() / 4.0, 
+    gc->SetBrush(*wxTRANSPARENT_BRUSH);
+    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 12.0, 
+                    rect.GetY() + 5* rect.GetHeight() / 12.0, 
                     rect.GetWidth() / 2.0, 
                     rect.GetHeight() / 2.0);
+
+    double pt_radius = std::min(rect.GetWidth(), rect.GetHeight())/16.0;
+    gc->SetBrush(*wxBLUE_BRUSH);
+    gc->DrawEllipse(rect.GetX() + 2*rect.GetWidth()/5.0 - 0.25, rect.GetY() + 3*rect.GetHeight()/5.0 - 0.25, 1/16.0, 1/16.0);
+    gc->DrawEllipse(rect.GetX() + rect.GetWidth()*0.4 - pt_radius, rect.GetY() + rect.GetHeight()*0.6 - pt_radius, 2*pt_radius, 2*pt_radius);
+
+    gc->SetBrush(*wxRED_BRUSH);
+    gc->DrawEllipse(rect.GetX() + rect.GetWidth()*0.8 - pt_radius, rect.GetY() + rect.GetHeight()*0.2 - pt_radius, 2*pt_radius, 2*pt_radius);
 }
 
 void CircleInverseTool::OnMouseDown(wxMouseEvent &event) {

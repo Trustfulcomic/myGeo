@@ -29,12 +29,32 @@ void HyperByFociTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) con
     gc->DrawRectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
 
     gc->SetPen(*wxBLACK_PEN);
-    gc->SetBrush(*wxWHITE_BRUSH);
+    gc->SetBrush(*wxBLUE_BRUSH);
 
-    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 4.0, 
-                    rect.GetY() + rect.GetHeight() / 4.0, 
-                    rect.GetWidth() / 2.0, 
-                    rect.GetHeight() / 2.0);
+    // Hyperbola given by equation (x-1/2)^2-(y-1/2)^2=(1/6)^2
+    int n = 11;
+    wxPoint2DDouble points[n];
+    // First arc
+    for (int i = 0; i<n; i++) {
+        double y = (double)i/(n-1)*2*sqrt(5.0/18) + 0.5 - sqrt(5.0/18);
+        double x = 0.5 - sqrt(1/36.0+(y-1/2.0)*(y-1/2.0));
+        points[i] = {rect.GetX() + x*rect.GetWidth(), rect.GetY() + y*rect.GetHeight()};
+    }
+    gc->StrokeLines(n, points);
+    // Second arc
+    for (int i = 0; i<n; i++) {
+        double y = (double)i/(n-1)*2*sqrt(5.0/18) + 0.5 - sqrt(5.0/18);
+        double x = 0.5 + sqrt(1/36.0+(y-1/2.0)*(y-1/2.0));
+        points[i] = {rect.GetX() + x*rect.GetWidth(), rect.GetY() + y*rect.GetHeight()};
+    }
+    gc->StrokeLines(n, points);
+
+    double pt_radius = std::min(rect.GetWidth(), rect.GetHeight())/16.0;
+    // Foci are a bit shifted (by 1/20) to not touch
+    gc->DrawEllipse(rect.GetX() + rect.GetWidth()*(1/2.0 - sqrt(2.0)/6 - 1/20.0) - pt_radius, rect.GetY() + rect.GetHeight()/2.0 - pt_radius, 2*pt_radius, 2*pt_radius);
+    gc->DrawEllipse(rect.GetX() + rect.GetWidth()*(1/2.0 + sqrt(2.0)/6 + 1/20.0) - pt_radius, rect.GetY() + rect.GetHeight()/2.0 - pt_radius, 2*pt_radius, 2*pt_radius);
+
+    gc->DrawEllipse(rect.GetX() + 0.8143*rect.GetWidth() - pt_radius, rect.GetY() + 0.2336*rect.GetHeight() - pt_radius, 2*pt_radius, 2*pt_radius);
 }
 
 void HyperByFociTool::OnMouseDown(wxMouseEvent &event) {

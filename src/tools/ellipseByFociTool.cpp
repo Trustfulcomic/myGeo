@@ -29,12 +29,23 @@ void EllipseByFociTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) c
     gc->DrawRectangle(rect.GetX(), rect.GetY(), rect.GetWidth(), rect.GetHeight());
 
     gc->SetPen(*wxBLACK_PEN);
-    gc->SetBrush(*wxGREEN_BRUSH);
+    gc->SetBrush(*wxTRANSPARENT_BRUSH);
 
-    gc->DrawEllipse(rect.GetX() + rect.GetWidth() / 4.0, 
-                    rect.GetY() + rect.GetHeight() / 4.0, 
-                    rect.GetWidth() / 2.0, 
-                    rect.GetHeight() / 2.0);
+    double w = 0.8;
+    double h = 0.6;
+    gc->DrawEllipse(rect.GetX() + rect.GetWidth()/2.0 - rect.GetWidth()*w/2.0, rect.GetY() + rect.GetHeight()/2.0 - rect.GetHeight()*h/2.0, w*rect.GetWidth(), h*rect.GetHeight());
+
+    std::vector<wxPoint2DDouble> points = {{0.5 - sqrt(7)/10, 0.5},
+                                            {0.5 + sqrt(7)/10, 0.5},
+                                            {0.5784, 0.2058}};
+    double pt_radius = std::min(rect.GetWidth(), rect.GetHeight())/16.0;
+    gc->SetBrush(*wxBLUE_BRUSH);
+    for (wxPoint2DDouble& pt : points) {
+        gc->DrawEllipse(rect.GetX() + pt.m_x*rect.GetWidth() - pt_radius,
+                        rect.GetY() + pt.m_y*rect.GetHeight() - pt_radius,
+                        2*pt_radius,
+                        2*pt_radius);
+    }
 }
 
 void EllipseByFociTool::OnMouseDown(wxMouseEvent &event) {
