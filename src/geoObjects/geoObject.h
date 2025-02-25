@@ -56,7 +56,7 @@ public:
 
     /// @brief Returns the name of the object
     /// @return The name of the object
-    wxString GetName(){ return name; }
+    wxString GetName() const { return name; }
 
     /// @brief Renames the object
     /// @param name The name to which the object should be renamed

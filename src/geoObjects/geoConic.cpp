@@ -1,6 +1,8 @@
 #include "geoConic.h"
 #include "../sidePanel/sidePanel.h"
 
+#include <stack>
+
 /// @brief Constructor for general conic (passing through 5 points)
 /// @param parent Drawing canvas on which the conic is
 /// @param name Name of the conic
@@ -47,6 +49,20 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
     // Pls send help
     // First calculate the transformed conic (shoft and scale of canvas)
     std::vector<std::vector<double>> trans_matrix = util::TransformConic(matrix, util::WxAffineToMatrix(transform));
+    double max_coeff = 0;
+    for (int i = 0; i<3; i++) {
+        for (int j = 0; j<3; j++) {
+            if (fabs(trans_matrix[i][j]) > max_coeff) {
+                max_coeff = trans_matrix[i][j];
+            }
+        }
+    }
+    max_coeff /= 100000.0;
+    for (int i = 0; i<3; i++) {
+        for (int j = 0; j<3; j++) {
+            trans_matrix[i][j] /= max_coeff;
+        }
+    }
     std::vector<double> trans_coeffs = {trans_matrix[0][0], 2*trans_matrix[0][1], trans_matrix[1][1], 2*trans_matrix[0][2], 2*trans_matrix[1][2], trans_matrix[2][2]};
 
     std::vector<std::vector<double>> trans_dual = util::AdjMatrix3x3(trans_matrix);
@@ -116,30 +132,55 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
 
     // Draws the seen intervals
     for (std::pair<double,double>& interval : seen_intervals) {
-        wxPoint2DDouble points[101];
-        for (int i = 0; i<101; i++) {
-            points[i] = util::GetConicPtFromParam(interval.first + i*(interval.second-interval.first)/100.0, trans_focus, trans_angle, trans_ecc, trans_dist, trans_latus);
+        std::vector<std::pair<double, wxPoint2DDouble>> points_pairs;
+        points_pairs.push_back({interval.first, util::GetConicPtFromParam(interval.first, trans_focus, trans_angle, trans_ecc, trans_dist, trans_latus)});
+        std::stack<std::pair<double, wxPoint2DDouble>> stck;
+        stck.push({interval.second, util::GetConicPtFromParam(interval.second, trans_focus, trans_angle, trans_ecc, trans_dist, trans_latus)});
+        stck.push({(interval.second + interval.first)/2, util::GetConicPtFromParam((interval.second + interval.first)/2, trans_focus, trans_angle, trans_ecc, trans_dist, trans_latus)});
+
+        int no_pts = 0;
+        while (stck.size() > 0) {
+            auto& last_pt = points_pairs.back();
+            auto& to_add_pt = stck.top();
+
+            if (last_pt.second.GetDistance(to_add_pt.second) > 20) {
+                stck.push({(last_pt.first + to_add_pt.first)/2 , util::GetConicPtFromParam((last_pt.first + to_add_pt.first)/2, trans_focus, trans_angle, trans_ecc, trans_dist, trans_latus)});
+            } else {
+                points_pairs.push_back(to_add_pt);
+                stck.pop();
+            }
+
+            no_pts++;
+            if (no_pts > 1000) {
+                std::cout << "Something went wrong when drawing conic " << this << " aka " << GetName() << " (maximum number of sampled points on conic exceeded)" << std::endl;
+            }
+        }
+
+        int n = points_pairs.size();
+        wxPoint2DDouble points[n];
+        for (int i = 0; i<n; i++) {
+            points[i] = points_pairs[i].second;
         }
 
         if (selected || highlited) {
             gc->SetPen(wxPen(wxColour(200, 150, 150, 150), this->outlineWidth + 3));
-            gc->StrokeLines(101, points);
+            gc->StrokeLines(n, points);
         }
 
         gc->SetPen(wxPen(this->outlineColor, this->outlineWidth));
-        gc->StrokeLines(101, points);
+        gc->StrokeLines(n, points);
     }
 }
 
 void GeoConic::ReloadPrecomp() {
-    // Multiply the coefficients such that the biggest one is 1000
+    // Multiply the coefficients such that the biggest one is 100000
     double max_coeff = 0;
     for (int i = 0; i<6; i++) {
         if (fabs(coeffs[i]) > max_coeff) {
             max_coeff = coeffs[i];
         }
     }
-    max_coeff /= 1000.0;
+    max_coeff /= 100000.0;
     for (int i = 0; i<6; i++) {
         coeffs[i] /= max_coeff;
     }
