@@ -21,4 +21,5 @@ target_sources(main PRIVATE     tool.cpp
                                 parabByFocDirTool.cpp
                                 polarTool.cpp
                                 poleTool.cpp
-                                circleInverseTool.cpp)
+                                circleInverseTool.cpp
+                                tangFromPtTool.cpp)

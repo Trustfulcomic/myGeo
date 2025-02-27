@@ -20,3 +20,4 @@
 #include "polarTool.h"
 #include "poleTool.h"
 #include "circleInverseTool.h"
+#include "tangFromPtTool.h"

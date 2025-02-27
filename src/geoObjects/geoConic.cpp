@@ -49,18 +49,12 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
     // Pls send help
     // First calculate the transformed conic (shoft and scale of canvas)
     std::vector<std::vector<double>> trans_matrix = util::TransformConic(matrix, util::WxAffineToMatrix(transform));
-    double max_coeff = 0;
+
+    // Scales the coefficients such that weighed average is 1000
+    double weighed_coeff_avg = (fabs(trans_matrix[0][0])*fabs(trans_matrix[0][0]) + fabs(2*trans_matrix[0][1])*fabs(2*trans_matrix[0][1]) + fabs(trans_matrix[1][1])*fabs(trans_matrix[1][1]) + fabs(2*trans_matrix[0][2]) + fabs(2*trans_matrix[1][2]))/5;
     for (int i = 0; i<3; i++) {
         for (int j = 0; j<3; j++) {
-            if (fabs(trans_matrix[i][j]) > max_coeff) {
-                max_coeff = trans_matrix[i][j];
-            }
-        }
-    }
-    max_coeff /= 100000.0;
-    for (int i = 0; i<3; i++) {
-        for (int j = 0; j<3; j++) {
-            trans_matrix[i][j] /= max_coeff;
+            trans_matrix[i][j] /= (weighed_coeff_avg / 1000);
         }
     }
     std::vector<double> trans_coeffs = {trans_matrix[0][0], 2*trans_matrix[0][1], trans_matrix[1][1], 2*trans_matrix[0][2], 2*trans_matrix[1][2], trans_matrix[2][2]};
@@ -153,6 +147,7 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
             no_pts++;
             if (no_pts > 1000) {
                 std::cout << "Something went wrong when drawing conic " << this << " aka " << GetName() << " (maximum number of sampled points on conic exceeded)" << std::endl;
+                break;
             }
         }
 
@@ -173,16 +168,10 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
 }
 
 void GeoConic::ReloadPrecomp() {
-    // Multiply the coefficients such that the biggest one is 100000
-    double max_coeff = 0;
+    // Scales the coefficients such that weighed sum of coefficients is 1000
+    double weighed_coeff_avg = (fabs(coeffs[0])*fabs(coeffs[0]) + fabs(coeffs[1])*fabs(coeffs[1]) + fabs(coeffs[2])*fabs(coeffs[2]) + fabs(coeffs[3]) + fabs(coeffs[4]))/5;
     for (int i = 0; i<6; i++) {
-        if (fabs(coeffs[i]) > max_coeff) {
-            max_coeff = coeffs[i];
-        }
-    }
-    max_coeff /= 100000.0;
-    for (int i = 0; i<6; i++) {
-        coeffs[i] /= max_coeff;
+        coeffs[i] /= (weighed_coeff_avg / 1000);
     }
 
     // Calculates the matrix, dual_matrix, focus

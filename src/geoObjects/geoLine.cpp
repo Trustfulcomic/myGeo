@@ -189,6 +189,20 @@ void GeoLine::ReloadSelf() {
         case POLAR:
             util::GetPolar(static_cast<GeoConic*>(parentObjs[1])->GetConicMatrix(), static_cast<GeoPoint*>(parentObjs[0])->GetPos(), mainPoint, lineVect);
             break;
+        
+        case TANGENT_LINE:
+            int tangent_i = (int)(parameter+0.5);
+            if (tangent_i < 0) tangent_i = 0;
+            
+            std::vector<wxPoint2DDouble> tangents = util::GetConicTangentsFromPt(static_cast<GeoPoint*>(parentObjs[0])->GetPos(), static_cast<GeoConic*>(parentObjs[1])->GetConicMatrix());
+            if (tangent_i < tangents.size()) {
+                lineVect = tangents[tangent_i];
+            } else {
+                // TODO - undefined
+            }
+
+            mainPoint = static_cast<GeoPoint*>(parentObjs[0])->GetPos();
+            break;
     }
 }
 
@@ -260,6 +274,8 @@ ListItem GeoLine::GetListItem() {
             return {GetName(), geoTransform->GetListText(parentObjs[0]), parameter, this};
         case POLAR:
             return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
+        case TANGENT_LINE:
+            return {GetName(), wxString::Format(GeoLine::DefToString(definition) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
     }
 
     return {GetName(), "He?", 0, this};
@@ -284,6 +300,8 @@ wxString GeoLine::DefToString(LineDefinition definition) {
             return "AngleBisectorP";
         case POLAR:
             return "Polar";
+        case TANGENT_LINE:
+            return "Tangent";
         default:
             return "";
     }

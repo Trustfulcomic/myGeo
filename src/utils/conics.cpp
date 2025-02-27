@@ -331,3 +331,24 @@ wxPoint2DDouble util::GetPole(const std::vector<std::vector<double>> &conic, con
     std::vector<std::vector<double>> point_matrix = util::MatrixMult(conic_inverse, line_matrix);
     return {point_matrix[0][0]/point_matrix[2][0], point_matrix[1][0]/point_matrix[2][0]};
 }
+
+/// @brief Calculates tangent vectors from point onto a conic
+/// @param pt Point from which to do the tangents
+/// @param conic Matrix representation of the conic
+/// @return Tangent vectors from the point
+std::vector<wxPoint2DDouble> util::GetConicTangentsFromPt(const wxPoint2DDouble &pt, const std::vector<std::vector<double>> &conic) {
+    // Calculates the polar of the point
+    wxPoint2DDouble mainPoint, vect;
+    util::GetPolar(conic, pt, mainPoint, vect);
+
+    // Intersection of the polar and the conic are the tangent points
+    std::vector<wxPoint2DDouble> tangent_points = util::IntersectLineConic(mainPoint, vect, util::GetConicCoeffs(conic));
+    
+    // Get the vectors
+    std::vector<wxPoint2DDouble> result_vects;
+    for (const wxPoint2DDouble& tang_pt : tangent_points) {
+        result_vects.push_back(tang_pt - pt);
+    }
+
+    return result_vects;
+}

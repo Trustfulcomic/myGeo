@@ -101,6 +101,7 @@ void SidePanel::SetupTools() {
     ADD_TOOL(PerpBisectorTool);
     ADD_TOOL(MidpointTool);
     ADD_TOOL(AngleBisectorTool);
+    ADD_TOOL(TangFromPtTool);
     toolPanelSizer->Add(toolPanesSizer, 0, wxLEFT | wxRIGHT | wxDOWN, FromDIP(5));
 
     textTools = new wxStaticText(toolPanel, wxID_ANY, wxString::FromUTF8("Kuželosečky"));
