@@ -307,7 +307,7 @@ ListItem GeoPoint::GetListItem() {
         case TRANSFORMED_POINT:
             return {GetName(), geoTransform->GetListText(parentObjs[0]), parameter, this};
         case POLE:
-            return {GetName(), wxString::Format(GeoPoint::DefToString(MIDPOINT) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
+            return {GetName(), wxString::Format(GeoPoint::DefToString(POLE) + "(%s,%s)", parentObjs[0]->GetName(), parentObjs[1]->GetName()), parameter, this};
     }
 
     return {GetName(), "He?", parameter, this};

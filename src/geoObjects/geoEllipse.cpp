@@ -69,6 +69,7 @@ void GeoEllipse::CreateCopy(std::unordered_map<GeoObject *, GeoObject *> &copied
     copy->angle = this->angle;
     copy->coeffs = this->coeffs;
     copy->outlineColor = this->outlineColor;
+    copy->fillColor = this->fillColor;
     copy->outlineWidth = this->outlineWidth;
     copy->isPoint = this->isPoint;
     copy->definition = this->definition;

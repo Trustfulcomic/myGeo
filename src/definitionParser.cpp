@@ -30,7 +30,6 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
         return new GeoPoint(canvas, "", {x_coord, y_coord});
     } else {
         // All other dependent objects
-        std::cout << parsedStr.def << std::endl;
 
         // Check if all arguments exist
         for (const wxString& argName : parsedStr.args) {
@@ -104,6 +103,10 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
         } else if (parsedStr.def.compare(GeoLine::DefToString(POLAR)) == 0) {
             if (CheckObjectTypes({-1,-5}, argObjs)) {
                 return new GeoLine(canvas, "", argObjs[0], argObjs[1], POLAR);
+            }
+        } else if (parsedStr.def.compare(GeoLine::DefToString(TANGENT_LINE)) == 0) {
+            if (CheckObjectTypes({-1,-5}, argObjs)) {
+                return new GeoLine(canvas, "", argObjs[0], argObjs[1], TANGENT_LINE);
             }
         }
 

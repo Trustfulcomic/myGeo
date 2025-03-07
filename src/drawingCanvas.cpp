@@ -377,6 +377,7 @@ void DrawingCanvas::ShowOpenDialog() {
         // Try to create the object
         GeoObject* newObj = DefinitionParser::CreateObject(nameToCSV[curName].definition, this);
         if (newObj == nullptr) {
+            std::cout << nameToCSV[curName].definition << std::endl;
             success = false; // Something went wrong...
             break;
         }
@@ -397,14 +398,27 @@ void DrawingCanvas::ShowOpenDialog() {
     }
 
     if (!success) {
+        std::cout << "Failed to load the file" << std::endl;
         // If something went wrong, delete all the objects
-        for (GeoPoint* obj : geoPoints) {
-            obj->nameHandler = nullptr;
-            delete obj;
+        std::list<GeoObject*> toDelete;
+        std::unordered_set<GeoObject*> deleted;
+
+        for (auto geoObj : geoPoints) {
+           toDelete.push_back(geoObj);
         }
-        for (GeoCurve* obj : geoCurves) {
-            obj->nameHandler = nullptr;
-            delete obj;
+        for (auto geoObj : geoCurves) {
+            toDelete.push_back(geoObj);
+        }
+
+        for (auto toDelObj : toDelete){
+            // Delete object if it is not deleted yet
+            if (deleted.find(toDelObj) != deleted.end()) continue;
+
+            for (GeoObject* obj : toDelObj->GetDescendants()){
+                deleted.insert(obj);
+            }
+
+            delete toDelObj;
         }
 
         // Restore backup

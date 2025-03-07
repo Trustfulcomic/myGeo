@@ -353,6 +353,7 @@ void GeoConic::CreateCopy(std::unordered_map<GeoObject *, GeoObject *> &copiedPt
     copy->parent = this->parent;
     copy->coeffs = this->coeffs;
     copy->outlineColor = this->outlineColor;
+    copy->fillColor = this->fillColor;
     copy->outlineWidth = this->outlineWidth;
     copy->isPoint = this->isPoint;
     copy->ReloadPrecomp();

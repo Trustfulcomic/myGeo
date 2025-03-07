@@ -129,6 +129,7 @@ void GeoSegment::CreateCopy(std::unordered_map<GeoObject*, GeoObject*>& copiedPt
     copy->lineVect = this->lineVect;
     copy->definition = this->definition;
     copy->outlineColor = this->outlineColor;
+    copy->fillColor = this->fillColor;
     copy->outlineWidth = this->outlineWidth;
     copy->isPoint = this->isPoint;
 

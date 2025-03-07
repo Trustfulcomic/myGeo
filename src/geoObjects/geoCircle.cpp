@@ -86,6 +86,7 @@ void GeoCircle::CreateCopy(std::unordered_map<GeoObject *, GeoObject *> &copiedP
     copy->coeffs = this->coeffs;
     copy->radius = this->radius;
     copy->outlineColor = this->outlineColor;
+    copy->fillColor = this->fillColor;
     copy->outlineWidth = this->outlineWidth;
     copy->isPoint = this->isPoint;
     copy->definition = this->definition;
