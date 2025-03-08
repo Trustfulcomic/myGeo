@@ -36,26 +36,36 @@ void RotationTool::DrawContent(wxGraphicsContext *gc, const wxRect &rect) const 
     gc->SetPen(*wxBLACK_PEN);
     gc->SetBrush(*wxGREY_BRUSH);
 
-    wxPoint2DDouble vertA = {rect.GetX() + 2*rect.GetWidth()/5.0, rect.GetY() + rect.GetHeight()/5.0};
-    wxPoint2DDouble vertB = {rect.GetX() + rect.GetWidth()/5.0, rect.GetY() + 4*rect.GetHeight()/5.0};
-    wxPoint2DDouble vertC = {rect.GetX() + 4*rect.GetWidth()/5.0, rect.GetY() + 3*rect.GetHeight()/5.0};
+    wxPoint2DDouble vertA = {rect.GetX() + 0.2*rect.GetWidth(), rect.GetY() + 0.8*rect.GetHeight()};
+    wxPoint2DDouble vertB = {rect.GetX() + 0.5*rect.GetWidth(), rect.GetY() + 0.8*rect.GetHeight()};
+    wxPoint2DDouble vertC = {rect.GetX() + 0.4121*rect.GetWidth(), rect.GetY() + (1-0.4121)*rect.GetHeight()};
+    wxPoint2DDouble vertD = {rect.GetX() + 0.8*rect.GetWidth(), rect.GetY() + 0.8*rect.GetHeight()};
+    wxPoint2DDouble vertE = {rect.GetX() + 0.6243*rect.GetWidth(), rect.GetY() + (1-0.6243)*rect.GetHeight()};
 
     double pt_radius = std::min(rect.GetWidth(), rect.GetHeight())/16.0;
 
-    gc->StrokeLine(vertA.m_x, vertA.m_y, vertB.m_x, vertB.m_y);
-    gc->StrokeLine(vertC.m_x, vertC.m_y, vertB.m_x, vertB.m_y);
-    gc->StrokeLine(vertA.m_x, vertA.m_y, vertC.m_x, vertC.m_y);
+    gc->StrokeLine(vertA.m_x, vertA.m_y, vertD.m_x, vertD.m_y);
+    gc->StrokeLine(vertA.m_x, vertA.m_y, vertE.m_x, vertE.m_y);
+
+    gc->SetPen(*wxRED_PEN);
+
+    wxGraphicsPath path = gc->CreatePath();
+    path.MoveToPoint(vertB);
+    path.AddArc(vertA.m_x, vertA.m_y, 0.3*rect.GetWidth(), 0, -M_PI/4, false);
+    gc->StrokePath(path);
+
+    gc->SetPen(*wxBLACK_PEN);
+
     gc->DrawEllipse(vertA.m_x - pt_radius, vertA.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
     gc->DrawEllipse(vertB.m_x - pt_radius, vertB.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
     gc->DrawEllipse(vertC.m_x - pt_radius, vertC.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
 
     gc->SetBrush(*wxBLUE_BRUSH);
-    wxPoint2DDouble first_point = {rect.GetX() + rect.GetWidth()/2.0, rect.GetY() + 2*rect.GetHeight()/5.0};
-    gc->DrawEllipse(first_point.m_x - pt_radius, first_point.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
+    gc->DrawEllipse(vertD.m_x - pt_radius, vertD.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
 
     gc->SetBrush(*wxRED_BRUSH);
-    wxPoint2DDouble second_point = {rect.GetX() + 2*rect.GetWidth()/5.0, rect.GetY() + 13*rect.GetHeight()/20.0};
-    gc->DrawEllipse(second_point.m_x - pt_radius, second_point.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
+    gc->DrawEllipse(vertE.m_x - pt_radius, vertE.m_y - pt_radius, 2*pt_radius, 2*pt_radius);
+
 }
 
 void RotationTool::OnMouseDown(wxMouseEvent &event) {
