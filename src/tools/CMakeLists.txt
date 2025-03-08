@@ -22,4 +22,5 @@ target_sources(main PRIVATE     tool.cpp
                                 polarTool.cpp
                                 poleTool.cpp
                                 circleInverseTool.cpp
-                                tangFromPtTool.cpp)
+                                tangFromPtTool.cpp
+                                rotationTool.cpp)

@@ -91,3 +91,24 @@ private:
     /// The point defining the center of the homothety
     GeoPoint* center;
 };
+
+/// @brief Class for rotation transform
+class Rotation : public AffineGeoTransform {
+public:
+    Rotation(GeoPoint* original, GeoPoint* center, GeoPoint* target);
+
+    wxPoint2DDouble TransformPoint(const wxPoint2DDouble& pt) override;
+    wxPoint2DDouble TransformVect(const wxPoint2DDouble& vect) override;
+    std::list<GeoObject*> GetDeps() override;
+    GeoTransform* CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) override;
+
+    wxString GetListText(GeoObject* obj) override;
+    static wxString DefString();
+private:
+    /// The point defining the center of the rotation
+    GeoPoint* center;
+    /// The point in the original direction
+    GeoPoint* original;
+    /// The point in the target direction
+    GeoPoint* target;
+};

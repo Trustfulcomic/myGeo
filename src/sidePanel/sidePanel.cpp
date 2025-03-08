@@ -125,6 +125,7 @@ void SidePanel::SetupTools() {
     ADD_TOOL(PolarTool);
     ADD_TOOL(PoleTool);
     ADD_TOOL(IsoConjTool);
+    ADD_TOOL(RotationTool);
     toolPanelSizer->Add(toolPanesSizer, 0, wxLEFT | wxRIGHT | wxDOWN, FromDIP(5));
 
     toolPanel->SetSizer(toolPanelSizer);

@@ -179,6 +179,11 @@ GeoObject *DefinitionParser::CreateObject(const wxString &defStr, DrawingCanvas*
                 CircleInverse* circleInverse = new CircleInverse(static_cast<GeoCircle*>(argObjs[1]));
                 return argObjs[0]->GetTransformed(circleInverse);
             }
+        } else if (parsedStr.def.compare(Rotation::DefString()) == 0) {
+            if (CheckObjectTypes({-4,-1,-1,-1}, argObjs)) {
+                Rotation* rotation = new Rotation(static_cast<GeoPoint*>(argObjs[1]), static_cast<GeoPoint*>(argObjs[2]), static_cast<GeoPoint*>(argObjs[3]));
+                return argObjs[0]->GetTransformed(rotation);
+            }
         }
         
         return nullptr;

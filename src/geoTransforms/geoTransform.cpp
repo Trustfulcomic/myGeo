@@ -202,3 +202,62 @@ wxString CircleInverse::GetListText(GeoObject *obj) {
 wxString CircleInverse::DefString() {
     return "CircleInverse";
 }
+
+/// @brief Constructor for rotation transform using 3 points
+/// @param original Point in the original direction 
+/// @param center Center of the rotation
+/// @param target Point in the target direction
+Rotation::Rotation(GeoPoint *original, GeoPoint *center, GeoPoint *target) {
+    this->original = original;
+    this->center = center;
+    this->target = target;
+}
+
+wxPoint2DDouble Rotation::TransformPoint(const wxPoint2DDouble &pt) {
+    wxPoint2DDouble original_vect = original->GetPos() - center->GetPos();
+    wxPoint2DDouble target_vect = target->GetPos() - center->GetPos();
+
+    double angle = target_vect.GetVectorAngle() - original_vect.GetVectorAngle();
+
+    wxPoint2DDouble trans_vect = pt - center->GetPos();
+    trans_vect.SetVectorAngle(angle + trans_vect.GetVectorAngle());
+
+    return trans_vect + center->GetPos();
+}
+
+wxPoint2DDouble Rotation::TransformVect(const wxPoint2DDouble &vect) {
+    wxPoint2DDouble original_vect = original->GetPos() - center->GetPos();
+    wxPoint2DDouble target_vect = target->GetPos() - center->GetPos();
+
+    double angle = target_vect.GetVectorAngle() - original_vect.GetVectorAngle();
+    
+    wxPoint2DDouble trans_vect = vect;
+    trans_vect.SetVectorAngle(angle + trans_vect.GetVectorAngle());
+
+    return trans_vect;
+}
+
+std::list<GeoObject*> Rotation::GetDeps() {
+    return {original, center, target};
+}
+
+GeoTransform *Rotation::CopyTransform(std::unordered_map<GeoObject *, GeoObject *> &copiedPtrs) {
+    if (copiedPtrs.find(center) == copiedPtrs.end()){
+        center->CreateCopy(copiedPtrs);
+    }
+    if (copiedPtrs.find(original) == copiedPtrs.end()){
+        original->CreateCopy(copiedPtrs);
+    }
+    if (copiedPtrs.find(target) == copiedPtrs.end()){
+        target->CreateCopy(copiedPtrs);
+    }
+    return new Rotation(static_cast<GeoPoint*>(copiedPtrs[original]), static_cast<GeoPoint*>(copiedPtrs[center]), static_cast<GeoPoint*>(copiedPtrs[target]));
+}
+
+wxString Rotation::GetListText(GeoObject *obj) {
+    return wxString::Format(Rotation::DefString() + "(%s,%s,%s,%s)", obj->GetName(), original->GetName(), center->GetName(), target->GetName());
+}
+
+wxString Rotation::DefString() {
+    return "Rotation";
+}

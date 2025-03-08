@@ -21,3 +21,4 @@
 #include "poleTool.h"
 #include "circleInverseTool.h"
 #include "tangFromPtTool.h"
+#include "rotationTool.h"
