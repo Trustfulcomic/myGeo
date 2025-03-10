@@ -2,6 +2,7 @@
 #include <vector>
 
 namespace util {
+    /// @brief Struct for polynomials
     struct Poly {
         std::vector<double> coeffs;
 

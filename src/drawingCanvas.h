@@ -21,6 +21,7 @@ struct DrawingCanvasState {
     double scale = 1;
 };
 
+/// @brief Class for the drawing canvas on which all the objects are drawn
 class DrawingCanvas : public wxWindow {
 public:
     DrawingCanvas(wxWindow *parent, wxWindowID id, const wxPoint &pos, const wxSize &size);

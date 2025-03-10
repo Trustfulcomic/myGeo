@@ -7,6 +7,7 @@
 
 #include "objectDialog.h"
 
+/// @brief Struct containing information of an object to be diplayed in a list
 struct ListItem {
     wxString name, definition;
     double parameter;

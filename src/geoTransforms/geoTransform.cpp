@@ -173,6 +173,9 @@ wxPoint2DDouble CircleInverse::TransformPoint(const wxPoint2DDouble &pt) {
 
     // |XS|*|X'S|=r^2
     double dist = center.GetDistance(pt);
+    if (dist == 0) {
+        return {std::numeric_limits<double>::max(), std::numeric_limits<double>::max()};
+    }
     double transformed_dist = radius*radius / dist;
 
     wxPoint2DDouble begin_vect = pt - center;

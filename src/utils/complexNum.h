@@ -2,6 +2,7 @@
 #include "math.h"
 
 namespace util {
+    /// @brief Struct for complex numbers
     struct ComplexNum {
         double re, im;
 

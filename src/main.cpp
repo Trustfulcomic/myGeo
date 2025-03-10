@@ -1,6 +1,7 @@
 #include <wx/wx.h>
 #include "myFrame.h"
 
+/// @brief Subclass of wxApp
 class MyApp : public wxApp {
 public:
     virtual bool OnInit();

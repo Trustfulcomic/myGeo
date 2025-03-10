@@ -12,6 +12,7 @@
 #include "../geoObjects/geoCurve.h"
 #include "../drawingCanvas.h"
 
+/// @brief Parent class for all tools
 class Tool : public wxWindow {
 public:
     Tool(wxWindow *parent, DrawingCanvas *drawingCanvas, wxWindowID id = wxID_ANY, const wxPoint &pos = wxDefaultPosition, const wxSize &size = wxDefaultSize);
@@ -72,6 +73,7 @@ private:
     virtual void OnMouseEnter(wxMouseEvent& event) = 0;
 };
 
+/// @brief Class used to bind tools onto a canvas
 class ToolBind {
 public:
     ToolBind(DrawingCanvas* canvas);
