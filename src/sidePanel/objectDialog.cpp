@@ -43,7 +43,7 @@ ObjectDialog::ObjectDialog(GeoObject* obj, wxWindow *parent, wxWindowID id, cons
     fieldSizer->Add(outlineWidth, 0, wxEXPAND | wxALL, FromDIP(5));
 
     // Create buttons for color change
-    wxButton* outlineButton = new wxButton(this, wxID_ANY, wxString::FromUTF8("Barva hranice"));
+    wxButton* outlineButton = new wxButton(this, wxID_ANY, wxString::FromUTF8("Barva ohraničení"));
     wxButton* fillButton = new wxButton(this, wxID_ANY, wxString::FromUTF8("Barva výplně"));
     outlineButton->Bind(wxEVT_BUTTON, [this](wxCommandEvent& event){
         wxColourData data;
