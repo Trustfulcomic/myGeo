@@ -168,10 +168,18 @@ void GeoConic::DrawOnContext(wxGraphicsContext *gc, wxAffineMatrix2D &transform)
 }
 
 void GeoConic::ReloadPrecomp() {
-    // Scales the coefficients such that weighed sum of coefficients is 1000
-    double weighed_coeff_avg = (fabs(coeffs[0])*fabs(coeffs[0]) + fabs(coeffs[1])*fabs(coeffs[1]) + fabs(coeffs[2])*fabs(coeffs[2]) + fabs(coeffs[3]) + fabs(coeffs[4]))/5;
+    // Scales the max coeff in absolute value to 100000 
+    double max_coeff = 0;
+
     for (int i = 0; i<6; i++) {
-        coeffs[i] /= (weighed_coeff_avg / 1000);
+        if (fabs(coeffs[i]) > max_coeff) {
+            max_coeff = coeffs[i];
+        }
+    }
+    max_coeff /= 100000.0;
+
+    for (int i = 0; i<6; i++) {
+        coeffs[i] /= max_coeff;
     }
 
     // Calculates the matrix, dual_matrix, focus
