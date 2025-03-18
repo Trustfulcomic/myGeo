@@ -1,0 +1,98 @@
+\documentclass[11pt]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[czech]{babel}
+
+\usepackage{libertinus}
+\usepackage[T1]{fontenc}
+
+\usepackage[a4paper, left=30mm, right=20mm, top=25mm, bottom=25mm]{geometry}
+
+\usepackage{csquotes}
+\usepackage{graphicx, tabularx}
+\usepackage{pdfpages}
+\usepackage[hidelinks]{hyperref}
+
+\usepackage{subfiles}
+
+\raggedbottom
+
+\newcommand{\odkaz}[2]{
+    \href{#1}{#2} (\href{#1}{#1})
+}
+
+%==========================================================================================
+
+\begin{document}
+    \pagestyle{empty}
+    \newgeometry{left=0pt, right=0pt}
+    \hspace{0pt}\vfill\vspace{-10pt}
+        \begin{center}
+            {\Huge \bfseries Jednoduchá geometrická \enquote{GeoGebra} }\\[2ex]
+            {\large  David Hromádka, O8.A}\\[8ex]
+            \begin{tabular}{rl}
+                Předmět:& Informatika\\
+                Vedoucí:& Martin Rosenberg\\
+                Školní rok:& 2024/2025
+            \end{tabular}\\[8ex]
+            \includegraphics[width = 40mm]{imgs/logo.jpg}\\[6ex]
+            {Gymnázium, Praha 6, Nad Alejí 1952}\\
+            {Nad Alejí 1952/5, 162 00 Praha 6}
+        \end{center}
+    \hspace{0pt}\vfill
+    \newpage
+    \restoregeometry
+
+    \includepdf{zadani.pdf}
+    \newpage
+
+    \section*{Prohlášení}
+    Prohlašuji, že jsem svou maturitní práci na téma \textit{Jednoduchá geometrická \enquote{GeoGebra}} vypracoval samostatně a použil jsem pouze prameny a literaturu uvedené v seznamu zdrojů.\\\\
+    V Praze dne \today\dotfill
+    \newpage
+
+    \section*{Anotace}
+    Projekt si klade za cíl vytvořit jednoduchý program pro rýsování geometrických útvarů. Tyto útvary mohou mít mezi sebou různé vztahy, které jsou vždy zachovány. Je možné tedy některými útvary pohybovat, čímž se aktualizuje zbytek útvarů. Toto může například vést k lepšímu pochopení vztahů mezi danými útvary nebo nalezení lepší geometrické konfigurace zachycující danou situaci.
+    \section*{Klíčová slova}
+    Euklideovská geometrie, Interaktivní geometrie, Vizualizace
+    \section*{Annotation}
+    The project aims to create a simple program for drawing geometric figures. These figures can have relatioships between them, which are always preserved. It is possible to move some of these figures, therby updating the rest of them. This can, for example, lead to better understanding of the relations between the given figures or to find a better geometric configuration capturing the situation.
+    \section*{Keyword}
+    Euclidean geometry, Interactive geometry, Visualization
+    \newpage
+
+    \tableofcontents
+    \newpage
+    
+    \pagestyle{plain}
+    \subfile{userman.tex}
+    \newpage
+
+    \section{Závěr}
+    Považuji celý svůj maturitní projekt za povedený. Veškeré hlavní funkce jsem zvládl naimplementovat a fungují bez větších potíží. V průbehu jsem dozvěděl nové věci z analytické geometrie, především o kužeosečkách, a také drobnosti z algebraické a projektivní geometrie. V současném stavu sice projekt neobsahuje mnoho funkcí, které nejsou už v GeoGebře, ale tyto funkce, jako například export do rýsovacího programu \href{https://ipe.otfried.org/}{Ipe}, není problém přidat, což například může pomoci s vytvářením obrázků do řešení olympiádních matematických úloh.
+
+    \section{Odkazy}
+    \begin{itemize}
+        \itemsep0em
+        \item \odkaz{https://trustfulcomic.github.io/mygeo/}{Webová stránka}
+        \item \odkaz{https://trustfulcomic.github.io/mygeo/docs/}{Vývojářská dokumentace}
+        \item \odkaz{https://github.com/Trustfulcomic/myGeo}{Zdrojový kód}
+        \item Inspirace pro tuto maturitní práci - \odkaz{https://www.geogebra.org/}{GeoGebra}
+    \end{itemize}
+
+    \section{Zdroje}
+
+    \subsection{Použité knihovny}
+    \begin{itemize}
+        \itemsep0em
+        \item \odkaz{https://www.wxwidgets.org/}{wxWidgets}
+        \item Standardní knihovna C++
+    \end{itemize}
+    \subsection{Další zdroje}
+    \begin{itemize}
+        \itemsep0em
+        \item \odkaz{https://en.wikipedia.org/}{Wikipedie}
+        \item \odkaz{https://math.stackexchange.com/}{Mathematics Stack Exchange}
+        \item \odkaz{https://www.lukesdevtutorials.com/}{Luke's Dev Tutorials}
+    \end{itemize}
+\end{document}
